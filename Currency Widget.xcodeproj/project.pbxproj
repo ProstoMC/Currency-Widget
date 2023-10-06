@@ -9,23 +9,29 @@
 /* Begin PBXBuildFile section */
 		A524BE1A2ACDCF0E00D3303E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A524BE192ACDCF0E00D3303E /* AppDelegate.swift */; };
 		A524BE1C2ACDCF0E00D3303E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A524BE1B2ACDCF0E00D3303E /* SceneDelegate.swift */; };
-		A524BE1E2ACDCF0E00D3303E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A524BE1D2ACDCF0E00D3303E /* ViewController.swift */; };
-		A524BE212ACDCF0E00D3303E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A524BE1F2ACDCF0E00D3303E /* Main.storyboard */; };
+		A524BE1E2ACDCF0E00D3303E /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A524BE1D2ACDCF0E00D3303E /* MainViewController.swift */; };
 		A524BE242ACDCF0E00D3303E /* Currency_Widget.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A524BE222ACDCF0E00D3303E /* Currency_Widget.xcdatamodeld */; };
 		A524BE262ACDCF1200D3303E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A524BE252ACDCF1200D3303E /* Assets.xcassets */; };
 		A524BE292ACDCF1200D3303E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A524BE272ACDCF1200D3303E /* LaunchScreen.storyboard */; };
+		A524BE322ACDDF0400D3303E /* MainNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A524BE312ACDDF0400D3303E /* MainNavigationBar.swift */; };
+		A589C77A2ACF0B95001ABF2C /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589C7792ACF0B95001ABF2C /* Theme.swift */; };
+		A589C77D2ACF0F56001ABF2C /* TilesUIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589C77C2ACF0F56001ABF2C /* TilesUIViewController.swift */; };
+		A589C77F2ACF3926001ABF2C /* AddTileUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589C77E2ACF3926001ABF2C /* AddTileUIView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		A524BE162ACDCF0E00D3303E /* Currency Widget.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Currency Widget.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A524BE192ACDCF0E00D3303E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A524BE1B2ACDCF0E00D3303E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		A524BE1D2ACDCF0E00D3303E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		A524BE202ACDCF0E00D3303E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		A524BE1D2ACDCF0E00D3303E /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		A524BE232ACDCF0E00D3303E /* Currency_Widget.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Currency_Widget.xcdatamodel; sourceTree = "<group>"; };
 		A524BE252ACDCF1200D3303E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A524BE282ACDCF1200D3303E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A524BE2A2ACDCF1200D3303E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A524BE312ACDDF0400D3303E /* MainNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainNavigationBar.swift; sourceTree = "<group>"; };
+		A589C7792ACF0B95001ABF2C /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		A589C77C2ACF0F56001ABF2C /* TilesUIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TilesUIViewController.swift; sourceTree = "<group>"; };
+		A589C77E2ACF3926001ABF2C /* AddTileUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTileUIView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,14 +66,25 @@
 			children = (
 				A524BE192ACDCF0E00D3303E /* AppDelegate.swift */,
 				A524BE1B2ACDCF0E00D3303E /* SceneDelegate.swift */,
-				A524BE1D2ACDCF0E00D3303E /* ViewController.swift */,
-				A524BE1F2ACDCF0E00D3303E /* Main.storyboard */,
+				A589C7792ACF0B95001ABF2C /* Theme.swift */,
+				A589C77B2ACF0EC0001ABF2C /* MainView */,
 				A524BE252ACDCF1200D3303E /* Assets.xcassets */,
 				A524BE272ACDCF1200D3303E /* LaunchScreen.storyboard */,
 				A524BE2A2ACDCF1200D3303E /* Info.plist */,
 				A524BE222ACDCF0E00D3303E /* Currency_Widget.xcdatamodeld */,
 			);
 			path = "Currency Widget";
+			sourceTree = "<group>";
+		};
+		A589C77B2ACF0EC0001ABF2C /* MainView */ = {
+			isa = PBXGroup;
+			children = (
+				A524BE312ACDDF0400D3303E /* MainNavigationBar.swift */,
+				A524BE1D2ACDCF0E00D3303E /* MainViewController.swift */,
+				A589C77C2ACF0F56001ABF2C /* TilesUIViewController.swift */,
+				A589C77E2ACF3926001ABF2C /* AddTileUIView.swift */,
+			);
+			path = MainView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -130,7 +147,6 @@
 			files = (
 				A524BE292ACDCF1200D3303E /* LaunchScreen.storyboard in Resources */,
 				A524BE262ACDCF1200D3303E /* Assets.xcassets in Resources */,
-				A524BE212ACDCF0E00D3303E /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -141,9 +157,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A524BE1E2ACDCF0E00D3303E /* ViewController.swift in Sources */,
+				A524BE1E2ACDCF0E00D3303E /* MainViewController.swift in Sources */,
+				A589C77D2ACF0F56001ABF2C /* TilesUIViewController.swift in Sources */,
 				A524BE1A2ACDCF0E00D3303E /* AppDelegate.swift in Sources */,
+				A524BE322ACDDF0400D3303E /* MainNavigationBar.swift in Sources */,
+				A589C77A2ACF0B95001ABF2C /* Theme.swift in Sources */,
 				A524BE242ACDCF0E00D3303E /* Currency_Widget.xcdatamodeld in Sources */,
+				A589C77F2ACF3926001ABF2C /* AddTileUIView.swift in Sources */,
 				A524BE1C2ACDCF0E00D3303E /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -151,14 +171,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		A524BE1F2ACDCF0E00D3303E /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A524BE202ACDCF0E00D3303E /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		A524BE272ACDCF1200D3303E /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -294,11 +306,13 @@
 				DEVELOPMENT_TEAM = V4APKTMRAM;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Currency Widget/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Currency Widget";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -306,6 +320,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "slm.Currency-Widget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -322,11 +339,13 @@
 				DEVELOPMENT_TEAM = V4APKTMRAM;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Currency Widget/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Currency Widget";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -334,6 +353,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "slm.Currency-Widget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
