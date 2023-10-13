@@ -65,17 +65,19 @@ class TilesUIViewController: UIViewController {
     
     private func setupCollectionView(){
         
-        collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: flowLayout)
+    collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: flowLayout)
         
         print("setupCollectionView")
         
         collectionView.dataSource = self
         collectionView.delegate = self
         
-        let cell = UICollectionViewCell()
+        //let cell = UICollectionViewCell()
+        
+        //let cell = TileCollectionViewCell()
         
         
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.register(Tile3x2CollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         
         //collectionView.bounces = true
         collectionView.backgroundColor = Theme.Color.background
@@ -97,7 +99,7 @@ class TilesUIViewController: UIViewController {
 extension TilesUIViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 3
+        return 1
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 6
@@ -106,7 +108,7 @@ extension TilesUIViewController: UICollectionViewDelegate, UICollectionViewDataS
 
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.bounds.size.width/2, height: collectionView.bounds.height/3)
+        return CGSize(width: collectionView.bounds.size.width/2, height: collectionView.bounds.height)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
@@ -114,19 +116,21 @@ extension TilesUIViewController: UICollectionViewDelegate, UICollectionViewDataS
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
- 
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-        cell.backgroundColor = .green
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! Tile3x2CollectionViewCell
+//        cell.backgroundColor = .green
         print(indexPath.row)
+       
+//
+//        let view = AddTileUIView()
+//        cell.contentView.addSubview(view)
+//        view.frame = cell.bounds
+//
+//        cell.contentView.layer.borderWidth = 1
+//        cell.contentView.layer.borderColor = UIColor.gray.cgColor
+//
         
-        let view = AddTileUIView()
-        cell.contentView.addSubview(view)
-        view.frame = cell.bounds
-        
-        cell.contentView.layer.borderWidth = 1
-        cell.contentView.layer.borderColor = UIColor.gray.cgColor
 
         return cell
     }

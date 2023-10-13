@@ -17,6 +17,8 @@
 		A589C77A2ACF0B95001ABF2C /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589C7792ACF0B95001ABF2C /* Theme.swift */; };
 		A589C77D2ACF0F56001ABF2C /* TilesUIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589C77C2ACF0F56001ABF2C /* TilesUIViewController.swift */; };
 		A589C77F2ACF3926001ABF2C /* AddTileUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589C77E2ACF3926001ABF2C /* AddTileUIView.swift */; };
+		A5D6DA872AD6F5FA00E3D4F4 /* Tile3x2CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D6DA862AD6F5FA00E3D4F4 /* Tile3x2CollectionViewCell.swift */; };
+		A5D6DA892AD97FFF00E3D4F4 /* Tile1x2CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D6DA882AD97FFF00E3D4F4 /* Tile1x2CollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +34,8 @@
 		A589C7792ACF0B95001ABF2C /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		A589C77C2ACF0F56001ABF2C /* TilesUIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TilesUIViewController.swift; sourceTree = "<group>"; };
 		A589C77E2ACF3926001ABF2C /* AddTileUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTileUIView.swift; sourceTree = "<group>"; };
+		A5D6DA862AD6F5FA00E3D4F4 /* Tile3x2CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tile3x2CollectionViewCell.swift; sourceTree = "<group>"; };
+		A5D6DA882AD97FFF00E3D4F4 /* Tile1x2CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tile1x2CollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +68,7 @@
 		A524BE182ACDCF0E00D3303E /* Currency Widget */ = {
 			isa = PBXGroup;
 			children = (
+				A5D6DA852AD6CE7C00E3D4F4 /* Models */,
 				A524BE192ACDCF0E00D3303E /* AppDelegate.swift */,
 				A524BE1B2ACDCF0E00D3303E /* SceneDelegate.swift */,
 				A589C7792ACF0B95001ABF2C /* Theme.swift */,
@@ -83,8 +88,17 @@
 				A524BE1D2ACDCF0E00D3303E /* MainViewController.swift */,
 				A589C77C2ACF0F56001ABF2C /* TilesUIViewController.swift */,
 				A589C77E2ACF3926001ABF2C /* AddTileUIView.swift */,
+				A5D6DA862AD6F5FA00E3D4F4 /* Tile3x2CollectionViewCell.swift */,
+				A5D6DA882AD97FFF00E3D4F4 /* Tile1x2CollectionViewCell.swift */,
 			);
 			path = MainView;
+			sourceTree = "<group>";
+		};
+		A5D6DA852AD6CE7C00E3D4F4 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -159,10 +173,12 @@
 			files = (
 				A524BE1E2ACDCF0E00D3303E /* MainViewController.swift in Sources */,
 				A589C77D2ACF0F56001ABF2C /* TilesUIViewController.swift in Sources */,
+				A5D6DA872AD6F5FA00E3D4F4 /* Tile3x2CollectionViewCell.swift in Sources */,
 				A524BE1A2ACDCF0E00D3303E /* AppDelegate.swift in Sources */,
 				A524BE322ACDDF0400D3303E /* MainNavigationBar.swift in Sources */,
 				A589C77A2ACF0B95001ABF2C /* Theme.swift in Sources */,
 				A524BE242ACDCF0E00D3303E /* Currency_Widget.xcdatamodeld in Sources */,
+				A5D6DA892AD97FFF00E3D4F4 /* Tile1x2CollectionViewCell.swift in Sources */,
 				A589C77F2ACF3926001ABF2C /* AddTileUIView.swift in Sources */,
 				A524BE1C2ACDCF0E00D3303E /* SceneDelegate.swift in Sources */,
 			);
