@@ -33,8 +33,8 @@ class MainViewController: UIViewController {
     
     private func buildInterface() {
         navigationBar = MainNavigationBar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height/10))
-        currencyTileView.view.frame = CGRect(x: 0, y: navigationBar.frame.maxY, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height*0.4)
-        pairsTileView.view.frame = CGRect(x: 0, y: currencyTileView.view.frame.maxY, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height*0.4)
+        currencyTileView.view.frame = CGRect(x: 0, y: navigationBar.frame.maxY, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height*0.42)
+        pairsTileView.view.frame = CGRect(x: 0, y: currencyTileView.view.frame.maxY, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height*0.42)
         view.addSubview(navigationBar)
         view.addSubview(currencyTileView.view)
         view.addSubview(pairsTileView.view)

@@ -9,11 +9,15 @@ import UIKit
 
 class Tile1x2CollectionViewCell: UICollectionViewCell {
     
+    var standartLayoutSpace: CGFloat!
+    
     let logoView = UIView()
     let shortNameLabel = UILabel()
     let valueLabel = UILabel()
     let additionalLabel1 = UILabel()
     let additionalLabel2 = UILabel()
+    let graph = UIView()
+    
     
     required override init(frame: CGRect) {
         super.init(frame: frame)
@@ -26,29 +30,33 @@ class Tile1x2CollectionViewCell: UICollectionViewCell {
     
     
     private func setupUI() {
-        contentView.backgroundColor = .darkGray
+        standartLayoutSpace = contentView.bounds.height/20
+        
+
+        
+        
+        contentView.backgroundColor = Theme.Color.background
         contentView.layer.borderWidth = 1
-        contentView.layer.borderColor = UIColor.brown.cgColor
+        contentView.layer.borderColor = Theme.Color.border.cgColor
         setupLogo()
         setupShortNameLabel()
         setupValueLabel()
         setupAdditionalLabels()
+        setupGraph()
     }
     
     private func setupLogo() {
         contentView.addSubview(logoView)
         logoView.translatesAutoresizingMaskIntoConstraints = false
         
-        logoView.backgroundColor = .blue
-        
         NSLayoutConstraint.activate([
-            logoView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: contentView.bounds.height/10),
-            logoView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: contentView.bounds.height/12),
-            logoView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.5),
-            logoView.widthAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.5)
+            logoView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: standartLayoutSpace),
+            logoView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: standartLayoutSpace),
+            logoView.heightAnchor.constraint(equalToConstant: standartLayoutSpace*4.5),
+            logoView.widthAnchor.constraint(equalToConstant: standartLayoutSpace*4.5)
         ])
     
-        //logoImage.layer.cornerRadius = logoImage.bounds.height / 2
+        
 
         let label = UILabel()
         logoView.addSubview(label)
@@ -57,6 +65,7 @@ class Tile1x2CollectionViewCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = label.font.withSize(100) //Just set max and resize after
         label.adjustsFontSizeToFitWidth = true
+        label.textColor = Theme.Color.mainText
         
         NSLayoutConstraint.activate([
             label.centerYAnchor.constraint(equalTo: logoView.centerYAnchor),
@@ -70,39 +79,48 @@ class Tile1x2CollectionViewCell: UICollectionViewCell {
         self.logoView.layer.masksToBounds = true
         self.logoView.layer.cornerRadius = logoView.bounds.height/2
         
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = logoView.bounds
+        gradientLayer.colors = [Theme.Color.border.cgColor, Theme.Color.background.cgColor]
+        logoView.layer.insertSublayer(gradientLayer, at: 0)
+        
     }
     
     private func setupShortNameLabel() {
         contentView.addSubview(shortNameLabel)
         shortNameLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            shortNameLabel.centerXAnchor.constraint(equalTo: logoView.centerXAnchor),
-            shortNameLabel.heightAnchor.constraint(equalToConstant: contentView.bounds.height*0.3),
-            shortNameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -contentView.bounds.height*0.05),
-            shortNameLabel.widthAnchor.constraint(equalTo: logoView.widthAnchor, multiplier: 1.2),
+            shortNameLabel.centerYAnchor.constraint(equalTo: logoView.centerYAnchor),
+            shortNameLabel.heightAnchor.constraint(equalToConstant: standartLayoutSpace*3),
+            shortNameLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -standartLayoutSpace),
+            shortNameLabel.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.5),
         ])
         
         shortNameLabel.text = "GEL"
         shortNameLabel.font = shortNameLabel.font.withSize(100) //Just set max and resize after
         shortNameLabel.adjustsFontSizeToFitWidth = true
-        shortNameLabel.textAlignment = .center
+        shortNameLabel.textAlignment = .right
+        valueLabel.textColor = Theme.Color.mainText
     }
     
     private func setupValueLabel() {
         contentView.addSubview(valueLabel)
         valueLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            valueLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -contentView.bounds.height*0.1),
-            valueLabel.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.4 ),
-            valueLabel.centerYAnchor.constraint(equalTo: logoView.centerYAnchor),
-            valueLabel.widthAnchor.constraint(equalToConstant: contentView.bounds.width*0.5),
+            valueLabel.rightAnchor.constraint(equalTo: shortNameLabel.rightAnchor),
+            valueLabel.heightAnchor.constraint(equalTo: shortNameLabel.heightAnchor ),
+            valueLabel.topAnchor.constraint(equalTo: logoView.bottomAnchor),
+            valueLabel.widthAnchor.constraint(equalToConstant: contentView.bounds.width*0.6),
         ])
         
         valueLabel.text = "3.56\u{24}"
         valueLabel.font = valueLabel.font.withSize(100) //Just set max and resize after
         valueLabel.adjustsFontSizeToFitWidth = true
         valueLabel.textAlignment = .right
+        valueLabel.textColor = Theme.Color.mainText
+        
     }
+    
     private func setupAdditionalLabels() {
         contentView.addSubview(additionalLabel1)
         contentView.addSubview(additionalLabel2)
@@ -111,15 +129,15 @@ class Tile1x2CollectionViewCell: UICollectionViewCell {
        
         NSLayoutConstraint.activate([
             additionalLabel1.rightAnchor.constraint(equalTo: valueLabel.rightAnchor),
-            additionalLabel1.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.15),
-            //additionalLabel1.topAnchor.constraint(equalTo: valueLabel.bottomAnchor, constant: contentView.bounds.height*0.05),
-            additionalLabel1.widthAnchor.constraint(equalToConstant: contentView.bounds.width*0.5),
+            additionalLabel1.heightAnchor.constraint(equalToConstant: standartLayoutSpace*1.5),
+            additionalLabel1.topAnchor.constraint(equalTo: valueLabel.bottomAnchor, constant: standartLayoutSpace*0.5),
+            additionalLabel1.widthAnchor.constraint(equalToConstant: contentView.bounds.width*0.8),
             
             additionalLabel2.rightAnchor.constraint(equalTo: valueLabel.rightAnchor),
-            additionalLabel2.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.15),
-            additionalLabel2.topAnchor.constraint(equalTo: additionalLabel1.bottomAnchor, constant: contentView.bounds.height*0.05),
-            additionalLabel2.widthAnchor.constraint(equalToConstant: contentView.bounds.width*0.5),
-            additionalLabel2.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -contentView.bounds.height*0.08), //For visual equal with shortNameLabel
+            additionalLabel2.heightAnchor.constraint(equalToConstant: standartLayoutSpace*1.5),
+            additionalLabel2.topAnchor.constraint(equalTo: additionalLabel1.bottomAnchor, constant: standartLayoutSpace*0.5),
+            additionalLabel2.widthAnchor.constraint(equalToConstant: contentView.bounds.width*0.8),
+            //additionalLabel2.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -contentView.bounds.height*0.08), //For visual equal with shortNameLabel
             
         ])
         
@@ -130,13 +148,41 @@ class Tile1x2CollectionViewCell: UICollectionViewCell {
         additionalLabel1.font = additionalLabel1.font.withSize(100) //Just set max and resize after
         additionalLabel1.adjustsFontSizeToFitWidth = true
         additionalLabel1.textAlignment = .right
-        additionalLabel1.textColor = .gray
+        additionalLabel1.textColor = Theme.Color.secondText
         
         additionalLabel2.font = additionalLabel2.font.withSize(100) //Just set max and resize after
         additionalLabel2.adjustsFontSizeToFitWidth = true
         additionalLabel2.textAlignment = .right
-        additionalLabel2.textColor = .gray
+        additionalLabel2.textColor = Theme.Color.secondText
 
+    }
+    
+    private func setupGraph() {
+        contentView.addSubview(graph)
+        graph.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            graph.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -standartLayoutSpace),
+            graph.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: standartLayoutSpace),
+            graph.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -standartLayoutSpace),
+            graph.heightAnchor.constraint(equalToConstant: standartLayoutSpace*5)
+        ])
+        
+       // graph.backgroundColor = Theme.Color.border
+        self.layoutIfNeeded()
+        
+        let gradientLayer = CAGradientLayer()
+//        gradientLayer.frame = CGRect (
+//            x: graph.bounds.minX,
+//            y: graph.bounds.midY,
+//            width: graph.bounds.width,
+//            height: graph.bounds.height/2)
+        gradientLayer.frame = graph.bounds
+        gradientLayer.colors = [Theme.Color.background.cgColor, Theme.Color.border.cgColor]
+        graph.layer.insertSublayer(gradientLayer, at: 0)
+        
+
+        
     }
     
 }

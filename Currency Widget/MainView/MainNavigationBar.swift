@@ -53,9 +53,9 @@ class MainNavigationBar: UINavigationBar {
         
         baseCurrencyButton.setTitle("USD", for: .normal)
         baseCurrencyButton.titleLabel?.font = baseCurrencyButton.titleLabel?.font.withSize(self.bounds.height/4)
-        baseCurrencyButton.setTitleColor(Theme.Color.background, for: .normal)
+        baseCurrencyButton.setTitleColor(Theme.Color.mainText, for: .normal)
         
-        baseCurrencyButton.layer.borderColor = Theme.Color.background.cgColor
+        baseCurrencyButton.layer.borderColor = Theme.Color.mainText.cgColor
         baseCurrencyButton.layer.borderWidth = 2
         baseCurrencyButton.layer.cornerRadius = self.bounds.height*0.1   // Height / 3
         

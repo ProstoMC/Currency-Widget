@@ -23,8 +23,12 @@ class TilesUIViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Theme.Color.background
         setup()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+
     }
     
     private func setup() {
@@ -45,7 +49,10 @@ class TilesUIViewController: UIViewController {
             headView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.125)
         ])
         
-        headView.backgroundColor = .gray
+        headView.backgroundColor = Theme.Color.background
+        headView.layer.borderWidth = 1
+        headView.layer.borderColor = Theme.Color.border.cgColor
+        
     }
     
     private func setupAddView() {
@@ -77,10 +84,10 @@ class TilesUIViewController: UIViewController {
         //let cell = TileCollectionViewCell()
         
         
-        collectionView.register(Tile3x2CollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.register(Tile1x2CollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         
         //collectionView.bounces = true
-        collectionView.backgroundColor = Theme.Color.background
+        //collectionView.backgroundColor = Theme.Color.border
         
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
@@ -118,7 +125,7 @@ extension TilesUIViewController: UICollectionViewDelegate, UICollectionViewDataS
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! Tile3x2CollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! Tile1x2CollectionViewCell
 //        cell.backgroundColor = .green
         print(indexPath.row)
        
