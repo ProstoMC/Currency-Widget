@@ -19,6 +19,8 @@ class TilesUIViewController: UIViewController {
     }()
     
     var collectionView: UICollectionView!
+    
+    var data: [Currency] = []
    
     
     override func viewDidLoad() {
@@ -109,7 +111,7 @@ extension TilesUIViewController: UICollectionViewDelegate, UICollectionViewDataS
         return 1
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 6
+        return data.count
     }
     
 
@@ -126,18 +128,14 @@ extension TilesUIViewController: UICollectionViewDelegate, UICollectionViewDataS
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! Tile1x2CollectionViewCell
-//        cell.backgroundColor = .green
-        print(indexPath.row)
-       
-//
-//        let view = AddTileUIView()
-//        cell.contentView.addSubview(view)
-//        view.frame = cell.bounds
-//
-//        cell.contentView.layer.borderWidth = 1
-//        cell.contentView.layer.borderColor = UIColor.gray.cgColor
-//
         
+        cell.configure(
+            shortName: data[indexPath.row].shortName,
+            logo: data[indexPath.row].logo,
+            value: data[indexPath.row].rate,
+            base: CurrencyFetcher.shared.json.base
+        )
+
 
         return cell
     }

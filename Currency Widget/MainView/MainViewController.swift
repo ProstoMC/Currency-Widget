@@ -17,6 +17,13 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = Theme.Color.background
         
+        CurrencyFetcher.shared.fetchCurrency(completion: {
+            self.currencyTileView.data = CurrencyFetcher.shared.currency
+            self.currencyTileView.collectionView.reloadData()
+            self.navigationBar.baseCurrencyButton.setTitle(CurrencyFetcher.shared.json.base, for: .normal)
+            
+        })
+        
         print("MainVC")
     }
     
@@ -25,6 +32,7 @@ class MainViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+
     }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()

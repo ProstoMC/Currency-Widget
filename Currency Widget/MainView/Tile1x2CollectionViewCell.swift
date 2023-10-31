@@ -12,11 +12,13 @@ class Tile1x2CollectionViewCell: UICollectionViewCell {
     var standartLayoutSpace: CGFloat!
     
     let logoView = UIView()
+    let logoLabel = UILabel()
     let shortNameLabel = UILabel()
     let valueLabel = UILabel()
     let additionalLabel1 = UILabel()
     let additionalLabel2 = UILabel()
     let graph = UIView()
+    
     
     
     required override init(frame: CGRect) {
@@ -26,6 +28,14 @@ class Tile1x2CollectionViewCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupUI()
+    }
+    
+    func configure(shortName: String, logo: String, value: Double, base: String){
+        logoLabel.text = logo
+        shortNameLabel.text = shortName
+        let strValue = String(Double(round(100 * 1/value) / 100))
+        valueLabel.text = strValue + base
+        
     }
     
     
@@ -58,20 +68,20 @@ class Tile1x2CollectionViewCell: UICollectionViewCell {
     
         
 
-        let label = UILabel()
-        logoView.addSubview(label)
-        label.text = "\u{20BE}"
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = label.font.withSize(100) //Just set max and resize after
-        label.adjustsFontSizeToFitWidth = true
-        label.textColor = Theme.Color.mainText
+        
+        logoView.addSubview(logoLabel)
+        logoLabel.text = "\u{00A4}"
+        logoLabel.textAlignment = .center
+        logoLabel.translatesAutoresizingMaskIntoConstraints = false
+        logoLabel.font = logoLabel.font.withSize(100) //Just set max and resize after
+        logoLabel.adjustsFontSizeToFitWidth = true
+        logoLabel.textColor = Theme.Color.mainText
         
         NSLayoutConstraint.activate([
-            label.centerYAnchor.constraint(equalTo: logoView.centerYAnchor),
-            label.centerXAnchor.constraint(equalTo: logoView.centerXAnchor),
-            label.heightAnchor.constraint(equalTo: logoView.heightAnchor, multiplier: 0.8),
-            label.widthAnchor.constraint(equalTo: logoView.heightAnchor, multiplier: 0.8)
+            logoLabel.centerYAnchor.constraint(equalTo: logoView.centerYAnchor),
+            logoLabel.centerXAnchor.constraint(equalTo: logoView.centerXAnchor),
+            logoLabel.heightAnchor.constraint(equalTo: logoView.heightAnchor, multiplier: 0.8),
+            logoLabel.widthAnchor.constraint(equalTo: logoView.heightAnchor, multiplier: 0.8)
         ])
         
         self.layoutIfNeeded()  // For making corner radius
