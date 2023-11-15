@@ -9,6 +9,7 @@ import UIKit
 
 class MainNavigationBar: UINavigationBar {
     
+    let logoImageView = UIImageView()
     let baseCurrencyLabel = UILabel()
     let baseCurrencyButton = UIButton()
     
@@ -23,11 +24,31 @@ class MainNavigationBar: UINavigationBar {
     }
     
     private func setup() {
-        self.backgroundColor = Theme.Color.naviBar
+        self.backgroundColor = Theme.Color.backgroundForWidgets
         
+        setupLogo()
         setupBaseCurrency()
 
     }
+    
+    private func setupLogo() {
+        self.addSubview(logoImageView)
+        logoImageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            logoImageView.heightAnchor.constraint(equalToConstant: self.bounds.height*0.7),
+            logoImageView.widthAnchor.constraint(equalToConstant: self.bounds.height*0.7),
+            logoImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: self.bounds.width / 25),
+            logoImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+        ])
+        self.layoutIfNeeded()
+        //Apperance
+        logoImageView.clipsToBounds = true
+        logoImageView.layer.cornerRadius = logoImageView.bounds.height/2
+        logoImageView.backgroundColor = Theme.Color.mainColor
+        
+    }
+    
     private func setupBaseCurrency() {
         
         self.addSubview(baseCurrencyButton)

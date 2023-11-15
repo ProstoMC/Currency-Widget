@@ -17,17 +17,19 @@ struct JSONStruct: Decodable {
 
 class CurrencyFetcher {
     static let shared = CurrencyFetcher()
+    var baseCurrency = Currency (rate: 1, base: "USD", shortName: "USD") //DEFAULT
     var currency: [Currency] = []
     var json: JSONStruct!
+    
     
     func fetchCurrency(completion: @escaping () -> ()) {
         let url = "https://www.cbr-xml-daily.ru/latest.js"
         
         AF.request(url).validate().responseDecodable(of: JSONStruct.self) { (response) in
-            //print (response)
             DispatchQueue.main.async {
                 self.json = response.value!
-                //print (json.rates)
+                self.baseCurrency = Currency (rate: 1, base: self.json.base, shortName: self.json.base)
+                
                 for rate in self.json.rates {
                     self.currency.append(Currency(rate: rate.value, base: self.json.base, shortName: rate.key))
                 }

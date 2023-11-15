@@ -9,7 +9,7 @@ import UIKit
 
 class TilesUIViewController: UIViewController {
     
-    let headView = UIView()
+    let header = UIView()
     let addView = AddTileUIView()
     
     lazy var flowLayout: UICollectionViewFlowLayout = {
@@ -35,33 +35,31 @@ class TilesUIViewController: UIViewController {
     
     private func setup() {
         view.backgroundColor = Theme.Color.background
-        setupHeadView()
-        setupAddView()
+        //setupHeader()
+        //setupAddView()
         setupCollectionView()
     }
     
-    private func setupHeadView() {
-        headView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(headView)
+    private func setupHeader() {
+        header.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(header)
         
         NSLayoutConstraint.activate([
-            headView.topAnchor.constraint(equalTo: view.topAnchor),
-            headView.leftAnchor.constraint(equalTo: view.leftAnchor),
-            headView.rightAnchor.constraint(equalTo: view.rightAnchor),
-            headView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.125)
+            header.topAnchor.constraint(equalTo: view.topAnchor),
+            header.leftAnchor.constraint(equalTo: view.leftAnchor),
+            header.rightAnchor.constraint(equalTo: view.rightAnchor),
+            header.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.125)
         ])
         
-        headView.backgroundColor = Theme.Color.background
-        headView.layer.borderWidth = 1
-        headView.layer.borderColor = Theme.Color.border.cgColor
+        header.backgroundColor = Theme.Color.background
+        header.layer.borderWidth = 1
+        header.layer.borderColor = Theme.Color.border.cgColor
         
     }
     
     private func setupAddView() {
         addView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(addView)
-        
-
         
         NSLayoutConstraint.activate([
             addView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -71,31 +69,30 @@ class TilesUIViewController: UIViewController {
         ])
         
     }
-    
+    // MARK: - Collection View Appearing
     private func setupCollectionView(){
         
-    collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: flowLayout)
+        collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: flowLayout)
+        //Setup space before first element (x2 then between elements)
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: view.bounds.width / 25, bottom: 0, right: 0)
+        
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.showsVerticalScrollIndicator = false
+        
+        collectionView.backgroundColor = Theme.Color.background
         
         print("setupCollectionView")
         
         collectionView.dataSource = self
         collectionView.delegate = self
         
-        //let cell = UICollectionViewCell()
-        
-        //let cell = TileCollectionViewCell()
-        
-        
         collectionView.register(Tile1x2CollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-        
-        //collectionView.bounces = true
-        //collectionView.backgroundColor = Theme.Color.border
         
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
-
+        
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: headView.bottomAnchor),
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             collectionView.leftAnchor.constraint(equalTo: view.leftAnchor),
             collectionView.rightAnchor.constraint(equalTo: view.rightAnchor)
@@ -104,6 +101,8 @@ class TilesUIViewController: UIViewController {
         
     }
 }
+
+// MARK:  - CollectionView Extensions
 
 extension TilesUIViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
@@ -117,10 +116,10 @@ extension TilesUIViewController: UICollectionViewDelegate, UICollectionViewDataS
 
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.bounds.size.width/2, height: collectionView.bounds.height)
+        return CGSize(width: collectionView.bounds.size.height*0.92, height: collectionView.bounds.height) //Size of Tale
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
+        return view.bounds.width / 50
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
@@ -133,7 +132,8 @@ extension TilesUIViewController: UICollectionViewDelegate, UICollectionViewDataS
             shortName: data[indexPath.row].shortName,
             logo: data[indexPath.row].logo,
             value: data[indexPath.row].rate,
-            base: CurrencyFetcher.shared.json.base
+            base: CurrencyFetcher.shared.baseCurrency.shortName,
+            baseLogo: CurrencyFetcher.shared.baseCurrency.logo
         )
 
 
