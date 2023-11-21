@@ -51,7 +51,20 @@ class Tile1x2CollectionViewCell: UICollectionViewCell {
             string: baseLogo,
             attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 70, weight: .light), NSAttributedString.Key.foregroundColor: Theme.Color.secondText.withAlphaComponent(0.8)]))
         valueLabel.attributedText = attributedText
+    }
+    func configureWithPair(shortName: String, logo: String, value: String, base: String, baseLogo: String){
+        logoLabel.text = logo
+        mainCurrencyNameLabel.text = shortName
+        baseCurrencyNameLabel.text = "to \(base)"
         
+        let attributedText = NSMutableAttributedString(
+            string: value,
+            attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 100, weight: .medium)])
+        
+        attributedText.append(NSAttributedString(
+            string: baseLogo,
+            attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 70, weight: .light), NSAttributedString.Key.foregroundColor: Theme.Color.secondText.withAlphaComponent(0.8)]))
+        valueLabel.attributedText = attributedText
     }
     
     // MARK:  - SETUP UI

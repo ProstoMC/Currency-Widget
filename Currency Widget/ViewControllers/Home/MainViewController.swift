@@ -9,8 +9,9 @@ import UIKit
 
 class MainViewController: UIViewController {
     
+    
     var headerView = HeaderView()
-    var currencyTileViewController = TilesUIViewController()
+    var currencyPairsListViewController = CurrencyPairsListViewController()
     var exchangeViewController = ExchangeViewController()
     
     
@@ -18,14 +19,6 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = Theme.Color.background
-        
-        CurrencyFetcher.shared.fetchCurrency(completion: {
-            self.currencyTileViewController.data = CurrencyFetcher.shared.currency
-            self.currencyTileViewController.collectionView.reloadData()
-            //self.navigationBar.baseCurrencyButton.setTitle(CurrencyFetcher.shared.json.base, for: .normal)
-            
-        })
-        
         print("MainVC")
     }
     
@@ -40,33 +33,33 @@ class MainViewController: UIViewController {
         super.viewWillLayoutSubviews()
         buildInterface()
     }
-    
+
     private func buildInterface() {
-        
+
         headerView = HeaderView(frame: CGRect(
             x: 0,
             y: view.safeAreaInsets.top,
             width: view.bounds.width,
             height: view.bounds.height*0.08)
         )
-        
-        currencyTileViewController.view.frame = CGRect(
+
+        currencyPairsListViewController.view.frame = CGRect(
             x: 0,
             y: headerView.frame.maxY + view.bounds.height*0.01,
             width: view.bounds.width,
             height: view.bounds.height*0.17)
-        
+
         exchangeViewController.view.frame = CGRect(
             x: view.bounds.width*0.04,
-            y: currencyTileViewController.view.frame.maxY + view.bounds.height*0.025,
+            y: currencyPairsListViewController.view.frame.maxY + view.bounds.height*0.025,
             width: view.bounds.width*0.92,
-            height: view.bounds.height*0.25)
-        
-        
+            height: view.bounds.height*0.23)
+
+
         view.addSubview(headerView)
-        view.addSubview(currencyTileViewController.view)
+        view.addSubview(currencyPairsListViewController.view)
         view.addSubview(exchangeViewController.view)
-        
+
         //pairsTileView.addView.label.text = "Add pair"
     }
 

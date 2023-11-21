@@ -6,11 +6,16 @@
 //
 
 import UIKit
+import RxSwift
+import RxDataSources
 
-class TilesUIViewController: UIViewController {
+class CurrencyPairsListViewController: UIViewController {
     
-    let header = UIView()
-    let addView = AddTileUIView()
+    var viewModel: CurrencyPairsListViewModelProtocol!
+    let disposeBug = DisposeBag()
+    
+    var collectionView: UICollectionView!
+    //var data: [Currency] = []
     
     lazy var flowLayout: UICollectionViewFlowLayout = {
         let f = UICollectionViewFlowLayout()
@@ -18,58 +23,41 @@ class TilesUIViewController: UIViewController {
         return f
     }()
     
-    var collectionView: UICollectionView!
-    
-    var data: [Currency] = []
-   
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setup()
+        self.viewModel = CurrencyPairsListViewModel()
+        
+        setupUI()
+        
+//        viewModel = CurrencyListViewModel()
+//        viewModel.pairList.bind(
+//            to: collectionView.rx.items) { (row, pairList, item) -> Tile1x2CollectionViewCell in
+//                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: IndexPath(row: row, section: 0)) as! Tile1x2CollectionViewCell
+//                cell.configure(
+//
+//                    shortName: data[row].shortName,
+//                    logo: data[row].logo,
+//                    value: data[row].rate,
+//                    base: CurrencyFetcher.shared.baseCurrency.shortName,
+//                    baseLogo: CurrencyFetcher.shared.baseCurrency.logo
+//                )
+//                return cell
+//            }.disposed(by: disposeBug)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
 
     }
+
     
-    private func setup() {
+    // MARK: - Collection View Appearing
+    private func setupUI() {
         view.backgroundColor = Theme.Color.background
-        //setupHeader()
-        //setupAddView()
         setupCollectionView()
     }
-    
-    private func setupHeader() {
-        header.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(header)
-        
-        NSLayoutConstraint.activate([
-            header.topAnchor.constraint(equalTo: view.topAnchor),
-            header.leftAnchor.constraint(equalTo: view.leftAnchor),
-            header.rightAnchor.constraint(equalTo: view.rightAnchor),
-            header.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.125)
-        ])
-        
-        header.backgroundColor = Theme.Color.background
-        header.layer.borderWidth = 1
-        header.layer.borderColor = Theme.Color.border.cgColor
-        
-    }
-    
-    private func setupAddView() {
-        addView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(addView)
-        
-        NSLayoutConstraint.activate([
-            addView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            addView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            addView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.5),
-            addView.widthAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.5),
-        ])
-        
-    }
-    // MARK: - Collection View Appearing
+
     private func setupCollectionView(){
         
         collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: flowLayout)
@@ -104,17 +92,17 @@ class TilesUIViewController: UIViewController {
 
 // MARK:  - CollectionView Extensions
 
-extension TilesUIViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    
+extension CurrencyPairsListViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return data.count
+        return viewModel.pairs.count
     }
-    
 
-    
+
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.bounds.size.height*0.92, height: collectionView.bounds.height) //Size of Tale
     }
@@ -124,21 +112,19 @@ extension TilesUIViewController: UICollectionViewDelegate, UICollectionViewDataS
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! Tile1x2CollectionViewCell
-        
-        cell.configure(
-            shortName: data[indexPath.row].shortName,
-            logo: data[indexPath.row].logo,
-            value: data[indexPath.row].rate,
-            base: CurrencyFetcher.shared.baseCurrency.shortName,
-            baseLogo: CurrencyFetcher.shared.baseCurrency.logo
-        )
-
+        print ("cell")
+        cell.configureWithPair(
+            shortName: viewModel.pairs[indexPath.row].valueCurrencyShortName,
+            logo: viewModel.pairs[indexPath.row].baseLogo,
+            value: viewModel.pairs[indexPath.row].value,
+            base: viewModel.pairs[indexPath.row].baseCurrencyShortName,
+            baseLogo: viewModel.pairs[indexPath.row].baseLogo)
 
         return cell
     }
-    
-    
+
+
 }

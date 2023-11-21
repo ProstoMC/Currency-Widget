@@ -25,14 +25,15 @@ class Theme {
         
         static let border = UIColor(red: 98/255, green: 133/255, blue: 189/255, alpha: 1)
         
-        static let mainColor = UIColor(red: 117/255, green: 53/255, blue: 145/255, alpha: 1)
-        static let mainColorPale = UIColor(red: 117/255, green: 53/255, blue: 145/255, alpha: 0.15)
+        //static let mainColor = UIColor(red: 117/255, green: 53/255, blue: 145/255, alpha: 1)
+        static let mainColor = UIColor(red: 8/255, green: 97/255, blue: 135/255, alpha: 1)
+        static let mainColorPale = mainColor.withAlphaComponent(0.15)
         
     }
     
     enum Radius {
         static let mainWidget = UIScreen.main.bounds.height/50
-        static let minimal = UIScreen.main.bounds.height/150
+        static let minimal = UIScreen.main.bounds.height/120
     }
     
 }
