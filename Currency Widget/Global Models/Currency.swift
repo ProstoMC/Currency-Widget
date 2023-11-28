@@ -6,20 +6,39 @@
 //
 
 import Foundation
+import RxSwift
 
 struct Currency {
-    var rate: Double
+//    var rate: Double
+//    var previousRate: Double
+//    var flowRate: Double
+//    var flowPercent: Double
+    
+    var rateRx: BehaviorSubject<Double>
+    var previousRateRx: BehaviorSubject<Double>
+    var flowRateRx: BehaviorSubject<Double>
+    var flowPercentRx: BehaviorSubject<Double>
+   
     var base: String
     
     var name: String
     var shortName: String
     var logo: String
     
-    init(rate: Double, base: String, shortName: String) {
-        self.rate = rate
+    init(rate: Double, previousRate: Double, base: String, shortName: String) {
+//        self.rate = rate
         self.base = base
         self.shortName = shortName
+//        self.previousRate = previousRate
+//
+//        self.flowRate = rate - previousRate
+//        self.flowPercent = self.flowRate/previousRate * 100
         
+        self.rateRx = BehaviorSubject(value: rate)
+        self.previousRateRx = BehaviorSubject(value: previousRate)
+        self.flowRateRx = BehaviorSubject(value: rate - previousRate)
+        let flowPersent = (rate - previousRate)/previousRate*100
+        self.flowPercentRx = BehaviorSubject(value: flowPersent)
 
         //Set apperance
         switch shortName {

@@ -29,6 +29,9 @@ class Theme {
         static let mainColor = UIColor(red: 8/255, green: 97/255, blue: 135/255, alpha: 1)
         static let mainColorPale = mainColor.withAlphaComponent(0.15)
         
+        static let green = UIColor.systemGreen
+        static let red = UIColor.systemRed
+        
     }
     
     enum Radius {

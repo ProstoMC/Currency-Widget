@@ -8,6 +8,9 @@
 //  It is also Builder of project
 
 import UIKit
+import RxCocoa
+import RxSwift
+import RxDataSources
 
 class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     
@@ -19,8 +22,12 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         super.viewDidLoad()
         self.delegate = self
         
-        CurrencyFetcher.shared.fetchCurrency(completion: {
-            self.homeVC.currencyPairsListViewController.collectionView.reloadData()
+//        CurrencyFetcher.shared.fetchCurrency(completion: {
+//            self.homeVC.currencyPairsListViewController.collectionView.reloadData()
+//        })
+        
+        CurrencyFetcher.shared.fetchCurrencyDaily(completion: {
+            //self.homeVC.currencyPairsListViewController.collectionView.reloadData()
         })
         
         setupTabBarUI()

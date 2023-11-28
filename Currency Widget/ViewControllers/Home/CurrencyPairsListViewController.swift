@@ -7,48 +7,67 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
 import RxDataSources
+
+// MARK:  - Setup sections for RxDataSource
+
+struct SectionOfCustomData {
+  var header: String
+  var items: [Item]
+}
+extension SectionOfCustomData: SectionModelType {
+  typealias Item = CurrencyPair
+
+   init(original: SectionOfCustomData, items: [Item]) {
+    self = original
+    self.items = items
+  }
+}
+
+// MARK:  ViewController
 
 class CurrencyPairsListViewController: UIViewController {
     
-    var viewModel: CurrencyPairsListViewModelProtocol!
-    let disposeBug = DisposeBag()
-    
     var collectionView: UICollectionView!
-    //var data: [Currency] = []
-    
     lazy var flowLayout: UICollectionViewFlowLayout = {
         let f = UICollectionViewFlowLayout()
         f.scrollDirection = UICollectionView.ScrollDirection.horizontal
         return f
     }()
     
+    var viewModel: CurrencyPairsListViewModelProtocol!
+    let disposeBug = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.viewModel = CurrencyPairsListViewModel()
+        viewModel = CurrencyPairsListViewModel()
         
         setupUI()
-        
-//        viewModel = CurrencyListViewModel()
-//        viewModel.pairList.bind(
-//            to: collectionView.rx.items) { (row, pairList, item) -> Tile1x2CollectionViewCell in
-//                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: IndexPath(row: row, section: 0)) as! Tile1x2CollectionViewCell
-//                cell.configure(
-//
-//                    shortName: data[row].shortName,
-//                    logo: data[row].logo,
-//                    value: data[row].rate,
-//                    base: CurrencyFetcher.shared.baseCurrency.shortName,
-//                    baseLogo: CurrencyFetcher.shared.baseCurrency.logo
-//                )
-//                return cell
-//            }.disposed(by: disposeBug)
+        bindCollectionView()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-
+    private func bindCollectionView() {
+        let dataSource = RxCollectionViewSectionedReloadDataSource<SectionOfCustomData>(
+          configureCell: { dataSource, tableView, indexPath, item in
+              let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! Tile1x2CollectionViewCell
+              cell.rxConfigure(currecnyPair: item)
+              
+            print ("binding cell")
+            return cell
+        })
+        dataSource.canMoveItemAtIndexPath = { dataSource, indexPath in
+            return true
+            
+        }
+        
+        viewModel.pairList.bind(to: collectionView.rx.items(dataSource: dataSource)).disposed(by: disposeBug)
+        
+        collectionView.rx.modelSelected(CurrencyPair.self).subscribe(onNext: {_ in
+            print ("SELECTED")
+            self.viewModel.addCell()
+        }).disposed(by: disposeBug)
+        
     }
 
     
@@ -71,7 +90,7 @@ class CurrencyPairsListViewController: UIViewController {
         
         print("setupCollectionView")
         
-        collectionView.dataSource = self
+//        collectionView.dataSource = self
         collectionView.delegate = self
         
         collectionView.register(Tile1x2CollectionViewCell.self, forCellWithReuseIdentifier: "cell")
@@ -85,24 +104,12 @@ class CurrencyPairsListViewController: UIViewController {
             collectionView.leftAnchor.constraint(equalTo: view.leftAnchor),
             collectionView.rightAnchor.constraint(equalTo: view.rightAnchor)
         ])
-        
-        
     }
 }
 
-// MARK:  - CollectionView Extensions
+// MARK:  - CollectionView Appearing
 
-extension CurrencyPairsListViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.pairs.count
-    }
-
-
-
+extension CurrencyPairsListViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.bounds.size.height*0.92, height: collectionView.bounds.height) //Size of Tale
     }
@@ -112,19 +119,4 @@ extension CurrencyPairsListViewController: UICollectionViewDelegate, UICollectio
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! Tile1x2CollectionViewCell
-        print ("cell")
-        cell.configureWithPair(
-            shortName: viewModel.pairs[indexPath.row].valueCurrencyShortName,
-            logo: viewModel.pairs[indexPath.row].baseLogo,
-            value: viewModel.pairs[indexPath.row].value,
-            base: viewModel.pairs[indexPath.row].baseCurrencyShortName,
-            baseLogo: viewModel.pairs[indexPath.row].baseLogo)
-
-        return cell
-    }
-
-
 }

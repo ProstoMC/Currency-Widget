@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RxSwift
 
 class ExchangeViewController: UIViewController {
     
@@ -18,9 +19,21 @@ class ExchangeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         //view.backgroundColor = .yellow
+        setupRx()
         setupUI()
+        
+        
     }
 
+}
+// MARK:  SETUP RX
+extension ExchangeViewController {
+    private func setupRx() {
+//        fromView.textField.rx.text.orEmpty
+//            .throttle(.milliseconds(100), scheduler: MainScheduler.instance)
+//            .distinctUntilChanged()
+//            .
+    }
 }
 
 // MARK:  - SETUP UI

@@ -9,6 +9,20 @@
 /* Begin PBXBuildFile section */
 		A50A21282AEA83AA00BBF543 /* CurrencyFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50A21272AEA83AA00BBF543 /* CurrencyFetcher.swift */; };
 		A50A212A2AEA841000BBF543 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50A21292AEA841000BBF543 /* Currency.swift */; };
+		A50FDF4F2B14B01D00E1F54A /* Alamofire.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A50FDF472B14B01700E1F54A /* Alamofire.xcframework */; };
+		A50FDF502B14B01D00E1F54A /* Alamofire.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A50FDF472B14B01700E1F54A /* Alamofire.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A50FDF512B14B01D00E1F54A /* RxRelay.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A50FDF482B14B01800E1F54A /* RxRelay.xcframework */; };
+		A50FDF522B14B01D00E1F54A /* RxRelay.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A50FDF482B14B01800E1F54A /* RxRelay.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A50FDF532B14B01D00E1F54A /* RxSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A50FDF492B14B01900E1F54A /* RxSwift.xcframework */; };
+		A50FDF542B14B01D00E1F54A /* RxSwift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A50FDF492B14B01900E1F54A /* RxSwift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A50FDF552B14B01D00E1F54A /* RxCocoa.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A50FDF4A2B14B01A00E1F54A /* RxCocoa.xcframework */; };
+		A50FDF562B14B01D00E1F54A /* RxCocoa.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A50FDF4A2B14B01A00E1F54A /* RxCocoa.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A50FDF572B14B01E00E1F54A /* RxDataSources.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A50FDF4B2B14B01B00E1F54A /* RxDataSources.xcframework */; };
+		A50FDF582B14B01E00E1F54A /* RxDataSources.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A50FDF4B2B14B01B00E1F54A /* RxDataSources.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A50FDF592B14B01E00E1F54A /* RxBlocking.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A50FDF4C2B14B01B00E1F54A /* RxBlocking.xcframework */; };
+		A50FDF5A2B14B01E00E1F54A /* RxBlocking.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A50FDF4C2B14B01B00E1F54A /* RxBlocking.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A50FDF5B2B14B01E00E1F54A /* Differentiator.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A50FDF4D2B14B01C00E1F54A /* Differentiator.xcframework */; };
+		A50FDF5C2B14B01E00E1F54A /* Differentiator.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A50FDF4D2B14B01C00E1F54A /* Differentiator.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A521DE452B0CD99300BF1899 /* CurrencyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A521DE442B0CD99300BF1899 /* CurrencyList.swift */; };
 		A524BE1A2ACDCF0E00D3303E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A524BE192ACDCF0E00D3303E /* AppDelegate.swift */; };
 		A524BE1C2ACDCF0E00D3303E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A524BE1B2ACDCF0E00D3303E /* SceneDelegate.swift */; };
@@ -23,18 +37,6 @@
 		A54203952AF113A200A586D7 /* CurrencyPairsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54203942AF113A200A586D7 /* CurrencyPairsListViewModel.swift */; };
 		A547B2C92B03985B008747A2 /* ExchangeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A547B2C82B03985B008747A2 /* ExchangeViewController.swift */; };
 		A547B2D52B039BD7008747A2 /* EnterCurrencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A547B2D42B039BD7008747A2 /* EnterCurrencyView.swift */; };
-		A55126EB2B0CD06800215C62 /* RxSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A55126E62B0CD06200215C62 /* RxSwift.xcframework */; };
-		A55126EC2B0CD06800215C62 /* RxSwift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A55126E62B0CD06200215C62 /* RxSwift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		A55126ED2B0CD06800215C62 /* Differentiator.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A55126E72B0CD06300215C62 /* Differentiator.xcframework */; };
-		A55126EE2B0CD06800215C62 /* Differentiator.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A55126E72B0CD06300215C62 /* Differentiator.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		A55126EF2B0CD06800215C62 /* RxDataSources.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A55126E82B0CD06400215C62 /* RxDataSources.xcframework */; };
-		A55126F02B0CD06800215C62 /* RxDataSources.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A55126E82B0CD06400215C62 /* RxDataSources.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		A55126F12B0CD06800215C62 /* RxCocoa.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A55126E92B0CD06500215C62 /* RxCocoa.xcframework */; };
-		A55126F22B0CD06800215C62 /* RxCocoa.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A55126E92B0CD06500215C62 /* RxCocoa.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		A55126F32B0CD06800215C62 /* Alamofire.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A55126EA2B0CD06700215C62 /* Alamofire.xcframework */; };
-		A55126F42B0CD06800215C62 /* Alamofire.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A55126EA2B0CD06700215C62 /* Alamofire.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		A55126F62B0CD0D200215C62 /* RxRelay.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A55126F52B0CD0D100215C62 /* RxRelay.xcframework */; };
-		A55126F72B0CD0D300215C62 /* RxRelay.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A55126F52B0CD0D100215C62 /* RxRelay.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A589C77A2ACF0B95001ABF2C /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589C7792ACF0B95001ABF2C /* Theme.swift */; };
 		A589C77D2ACF0F56001ABF2C /* CurrencyPairsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589C77C2ACF0F56001ABF2C /* CurrencyPairsListViewController.swift */; };
 		A589C77F2ACF3926001ABF2C /* AddTileUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589C77E2ACF3926001ABF2C /* AddTileUIView.swift */; };
@@ -49,12 +51,13 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				A55126F42B0CD06800215C62 /* Alamofire.xcframework in Embed Frameworks */,
-				A55126EC2B0CD06800215C62 /* RxSwift.xcframework in Embed Frameworks */,
-				A55126F22B0CD06800215C62 /* RxCocoa.xcframework in Embed Frameworks */,
-				A55126F72B0CD0D300215C62 /* RxRelay.xcframework in Embed Frameworks */,
-				A55126EE2B0CD06800215C62 /* Differentiator.xcframework in Embed Frameworks */,
-				A55126F02B0CD06800215C62 /* RxDataSources.xcframework in Embed Frameworks */,
+				A50FDF542B14B01D00E1F54A /* RxSwift.xcframework in Embed Frameworks */,
+				A50FDF562B14B01D00E1F54A /* RxCocoa.xcframework in Embed Frameworks */,
+				A50FDF502B14B01D00E1F54A /* Alamofire.xcframework in Embed Frameworks */,
+				A50FDF582B14B01E00E1F54A /* RxDataSources.xcframework in Embed Frameworks */,
+				A50FDF5A2B14B01E00E1F54A /* RxBlocking.xcframework in Embed Frameworks */,
+				A50FDF522B14B01D00E1F54A /* RxRelay.xcframework in Embed Frameworks */,
+				A50FDF5C2B14B01E00E1F54A /* Differentiator.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -64,6 +67,13 @@
 /* Begin PBXFileReference section */
 		A50A21272AEA83AA00BBF543 /* CurrencyFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyFetcher.swift; sourceTree = "<group>"; };
 		A50A21292AEA841000BBF543 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
+		A50FDF472B14B01700E1F54A /* Alamofire.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Alamofire.xcframework; path = Carthage/Build/Alamofire.xcframework; sourceTree = "<group>"; };
+		A50FDF482B14B01800E1F54A /* RxRelay.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxRelay.xcframework; path = Carthage/Build/RxRelay.xcframework; sourceTree = "<group>"; };
+		A50FDF492B14B01900E1F54A /* RxSwift.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxSwift.xcframework; path = Carthage/Build/RxSwift.xcframework; sourceTree = "<group>"; };
+		A50FDF4A2B14B01A00E1F54A /* RxCocoa.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxCocoa.xcframework; path = Carthage/Build/RxCocoa.xcframework; sourceTree = "<group>"; };
+		A50FDF4B2B14B01B00E1F54A /* RxDataSources.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxDataSources.xcframework; path = Carthage/Build/RxDataSources.xcframework; sourceTree = "<group>"; };
+		A50FDF4C2B14B01B00E1F54A /* RxBlocking.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxBlocking.xcframework; path = Carthage/Build/RxBlocking.xcframework; sourceTree = "<group>"; };
+		A50FDF4D2B14B01C00E1F54A /* Differentiator.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Differentiator.xcframework; path = Carthage/Build/Differentiator.xcframework; sourceTree = "<group>"; };
 		A521DE442B0CD99300BF1899 /* CurrencyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyList.swift; sourceTree = "<group>"; };
 		A524BE162ACDCF0E00D3303E /* Currency Widget.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Currency Widget.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A524BE192ACDCF0E00D3303E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -80,12 +90,6 @@
 		A54203942AF113A200A586D7 /* CurrencyPairsListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPairsListViewModel.swift; sourceTree = "<group>"; };
 		A547B2C82B03985B008747A2 /* ExchangeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeViewController.swift; sourceTree = "<group>"; };
 		A547B2D42B039BD7008747A2 /* EnterCurrencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterCurrencyView.swift; sourceTree = "<group>"; };
-		A55126E62B0CD06200215C62 /* RxSwift.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxSwift.xcframework; path = Carthage/Build/RxSwift.xcframework; sourceTree = "<group>"; };
-		A55126E72B0CD06300215C62 /* Differentiator.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Differentiator.xcframework; path = Carthage/Build/Differentiator.xcframework; sourceTree = "<group>"; };
-		A55126E82B0CD06400215C62 /* RxDataSources.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxDataSources.xcframework; path = Carthage/Build/RxDataSources.xcframework; sourceTree = "<group>"; };
-		A55126E92B0CD06500215C62 /* RxCocoa.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxCocoa.xcframework; path = Carthage/Build/RxCocoa.xcframework; sourceTree = "<group>"; };
-		A55126EA2B0CD06700215C62 /* Alamofire.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Alamofire.xcframework; path = Carthage/Build/Alamofire.xcframework; sourceTree = "<group>"; };
-		A55126F52B0CD0D100215C62 /* RxRelay.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxRelay.xcframework; path = Carthage/Build/RxRelay.xcframework; sourceTree = "<group>"; };
 		A589C7792ACF0B95001ABF2C /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		A589C77C2ACF0F56001ABF2C /* CurrencyPairsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPairsListViewController.swift; sourceTree = "<group>"; };
 		A589C77E2ACF3926001ABF2C /* AddTileUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTileUIView.swift; sourceTree = "<group>"; };
@@ -98,31 +102,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A55126F32B0CD06800215C62 /* Alamofire.xcframework in Frameworks */,
-				A55126EB2B0CD06800215C62 /* RxSwift.xcframework in Frameworks */,
-				A55126F12B0CD06800215C62 /* RxCocoa.xcframework in Frameworks */,
-				A55126F62B0CD0D200215C62 /* RxRelay.xcframework in Frameworks */,
-				A55126ED2B0CD06800215C62 /* Differentiator.xcframework in Frameworks */,
-				A55126EF2B0CD06800215C62 /* RxDataSources.xcframework in Frameworks */,
+				A50FDF532B14B01D00E1F54A /* RxSwift.xcframework in Frameworks */,
+				A50FDF552B14B01D00E1F54A /* RxCocoa.xcframework in Frameworks */,
+				A50FDF4F2B14B01D00E1F54A /* Alamofire.xcframework in Frameworks */,
+				A50FDF572B14B01E00E1F54A /* RxDataSources.xcframework in Frameworks */,
+				A50FDF592B14B01E00E1F54A /* RxBlocking.xcframework in Frameworks */,
+				A50FDF512B14B01D00E1F54A /* RxRelay.xcframework in Frameworks */,
+				A50FDF5B2B14B01E00E1F54A /* Differentiator.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		96B66AFD1AD3FE400ABB0367 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				A55126F52B0CD0D100215C62 /* RxRelay.xcframework */,
-				A55126EA2B0CD06700215C62 /* Alamofire.xcframework */,
-				A55126E72B0CD06300215C62 /* Differentiator.xcframework */,
-				A55126E92B0CD06500215C62 /* RxCocoa.xcframework */,
-				A55126E82B0CD06400215C62 /* RxDataSources.xcframework */,
-				A55126E62B0CD06200215C62 /* RxSwift.xcframework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		A50A21262AEA838000BBF543 /* Workers */ = {
 			isa = PBXGroup;
 			children = (
@@ -136,7 +128,7 @@
 			children = (
 				A524BE182ACDCF0E00D3303E /* Currency Widget */,
 				A524BE172ACDCF0E00D3303E /* Products */,
-				96B66AFD1AD3FE400ABB0367 /* Frameworks */,
+				A5270F372B1235E0006DE662 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -163,6 +155,20 @@
 				A524BE222ACDCF0E00D3303E /* Currency_Widget.xcdatamodeld */,
 			);
 			path = "Currency Widget";
+			sourceTree = "<group>";
+		};
+		A5270F372B1235E0006DE662 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A50FDF472B14B01700E1F54A /* Alamofire.xcframework */,
+				A50FDF4D2B14B01C00E1F54A /* Differentiator.xcframework */,
+				A50FDF4C2B14B01B00E1F54A /* RxBlocking.xcframework */,
+				A50FDF4A2B14B01A00E1F54A /* RxCocoa.xcframework */,
+				A50FDF4B2B14B01B00E1F54A /* RxDataSources.xcframework */,
+				A50FDF482B14B01800E1F54A /* RxRelay.xcframework */,
+				A50FDF492B14B01900E1F54A /* RxSwift.xcframework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		A54203902AF110A300A586D7 /* Models */ = {
@@ -234,8 +240,6 @@
 			dependencies = (
 			);
 			name = "Currency Widget";
-			packageProductDependencies = (
-			);
 			productName = "Currency Widget";
 			productReference = A524BE162ACDCF0E00D3303E /* Currency Widget.app */;
 			productType = "com.apple.product-type.application";
@@ -376,7 +380,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -430,7 +434,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -443,9 +447,9 @@
 		A524BE2E2ACDCF1200D3303E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = V4APKTMRAM;
@@ -467,6 +471,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "slm.Currency-Widget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -479,9 +484,9 @@
 		A524BE2F2ACDCF1200D3303E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = V4APKTMRAM;
@@ -503,6 +508,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "slm.Currency-Widget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;

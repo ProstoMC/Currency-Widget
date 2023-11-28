@@ -6,6 +6,11 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
+import RxDataSources
+
+
 
 class Tile1x2CollectionViewCell: UICollectionViewCell {
     
@@ -24,6 +29,8 @@ class Tile1x2CollectionViewCell: UICollectionViewCell {
     let additionalLabel2 = UILabel()
     let graph = UIView()
     
+    let disposeBag = DisposeBag()
+    
     
     required override init(frame: CGRect) {
         super.init(frame: frame)
@@ -34,40 +41,59 @@ class Tile1x2CollectionViewCell: UICollectionViewCell {
         setupUI()
     }
     
-    // MARK:  - CONFIGURE
-    func configure(shortName: String, logo: String, value: Double, base: String, baseLogo: String){
-        logoLabel.text = logo
-        mainCurrencyNameLabel.text = shortName
-        baseCurrencyNameLabel.text = "to \(base)"
+    // MARK:  - CONFIGURE RX
+    
+    func rxConfigure(currecnyPair: CurrencyPair) { //I know, it is not good way, but too late components
+        logoLabel.text = currecnyPair.valueCurrencyLogo
+        mainCurrencyNameLabel.text = currecnyPair.valueCurrencyShortName
+        baseCurrencyNameLabel.text = "to \(currecnyPair.baseCurrencyShortName)"
         
-        //Set complex of value Text Label
-        let strValue = String(Double(round(100 * 1/value) / 100))
+        //Setup Value Label
+        currecnyPair.rxValue.subscribe(onNext: { value in
+            
+            let attributedText = NSMutableAttributedString(
+                string: String(format: "%.2f", value),
+                attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 100, weight: .medium)])
+            
+            attributedText.append(NSAttributedString(
+                string: currecnyPair.baseLogo,
+                attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 70, weight: .light), NSAttributedString.Key.foregroundColor: Theme.Color.secondText.withAlphaComponent(0.8)]))
+            
+            self.valueLabel.attributedText = attributedText
+            
+        }).disposed(by: disposeBag)
         
-        let attributedText = NSMutableAttributedString(
-            string: strValue,
-            attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 100, weight: .medium)])
+        //Setup Changes Label
+        currecnyPair.rxValueFlow.subscribe(onNext: { flow in
+            self.changesLabel.text = String(format: "%.2f", flow) + currecnyPair.baseLogo
+            
+            if flow >= 0 {
+                self.changesLabel.textColor = Theme.Color.green
+                self.changesArrowImageView.tintColor = Theme.Color.green
+                self.changesArrowImageView.image = UIImage(systemName: "arrow.up.right")
+            } else {
+                self.changesLabel.textColor = Theme.Color.red
+                self.changesArrowImageView.tintColor = Theme.Color.red
+                self.changesArrowImageView.image = UIImage(systemName: "arrow.down.right")
+            }
+            
+        }).disposed(by: disposeBag)
         
-        attributedText.append(NSAttributedString(
-            string: baseLogo,
-            attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 70, weight: .light), NSAttributedString.Key.foregroundColor: Theme.Color.secondText.withAlphaComponent(0.8)]))
-        valueLabel.attributedText = attributedText
-    }
-    func configureWithPair(shortName: String, logo: String, value: String, base: String, baseLogo: String){
-        logoLabel.text = logo
-        mainCurrencyNameLabel.text = shortName
-        baseCurrencyNameLabel.text = "to \(base)"
-        
-        let attributedText = NSMutableAttributedString(
-            string: value,
-            attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 100, weight: .medium)])
-        
-        attributedText.append(NSAttributedString(
-            string: baseLogo,
-            attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 70, weight: .light), NSAttributedString.Key.foregroundColor: Theme.Color.secondText.withAlphaComponent(0.8)]))
-        valueLabel.attributedText = attributedText
     }
     
+    
+    private func configureChangesLabel(rxValueFlow: BehaviorSubject<Double>, baseLogo: String){
+        
+
+    }
+    
+    
+    
+}
+
     // MARK:  - SETUP UI
+
+extension Tile1x2CollectionViewCell {
     private func setupUI() {
         standartLayoutSpace = contentView.bounds.height/20
         
@@ -217,7 +243,7 @@ class Tile1x2CollectionViewCell: UICollectionViewCell {
         changesLabel.font = changesLabel.font.withSize(100) //Just set max and resize after
         changesLabel.adjustsFontSizeToFitWidth = true
         changesLabel.textAlignment = .left
-        changesLabel.textColor = .systemGreen
+        changesLabel.textColor = Theme.Color.green
         //changesLabel.backgroundColor = .lightGray
         
 
