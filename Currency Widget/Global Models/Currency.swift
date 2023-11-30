@@ -26,13 +26,9 @@ struct Currency {
     var logo: String
     
     init(rate: Double, previousRate: Double, base: String, shortName: String) {
-//        self.rate = rate
+
         self.base = base
         self.shortName = shortName
-//        self.previousRate = previousRate
-//
-//        self.flowRate = rate - previousRate
-//        self.flowPercent = self.flowRate/previousRate * 100
         
         self.rateRx = BehaviorSubject(value: rate)
         self.previousRateRx = BehaviorSubject(value: previousRate)

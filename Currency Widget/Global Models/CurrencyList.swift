@@ -89,12 +89,9 @@ extension CurrencyList {
     
     func getCurrency(name: String) -> Currency {
         var currency = Currency(rate: 0, previousRate: 0, base: "ERR", shortName: "ERR")
-        print (name)
-        print("-------")
         for element in list {
             if element.shortName == name {
                 currency = element
-                print(element.shortName)
                 break
             }
         }

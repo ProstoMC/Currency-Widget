@@ -15,6 +15,7 @@ class EnterCurrencyView: UIView {
     let currencyButton = UIButton()
     let chevronView = UIView()
     
+    
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -48,8 +49,8 @@ extension EnterCurrencyView {
             textField.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             textField.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.65)
         ])
+
         
-        //textField.delegate = self
         textField.layer.cornerRadius = Theme.Radius.minimal
         textField.layer.borderWidth = 1
         textField.layer.borderColor = Theme.Color.separator.cgColor
@@ -57,6 +58,9 @@ extension EnterCurrencyView {
         textField.borderStyle = .roundedRect
         textField.keyboardType = .default
         textField.backgroundColor = Theme.Color.backgroundForWidgets
+        textField.textColor = Theme.Color.secondText.withAlphaComponent(0.7)
+        textField.keyboardType = .decimalPad
+        
     }
     
     private func setupHeader() {
@@ -103,9 +107,13 @@ extension EnterCurrencyView {
             currencyButton.heightAnchor.constraint(equalTo: textField.heightAnchor, multiplier: 0.8)
         ])
         
-        currencyButton.setTitle(" lari", for: .normal)
+        currencyButton.setTitle(" RUB", for: .normal)
         currencyButton.setTitleColor(Theme.Color.mainColor, for: .normal)
         currencyButton.contentHorizontalAlignment = .left
+        
+        //Changing font size *0.8 of that depended on Buttons size
+        currencyButton.titleLabel?.font = currencyButton.titleLabel?.font.withSize((currencyButton.titleLabel?.font.pointSize ?? 10)*0.8)
+        
 
     }
     

@@ -10,7 +10,7 @@ import RxCocoa
 import RxSwift
 import RxDataSources
 
-class MainViewController: UIViewController {
+class HomeViewController: UIViewController {
     
     
     var headerView = HeaderView()
@@ -22,7 +22,6 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = Theme.Color.background
-        print("MainVC")
     }
     
     
@@ -67,5 +66,16 @@ class MainViewController: UIViewController {
     }
 
 
+}
+
+// MARK:  - SETUP KEYBOARD
+extension HomeViewController: UITextFieldDelegate {
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let _ = touches.first {
+            view.endEditing(true)
+        }
+        super.touchesBegan(touches, with: event)
+    }
 }
 

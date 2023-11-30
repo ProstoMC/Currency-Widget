@@ -49,7 +49,6 @@ class CurrencyPairsListViewModel: CurrencyPairsListViewModelProtocol {
     func addCell() {
         pairs.append(CurrencyPair(valueCurrency: CurrencyList.shared.getCurrency(name: "EUR"),
                                           baseCurrency: CurrencyList.shared.getBaseCurrency(), position: 3))
-        print(pairs.count)
         section = SectionOfCustomData(header: "Header", items: pairs)
         pairList.accept([section])
     }

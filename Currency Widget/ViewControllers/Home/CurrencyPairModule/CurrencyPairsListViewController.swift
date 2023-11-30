@@ -53,7 +53,6 @@ class CurrencyPairsListViewController: UIViewController {
               let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! Tile1x2CollectionViewCell
               cell.rxConfigure(currecnyPair: item)
               
-            print ("binding cell")
             return cell
         })
         dataSource.canMoveItemAtIndexPath = { dataSource, indexPath in
@@ -88,9 +87,6 @@ class CurrencyPairsListViewController: UIViewController {
         
         collectionView.backgroundColor = Theme.Color.background
         
-        print("setupCollectionView")
-        
-//        collectionView.dataSource = self
         collectionView.delegate = self
         
         collectionView.register(Tile1x2CollectionViewCell.self, forCellWithReuseIdentifier: "cell")
