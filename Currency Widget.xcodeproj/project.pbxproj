@@ -33,7 +33,7 @@
 		A524BE292ACDCF1200D3303E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A524BE272ACDCF1200D3303E /* LaunchScreen.storyboard */; };
 		A5263DE92B05589100CAC378 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5263DE82B05589100CAC378 /* TabBarViewController.swift */; };
 		A538C7712B025ACE007F2145 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A538C7702B025ACD007F2145 /* HeaderView.swift */; };
-		A53AB4432B18D7F0002DB100 /* CurrencyListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53AB4422B18D7F0002DB100 /* CurrencyListViewController.swift */; };
+		A53AB4432B18D7F0002DB100 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53AB4422B18D7F0002DB100 /* ListViewController.swift */; };
 		A54203922AF110C400A586D7 /* CurrencyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54203912AF110C400A586D7 /* CurrencyPair.swift */; };
 		A54203952AF113A200A586D7 /* CurrencyPairsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54203942AF113A200A586D7 /* CurrencyPairsListViewModel.swift */; };
 		A547B2C92B03985B008747A2 /* ExchangeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A547B2C82B03985B008747A2 /* ExchangeViewController.swift */; };
@@ -41,6 +41,7 @@
 		A589C77A2ACF0B95001ABF2C /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589C7792ACF0B95001ABF2C /* Theme.swift */; };
 		A589C77D2ACF0F56001ABF2C /* CurrencyPairsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589C77C2ACF0F56001ABF2C /* CurrencyPairsListViewController.swift */; };
 		A589C77F2ACF3926001ABF2C /* AddTileUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589C77E2ACF3926001ABF2C /* AddTileUIView.swift */; };
+		A5B949472B1BE26200D2B6A6 /* CurrencyListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B949462B1BE26200D2B6A6 /* CurrencyListTableViewController.swift */; };
 		A5D6DA892AD97FFF00E3D4F4 /* Tile1x2CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D6DA882AD97FFF00E3D4F4 /* Tile1x2CollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
@@ -86,7 +87,7 @@
 		A524BE2A2ACDCF1200D3303E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A5263DE82B05589100CAC378 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		A538C7702B025ACD007F2145 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
-		A53AB4422B18D7F0002DB100 /* CurrencyListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyListViewController.swift; sourceTree = "<group>"; };
+		A53AB4422B18D7F0002DB100 /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		A54203912AF110C400A586D7 /* CurrencyPair.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPair.swift; sourceTree = "<group>"; };
 		A54203942AF113A200A586D7 /* CurrencyPairsListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPairsListViewModel.swift; sourceTree = "<group>"; };
 		A547B2C82B03985B008747A2 /* ExchangeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeViewController.swift; sourceTree = "<group>"; };
@@ -94,6 +95,7 @@
 		A589C7792ACF0B95001ABF2C /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		A589C77C2ACF0F56001ABF2C /* CurrencyPairsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPairsListViewController.swift; sourceTree = "<group>"; };
 		A589C77E2ACF3926001ABF2C /* AddTileUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTileUIView.swift; sourceTree = "<group>"; };
+		A5B949462B1BE26200D2B6A6 /* CurrencyListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyListTableViewController.swift; sourceTree = "<group>"; };
 		A5D6DA882AD97FFF00E3D4F4 /* Tile1x2CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tile1x2CollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -191,12 +193,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		A53AB4412B18D781002DB100 /* CurrencyList */ = {
+		A53AB4412B18D781002DB100 /* ListController */ = {
 			isa = PBXGroup;
 			children = (
-				A53AB4422B18D7F0002DB100 /* CurrencyListViewController.swift */,
+				A53AB4422B18D7F0002DB100 /* ListViewController.swift */,
+				A5B949462B1BE26200D2B6A6 /* CurrencyListTableViewController.swift */,
 			);
-			path = CurrencyList;
+			path = ListController;
 			sourceTree = "<group>";
 		};
 		A54203932AF1134D00A586D7 /* Views */ = {
@@ -210,7 +213,6 @@
 		A55126F82B0CD49F00215C62 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				A58AF4252B18D6B200458026 /* New Group */,
 				A524BE1D2ACDCF0E00D3303E /* HomeViewController.swift */,
 				A538C7702B025ACD007F2145 /* HeaderView.swift */,
 				A50FDF5F2B160E2200E1F54A /* CurrencyPairModule */,
@@ -225,16 +227,9 @@
 			children = (
 				A5263DE82B05589100CAC378 /* TabBarViewController.swift */,
 				A55126F82B0CD49F00215C62 /* Home */,
-				A53AB4412B18D781002DB100 /* CurrencyList */,
+				A53AB4412B18D781002DB100 /* ListController */,
 			);
 			path = ViewControllers;
-			sourceTree = "<group>";
-		};
-		A58AF4252B18D6B200458026 /* New Group */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "New Group";
 			sourceTree = "<group>";
 		};
 		A5D6DA852AD6CE7C00E3D4F4 /* Global Models */ = {
@@ -328,6 +323,7 @@
 				A5263DE92B05589100CAC378 /* TabBarViewController.swift in Sources */,
 				A589C77A2ACF0B95001ABF2C /* Theme.swift in Sources */,
 				A524BE242ACDCF0E00D3303E /* Currency_Widget.xcdatamodeld in Sources */,
+				A5B949472B1BE26200D2B6A6 /* CurrencyListTableViewController.swift in Sources */,
 				A538C7712B025ACE007F2145 /* HeaderView.swift in Sources */,
 				A547B2C92B03985B008747A2 /* ExchangeViewController.swift in Sources */,
 				A5D6DA892AD97FFF00E3D4F4 /* Tile1x2CollectionViewCell.swift in Sources */,
@@ -335,7 +331,7 @@
 				A50A21282AEA83AA00BBF543 /* CurrencyFetcher.swift in Sources */,
 				A547B2D52B039BD7008747A2 /* EnterCurrencyView.swift in Sources */,
 				A521DE452B0CD99300BF1899 /* CurrencyList.swift in Sources */,
-				A53AB4432B18D7F0002DB100 /* CurrencyListViewController.swift in Sources */,
+				A53AB4432B18D7F0002DB100 /* ListViewController.swift in Sources */,
 				A524BE1C2ACDCF0E00D3303E /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -36,7 +36,7 @@ class Theme {
     
     enum Radius {
         static let mainWidget = UIScreen.main.bounds.height/50
-        static let minimal = UIScreen.main.bounds.height/120
+        static let minimal = UIScreen.main.bounds.height/100
     }
     
 }

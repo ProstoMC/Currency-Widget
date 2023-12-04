@@ -23,14 +23,6 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = Theme.Color.background
     }
-    
-    
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-
-    }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         buildInterface()
@@ -68,14 +60,4 @@ class HomeViewController: UIViewController {
 
 }
 
-// MARK:  - SETUP KEYBOARD
-extension HomeViewController: UITextFieldDelegate {
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let _ = touches.first {
-            view.endEditing(true)
-        }
-        super.touchesBegan(touches, with: event)
-    }
-}
 

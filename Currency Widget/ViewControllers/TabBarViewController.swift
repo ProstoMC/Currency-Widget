@@ -15,7 +15,7 @@ import RxDataSources
 class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     
     let homeVC = HomeViewController()
-    let listVC = HomeViewController()
+    let listVC = ListViewController()
     let settingsVC = HomeViewController()
     	
     override public func viewDidLoad() {
