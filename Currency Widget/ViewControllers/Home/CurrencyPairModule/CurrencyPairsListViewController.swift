@@ -60,7 +60,7 @@ class CurrencyPairsListViewController: UIViewController {
             
         }
         
-        viewModel.pairList.bind(to: collectionView.rx.items(dataSource: dataSource)).disposed(by: disposeBug)
+        viewModel.rxPairList.bind(to: collectionView.rx.items(dataSource: dataSource)).disposed(by: disposeBug)
         
         collectionView.rx.modelSelected(CurrencyPair.self).subscribe(onNext: {_ in
             print ("SELECTED")

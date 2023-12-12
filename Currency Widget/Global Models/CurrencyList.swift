@@ -87,6 +87,10 @@ extension CurrencyList {
         return list.count
     }
     
+    func getFullList() -> [Currency] {
+        return list
+    }
+    
     func getCurrency(name: String) -> Currency {
         var currency = Currency(rate: 0, previousRate: 0, base: "ERR", shortName: "ERR")
         for element in list {
@@ -125,6 +129,7 @@ extension CurrencyList {
             if list[$0].shortName == name {
                 list[$0].rateRx.on(.next(value))
                 list[$0].previousRateRx.on(.next(previousValue))
+                list[$0].flowRateRx.on(.next(value-previousValue))
             }
         }
     }

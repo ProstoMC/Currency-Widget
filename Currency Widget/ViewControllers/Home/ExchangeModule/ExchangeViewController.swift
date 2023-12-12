@@ -88,6 +88,13 @@ extension ExchangeViewController {
             self.viewModel.switchFields()
         }).disposed(by: disposeBag)
         
+        //Setup Choose currency button
+        
+        fromView.currencyButton.rx.tap.asDriver().drive(onNext: {
+            let vc = ChooseCurrencyViewController()
+            self.present(vc, animated: true)
+        }).disposed(by: disposeBag)
+        
    
     }
 }

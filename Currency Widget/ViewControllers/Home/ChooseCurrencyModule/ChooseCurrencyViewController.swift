@@ -1,34 +1,18 @@
 //
-//  CurrencyListTableViewController.swift
+//  ChooseCurrencyViewController.swift
 //  Currency Widget
 //
-//  Created by macSlm on 03.12.2023.
+//  Created by macSlm on 12.12.2023.
 //
 
 import UIKit
 import RxSwift
+import RxCocoa
 import RxDataSources
 
-// MARK:  - Setup sections for RxDataSource
-
-struct SectionOfCurrencyList {
-  var header: String
-  var items: [Item]
-}
-
-extension SectionOfCurrencyList: SectionModelType {
-  typealias Item = Currency
-
-   init(original: SectionOfCurrencyList, items: [Item]) {
-    self = original
-    self.items = items
-  }
-}
-
-
-class CurrencyListTableViewController: UIViewController {
+class ChooseCurrencyViewController: UIViewController, UITableViewDelegate {
     
-    let viewModel: CurrencyListViewModelProtocol = CurrencyListViewModel()
+    let viewModel: ChooseCurrencyViewModelProtocol = ChooseCurrencyViewModel()
     let disposeBag = DisposeBag()
     
     var segmentedControl = CornersWhiteSegmentedControl(items: ["Fiat", "Crypto"])
@@ -36,60 +20,26 @@ class CurrencyListTableViewController: UIViewController {
     var tableView = UITableView()
     
     var baseHeightOfElements: Double!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        baseHeightOfElements = getBaseHeight()
-        
     }
     
-    override func viewDidLayoutSubviews() {
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
         setupUI()
-    }
-    
-}
-
-extension CurrencyListTableViewController: UITableViewDelegate {
-    private func setupUI(){
-        view.backgroundColor = Theme.Color.background
-        setupSegmentedControl()
-        setupTextField()
-        setupTableView()
         bindTableView()
-    }
-    
-    private func setupTableView(){
-        view.addSubview(tableView)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.delegate = self
-        tableView.register(CurrencyListTableViewCell.self, forCellReuseIdentifier: "cell")
-        
-        NSLayoutConstraint.activate([
-            tableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: view.bounds.width*0.04),
-            tableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -view.bounds.width*0.04),
-            tableView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: view.bounds.height*0.02),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-        
-        tableView.backgroundColor = Theme.Color.background
-        tableView.tableFooterView = UIView() // Dont show unused rows
-        tableView.separatorStyle = .none // Dont show borders between rows
-        tableView.keyboardDismissMode = .interactiveWithAccessory // Close the keyboard by scrolling
     }
     
     private func bindTableView() {
         let dataSource = RxTableViewSectionedReloadDataSource<SectionOfCurrencyList>(
             configureCell: { dataSource, tableView, indexPath, item in
-                let cell = self.tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CurrencyListTableViewCell
+                let cell = self.tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ChooseCurrencyTableViewCell
                 
-                cell.rxConfigure(currency: item)
+                cell.configure(shortName: item.shortName, fullname: item.name, logo: item.logo)
                 
                 return cell
             })
-        //        dataSource.canMoveItemAtIndexPath = { dataSource, indexPath in
-        //            return true
-        //
-        //        }
         
         viewModel.rxFiatList.bind(to: tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
         
@@ -99,7 +49,17 @@ extension CurrencyListTableViewController: UITableViewDelegate {
         //        }).disposed(by: disposeBug)
         //
     }
-    
+}
+
+// MARK:  - SETUP UI
+extension ChooseCurrencyViewController {
+    private func setupUI() {
+        view.backgroundColor = Theme.Color.background
+        baseHeightOfElements = getBaseHeight()
+        setupSegmentedControl()
+        setupTextField()
+        setupTableView()
+    }
     
     private func setupSegmentedControl() {
         view.addSubview(segmentedControl)
@@ -108,7 +68,7 @@ extension CurrencyListTableViewController: UITableViewDelegate {
         NSLayoutConstraint.activate([
             segmentedControl.leftAnchor.constraint(equalTo: view.leftAnchor, constant: view.bounds.width*0.04),
             segmentedControl.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -view.bounds.width*0.04),
-            segmentedControl.topAnchor.constraint(equalTo: view.topAnchor),
+            segmentedControl.topAnchor.constraint(equalTo: view.topAnchor, constant: baseHeightOfElements/2),
             segmentedControl.heightAnchor.constraint(equalToConstant: baseHeightOfElements)
         ])
         
@@ -135,9 +95,25 @@ extension CurrencyListTableViewController: UITableViewDelegate {
         textField.textColor = Theme.Color.secondText.withAlphaComponent(0.7)
         
     }
-}
-
-extension CurrencyListTableViewController {
+    
+    private func setupTableView(){
+        view.addSubview(tableView)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.delegate = self
+        tableView.register(ChooseCurrencyTableViewCell.self, forCellReuseIdentifier: "cell")
+        
+        NSLayoutConstraint.activate([
+            tableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: view.bounds.width*0.04),
+            tableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -view.bounds.width*0.04),
+            tableView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: view.bounds.height*0.02),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        
+        tableView.backgroundColor = Theme.Color.background
+        tableView.tableFooterView = UIView() // Dont show unused rows
+        tableView.separatorStyle = .none // Dont show borders between rows
+        tableView.keyboardDismissMode = .interactiveWithAccessory // Close the keyboard by scrolling
+    }
     
     private func getBaseHeight() -> Double {
         var height = UIScreen.main.bounds.height*0.058
@@ -148,13 +124,23 @@ extension CurrencyListTableViewController {
         } else {
             height = Double(Int(height)) // Deleting fraction
         }
-        print (height)
+        //print (height)
         return height
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return baseHeightOfElements*1.5
+        return CGFloat(Int(baseHeightOfElements*1.2))
     }
 }
 
 
+// MARK:  - SETUP KEYBOARD
+extension ChooseCurrencyViewController: UITextFieldDelegate {
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let _ = touches.first {
+            view.endEditing(true)
+        }
+        super.touchesBegan(touches, with: event)
+    }
+}

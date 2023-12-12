@@ -17,7 +17,7 @@ struct Currency {
     var rateRx: BehaviorSubject<Double>
     var previousRateRx: BehaviorSubject<Double>
     var flowRateRx: BehaviorSubject<Double>
-    var flowPercentRx: BehaviorSubject<Double>
+   // var flowPercentRx: BehaviorSubject<Double>
    
     var base: String
     
@@ -32,10 +32,8 @@ struct Currency {
         
         self.rateRx = BehaviorSubject(value: rate)
         self.previousRateRx = BehaviorSubject(value: previousRate)
-        self.flowRateRx = BehaviorSubject(value: rate - previousRate)
-        let flowPersent = (rate - previousRate)/previousRate*100
-        self.flowPercentRx = BehaviorSubject(value: flowPersent)
-
+        self.flowRateRx = BehaviorSubject(value: 0)
+ 
         //Set apperance
         switch shortName {
         case "RUB":

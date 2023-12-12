@@ -38,7 +38,7 @@ extension ListViewController {
             x: 0,
             y: headerView.frame.maxY + view.bounds.height*0.01,
             width: view.bounds.width,
-            height: view.bounds.height*0.92)
+            height: view.bounds.height*0.9)
         
         view.addSubview(headerView)
         view.addSubview(tableViewController.view)

@@ -26,7 +26,7 @@ class Theme {
         static let border = UIColor(red: 98/255, green: 133/255, blue: 189/255, alpha: 1)
         
         //static let mainColor = UIColor(red: 117/255, green: 53/255, blue: 145/255, alpha: 1)
-        static let mainColor = UIColor(red: 8/255, green: 97/255, blue: 135/255, alpha: 1)
+        static let mainColor = UIColor(red: 37/255, green: 83/255, blue: 88/255, alpha: 1)
         static let mainColorPale = mainColor.withAlphaComponent(0.15)
         
         static let green = UIColor.systemGreen

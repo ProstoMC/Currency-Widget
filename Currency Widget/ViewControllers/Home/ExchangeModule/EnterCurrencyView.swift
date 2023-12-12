@@ -60,6 +60,7 @@ extension EnterCurrencyView {
         textField.backgroundColor = Theme.Color.backgroundForWidgets
         textField.textColor = Theme.Color.secondText.withAlphaComponent(0.7)
         textField.keyboardType = .decimalPad
+        textField.clearButtonMode = .never
         
     }
     
