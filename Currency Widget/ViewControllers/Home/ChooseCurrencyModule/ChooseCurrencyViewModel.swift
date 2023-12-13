@@ -12,13 +12,16 @@ import RxDataSources
 import Differentiator
 
 protocol ChooseCurrencyViewModelProtocol {
-    var rxFiatList: BehaviorRelay<[SectionOfCurrencyList]> { get }
-    //var rxCoinList: BehaviorRelay<[SectionOfCurrencyList]> { get }
+    var type: String { set get }
     
-    //var pairs: [CurrencyPair] { get }
+    var rxFiatList: BehaviorRelay<[SectionOfCurrencyList]> { get }
+    
+    func setCurrency(shortName: String)
 }
 
 class ChooseCurrencyViewModel: ChooseCurrencyViewModelProtocol {
+    
+    var type = "Error" //Set default. values: from, to
     
     var rxFiatList: BehaviorRelay<[SectionOfCurrencyList]>
     //var rxCoinList: BehaviorRelay<[SectionOfCurrencyList]>
@@ -35,6 +38,16 @@ class ChooseCurrencyViewModel: ChooseCurrencyViewModelProtocol {
         fiatList = getCurrencyList()
         section = SectionOfCurrencyList(header: "Header", items: fiatList)
         rxFiatList.accept([section])
+    }
+    
+    func setCurrency(shortName: String) {
+        if type == "from" {
+            CoreWorker.shared.setFromCurrencyExchange(name: shortName)
+        }
+        if type == "to" {
+            CoreWorker.shared.setToCurrencyExchange(name: shortName)
+        }
+        
     }
     
 }

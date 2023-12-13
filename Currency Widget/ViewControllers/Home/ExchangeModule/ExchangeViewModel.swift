@@ -34,18 +34,32 @@ class ExchangeViewModel: ExchangeViewModelProtocol  {
     //let formatter = NumberFormatter().numberStyle = .decimal
     
     init() {
-        // Chust for update after fetching currency rates
+        // Just for update after fetching currency rates
         CurrencyList.shared.getCurrency(name: "USD").rateRx.subscribe(onNext: { rate in
             self.makeExchangeNormal()
             print(rate)
+        }).disposed(by: disposeBag)
+        
+        subscrubeToCoreWorker()
+    }
+    
+    private func subscrubeToCoreWorker() {
+        //Update exchanging and fields after new currency on the fields
+        CoreWorker.shared.rxExchangeFromCurrency.subscribe({ name in
+            self.fromCurrency.on(name)
+            self.makeExchangeNormal()
+        }).disposed(by: disposeBag)
+        CoreWorker.shared.rxExchangeToCurrency.subscribe({ name in
+            self.toCurrency.on(name)
+            self.makeExchangeNormal()
         }).disposed(by: disposeBag)
     }
     
     func makeExchangeNormal() {
         do {
             let fromValue = convertStringToDouble(text: try fromText.value())
-            let fromRate = try CurrencyList.shared.getCurrency(name: try fromCurrency.value()).rateRx.value()
-            let toRate = try CurrencyList.shared.getCurrency(name: try toCurrency.value()).rateRx.value()
+            let fromRate = try CurrencyList.shared.getCurrency(name: try CoreWorker.shared.rxExchangeFromCurrency.value()).rateRx.value()
+            let toRate = try CurrencyList.shared.getCurrency(name: try CoreWorker.shared.rxExchangeToCurrency.value()).rateRx.value()
             let rate = toRate/fromRate
             let value = fromValue/rate
             let valueText = String(Double(round(100*value)/100))
@@ -58,8 +72,8 @@ class ExchangeViewModel: ExchangeViewModelProtocol  {
     func makeExchangeReverse() {
         do {
             let fromValue = convertStringToDouble(text: try toText.value())
-            let fromRate = try CurrencyList.shared.getCurrency(name: try fromCurrency.value()).rateRx.value()
-            let toRate = try CurrencyList.shared.getCurrency(name: try toCurrency.value()).rateRx.value()
+            let fromRate = try CurrencyList.shared.getCurrency(name: try CoreWorker.shared.rxExchangeToCurrency.value()).rateRx.value()
+            let toRate = try CurrencyList.shared.getCurrency(name: try CoreWorker.shared.rxExchangeFromCurrency.value()).rateRx.value()
             let rate = fromRate/toRate
             let value = fromValue/rate
             let valueText = String(Double(round(100*value)/100))
@@ -75,18 +89,8 @@ class ExchangeViewModel: ExchangeViewModelProtocol  {
     }
     
     func switchFields() {
-        print("switchFields")
-        do {
-            let newFromName = try toCurrency.value()
-            toCurrency.onNext(try fromCurrency.value())
-            fromCurrency.onNext(newFromName)
-            makeExchangeNormal()
-        }catch {
-            return
-        }
+        CoreWorker.shared.switchExchangeFields()
     }
-    
-    
     
 }
 

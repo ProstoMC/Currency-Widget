@@ -60,4 +60,13 @@ class HomeViewController: UIViewController {
 
 }
 
-
+// MARK:  - SETUP KEYBOARD
+extension HomeViewController: UITextFieldDelegate {
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let _ = touches.first {
+            view.endEditing(true)
+        }
+        super.touchesBegan(touches, with: event)
+    }
+}

@@ -12,45 +12,42 @@ import RxDataSources
 import Differentiator
 
 protocol CurrencyPairsListViewModelProtocol {
-    var pairList: BehaviorRelay<[SectionOfCustomData]> { get }
+    var rxPairList: BehaviorRelay<[SectionOfCustomData]> { get }
     
     func addCell()
     //var pairs: [CurrencyPair] { get }
 }
 
 class CurrencyPairsListViewModel: CurrencyPairsListViewModelProtocol {
-    var pairList: BehaviorRelay<[SectionOfCustomData]>
-    var pairs: [CurrencyPair] = []
+    var rxPairList: BehaviorRelay<[SectionOfCustomData]>
     var section: SectionOfCustomData!
+    let bag = DisposeBag()
     
     init() {
+        //Start with nulls
+        section = SectionOfCustomData(header: "Header", items: [])
+        rxPairList = BehaviorRelay(value: [self.section])
         
-        pairs = [
-            CurrencyPair(
-                valueCurrency: CurrencyList.shared.getCurrency(name: "GEL"),
-                baseCurrency: CurrencyList.shared.getBaseCurrency(),
-                position: 0),
-            CurrencyPair(
-                valueCurrency: CurrencyList.shared.getCurrency(name: "USD"),
-                baseCurrency: CurrencyList.shared.getBaseCurrency(),
-                position: 1),
-            CurrencyPair(
-                valueCurrency: CurrencyList.shared.getCurrency(name: "USD"),
-                baseCurrency: CurrencyList.shared.getCurrency(name: "GEL"),
-                position: 2)
-        ]
-        
-        section = SectionOfCustomData(header: "Header", items: pairs)
-        
-        pairList = BehaviorRelay(value: [section])
-     
+        subscribeToCoreWorker()
     }
     
+    func subscribeToCoreWorker(){
+        
+        //Update view after pairsList was updated
+        CoreWorker.shared.rxFavouritPairsCount.subscribe({ count in  //I dont need count
+            
+            self.section = SectionOfCustomData(header: "Header", items: CoreWorker.shared.favoritePairList)
+            self.rxPairList.accept([self.section])
+        }).disposed(by: bag)
+    }
+    
+// MARK: - Funcions
+
     func addCell() {
-        pairs.append(CurrencyPair(valueCurrency: CurrencyList.shared.getCurrency(name: "EUR"),
-                                          baseCurrency: CurrencyList.shared.getBaseCurrency(), position: 3))
-        section = SectionOfCustomData(header: "Header", items: pairs)
-        pairList.accept([section])
+        CoreWorker.shared.addPairToFavoriteList(pair: CurrencyPair(
+                valueCurrency: CurrencyList.shared.getCurrency(name: "EUR"),
+                baseCurrency: CurrencyList.shared.getBaseCurrency(),
+                position: 3))
     }
     
     

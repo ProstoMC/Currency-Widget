@@ -92,9 +92,15 @@ extension ExchangeViewController {
         
         fromView.currencyButton.rx.tap.asDriver().drive(onNext: {
             let vc = ChooseCurrencyViewController()
+            vc.viewModel.type = "from"
             self.present(vc, animated: true)
         }).disposed(by: disposeBag)
         
+        toView.currencyButton.rx.tap.asDriver().drive(onNext: {
+            let vc = ChooseCurrencyViewController()
+            vc.viewModel.type = "to"
+            self.present(vc, animated: true)
+        }).disposed(by: disposeBag)
    
     }
 }

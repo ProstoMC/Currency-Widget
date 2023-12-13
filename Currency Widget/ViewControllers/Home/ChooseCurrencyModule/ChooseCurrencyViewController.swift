@@ -12,7 +12,9 @@ import RxDataSources
 
 class ChooseCurrencyViewController: UIViewController, UITableViewDelegate {
     
-    let viewModel: ChooseCurrencyViewModelProtocol = ChooseCurrencyViewModel()
+    
+    //We have to provide type of VM from mother VC
+    var viewModel: ChooseCurrencyViewModelProtocol = ChooseCurrencyViewModel()
     let disposeBag = DisposeBag()
     
     var segmentedControl = CornersWhiteSegmentedControl(items: ["Fiat", "Crypto"])
@@ -43,11 +45,12 @@ class ChooseCurrencyViewController: UIViewController, UITableViewDelegate {
         
         viewModel.rxFiatList.bind(to: tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
         
-        //        collectionView.rx.modelSelected(CurrencyPair.self).subscribe(onNext: {_ in
-        //            print ("SELECTED")
-        //            self.viewModel.addCell()
-        //        }).disposed(by: disposeBug)
-        //
+        tableView.rx.modelSelected(Currency.self).subscribe(onNext: { item in
+            print ("SELECTED")
+            self.viewModel.setCurrency(shortName: item.shortName)
+            self.dismiss(animated: true)
+        }).disposed(by: disposeBag)
+        
     }
 }
 
