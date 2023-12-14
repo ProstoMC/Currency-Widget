@@ -18,6 +18,7 @@ class Tile1x2CollectionViewCell: UICollectionViewCell {
     
     let logoView = UIView()
     let logoLabel = UILabel()
+    let gradientLayer = CAGradientLayer()
     
     let mainCurrencyNameLabel = UILabel()
     let baseCurrencyNameLabel = UILabel()
@@ -47,6 +48,9 @@ class Tile1x2CollectionViewCell: UICollectionViewCell {
         logoLabel.text = currecnyPair.valueCurrencyLogo
         mainCurrencyNameLabel.text = currecnyPair.valueCurrencyShortName
         baseCurrencyNameLabel.text = "to \(currecnyPair.baseCurrencyShortName)"
+        
+        //Color of logo
+        gradientLayer.colors = Theme.colorsForGradient[currecnyPair.colorIndex]
         
         //Setup Value Label
         currecnyPair.rxValue.subscribe(onNext: { value in
@@ -138,11 +142,11 @@ extension Tile1x2CollectionViewCell {
         self.logoView.layer.masksToBounds = true
         self.logoView.layer.cornerRadius = logoView.bounds.height/2
         
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.startPoint = CGPoint(x: 0, y: 0)
-        gradientLayer.endPoint = CGPoint(x: 1, y: 1 )
+        
+        gradientLayer.startPoint = CGPoint(x: 1, y: 0)
+        gradientLayer.endPoint = CGPoint(x: 0, y: 1)
         gradientLayer.frame = logoView.bounds
-        gradientLayer.colors = [Theme.Color.mainColor.cgColor, Theme.Color.mainColor.withAlphaComponent(0.8).cgColor]
+
         logoView.layer.insertSublayer(gradientLayer, at: 0)
         
     }

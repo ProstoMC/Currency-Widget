@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ListViewController: UIViewController {
+class SecondViewController: UIViewController {
     
     var headerView: HeaderView!
     var tableViewController = CurrencyListTableViewController()
@@ -24,7 +24,7 @@ class ListViewController: UIViewController {
 
 }
 // MARK:  - SETUP UI
-extension ListViewController {
+extension SecondViewController {
     private func setupUI() {
         view.backgroundColor = Theme.Color.background
         
@@ -46,7 +46,7 @@ extension ListViewController {
 }
 
 // MARK:  - SETUP KEYBOARD
-extension ListViewController: UITextFieldDelegate {
+extension SecondViewController: UITextFieldDelegate {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let _ = touches.first {

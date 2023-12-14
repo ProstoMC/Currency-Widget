@@ -38,7 +38,7 @@ class CurrencyFetcher {
                 for currency in dailyJSON.Valute {
                     
                     let charCode = currency.value.CharCode
-                    let value = currency.value.Value
+                    let value = currency.value.Value / currency.value.Nominal
                     let previousValue = currency.value.Previous
                     //let name = currency.value.Name  //It is russian name
                     

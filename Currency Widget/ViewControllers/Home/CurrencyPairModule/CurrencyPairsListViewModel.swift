@@ -15,7 +15,8 @@ protocol CurrencyPairsListViewModelProtocol {
     var rxPairList: BehaviorRelay<[SectionOfCustomData]> { get }
     
     func addCell()
-    //var pairs: [CurrencyPair] { get }
+    func selectTail(pair: CurrencyPair)
+    
 }
 
 class CurrencyPairsListViewModel: CurrencyPairsListViewModelProtocol {
@@ -48,6 +49,11 @@ class CurrencyPairsListViewModel: CurrencyPairsListViewModelProtocol {
                 valueCurrency: CurrencyList.shared.getCurrency(name: "EUR"),
                 baseCurrency: CurrencyList.shared.getBaseCurrency(),
                 position: 3))
+    }
+    
+    func selectTail(pair: CurrencyPair) {
+        CoreWorker.shared.setFromCurrencyExchange(name: pair.valueCurrencyShortName)
+        CoreWorker.shared.setToCurrencyExchange(name: pair.baseCurrencyShortName)
     }
     
     

@@ -13,9 +13,10 @@ import Differentiator
 
 protocol CurrencyListViewModelProtocol {
     var rxFiatList: BehaviorRelay<[SectionOfCurrencyList]> { get }
+    
     //var rxCoinList: BehaviorRelay<[SectionOfCurrencyList]> { get }
     
-    //var pairs: [CurrencyPair] { get }
+    func selectTail(currency: Currency)
 }
 
 class CurrencyListViewModel: CurrencyListViewModelProtocol {
@@ -35,6 +36,11 @@ class CurrencyListViewModel: CurrencyListViewModelProtocol {
         fiatList = getCurrencyList()
         section = SectionOfCurrencyList(header: "Header", items: fiatList)
         rxFiatList.accept([section])
+    }
+    
+    func selectTail(currency: Currency) {
+        CoreWorker.shared.setFromCurrencyExchange(name: currency.shortName)
+        CoreWorker.shared.setToCurrencyExchange(name: currency.base)
     }
     
 }

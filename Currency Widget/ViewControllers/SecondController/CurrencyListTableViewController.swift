@@ -82,7 +82,7 @@ extension CurrencyListTableViewController: UITableViewDelegate {
             configureCell: { dataSource, tableView, indexPath, item in
                 let cell = self.tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CurrencyListTableViewCell
                 
-                cell.rxConfigure(currency: item)
+                cell.rxConfigure(currency: item, baseLogo: CurrencyList.shared.getBaseCurrency().logo)
                 
                 return cell
             })
@@ -93,11 +93,11 @@ extension CurrencyListTableViewController: UITableViewDelegate {
         
         viewModel.rxFiatList.bind(to: tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
         
-        //        collectionView.rx.modelSelected(CurrencyPair.self).subscribe(onNext: {_ in
-        //            print ("SELECTED")
-        //            self.viewModel.addCell()
-        //        }).disposed(by: disposeBug)
-        //
+                tableView.rx.modelSelected(Currency.self).subscribe(onNext: { item in
+                    print ("SELECTED")
+                    self.viewModel.selectTail(currency: item)
+                }).disposed(by: disposeBag)
+        
     }
     
     

@@ -14,26 +14,38 @@ import RxDataSources
 
 class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     
+    let bag = DisposeBag()
+    
     let homeVC = HomeViewController()
-    let listVC = ListViewController()
+    let listVC = SecondViewController()
     let settingsVC = HomeViewController()
-    	
+    
     override public func viewDidLoad() {
         super.viewDidLoad()
         self.delegate = self
-        
-//        CurrencyFetcher.shared.fetchCurrency(completion: {
-//            self.homeVC.currencyPairsListViewController.collectionView.reloadData()
-//        })
-        
-        CurrencyFetcher.shared.fetchCurrencyDaily(completion: {
-            //self.homeVC.currencyPairsListViewController.collectionView.reloadData()
-        })
+
         
         setupTabBarUI()
         setupViewControllers()
+        setupRx()
     }
+    
+    private func setupRx() {
+        //Return to first VC
+        CoreWorker.shared.rxExchangeFromCurrency.subscribe(onNext: {_ in
+            self.selectedIndex = 0
+        }).disposed(by: bag)
+        CoreWorker.shared.rxExchangeToCurrency.subscribe(onNext: {_ in
+            self.selectedIndex = 0
+        }).disposed(by: bag)
+    }
+    
+}
 
+// MARK:  - SETUP UI
+extension TabBarViewController {
+    
+   
     func setupViewControllers() {
         configureHomeVC()
         configureListVC()

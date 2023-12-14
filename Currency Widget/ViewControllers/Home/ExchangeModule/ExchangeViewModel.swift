@@ -18,12 +18,13 @@ protocol ExchangeViewModelProtocol {
     
     func makeExchangeNormal()
     func makeExchangeReverse()
-    func setFields(fromName: String, toName: String)
     func switchFields()
     
 }
 
 class ExchangeViewModel: ExchangeViewModelProtocol  {
+
+    
     
     var fromText = RxSwift.BehaviorSubject<String>(value: "1")
     var toText = RxSwift.BehaviorSubject<String>(value: "1")
@@ -58,8 +59,8 @@ class ExchangeViewModel: ExchangeViewModelProtocol  {
     func makeExchangeNormal() {
         do {
             let fromValue = convertStringToDouble(text: try fromText.value())
-            let fromRate = try CurrencyList.shared.getCurrency(name: try CoreWorker.shared.rxExchangeFromCurrency.value()).rateRx.value()
-            let toRate = try CurrencyList.shared.getCurrency(name: try CoreWorker.shared.rxExchangeToCurrency.value()).rateRx.value()
+            let fromRate = try CurrencyList.shared.getCurrency(name: try fromCurrency.value()).rateRx.value()
+            let toRate = try CurrencyList.shared.getCurrency(name: try toCurrency.value()).rateRx.value()
             let rate = toRate/fromRate
             let value = fromValue/rate
             let valueText = String(Double(round(100*value)/100))
@@ -72,8 +73,8 @@ class ExchangeViewModel: ExchangeViewModelProtocol  {
     func makeExchangeReverse() {
         do {
             let fromValue = convertStringToDouble(text: try toText.value())
-            let fromRate = try CurrencyList.shared.getCurrency(name: try CoreWorker.shared.rxExchangeToCurrency.value()).rateRx.value()
-            let toRate = try CurrencyList.shared.getCurrency(name: try CoreWorker.shared.rxExchangeFromCurrency.value()).rateRx.value()
+            let fromRate = try CurrencyList.shared.getCurrency(name: try fromCurrency.value()).rateRx.value()
+            let toRate = try CurrencyList.shared.getCurrency(name: try toCurrency.value()).rateRx.value()
             let rate = fromRate/toRate
             let value = fromValue/rate
             let valueText = String(Double(round(100*value)/100))
@@ -81,11 +82,6 @@ class ExchangeViewModel: ExchangeViewModelProtocol  {
         } catch {
             return
         }
-    }
-    
-    func setFields(fromName: String, toName: String) {
-        print("setFields")
-        
     }
     
     func switchFields() {

@@ -17,6 +17,7 @@ struct CurrencyPair {
     var valueCurrencyLogo: String
     var baseCurrencyShortName: String
     var baseLogo: String
+    var colorIndex: Int
     
     var rxValue = BehaviorSubject<Double>(value: 0)
     var rxValueFlow = BehaviorSubject<Double>(value: 0)
@@ -28,6 +29,7 @@ struct CurrencyPair {
         self.valueCurrencyLogo = valueCurrency.logo
         self.baseCurrencyShortName = baseCurrency.shortName
         self.baseLogo = baseCurrency.logo
+        self.colorIndex = valueCurrency.colorIndex
         
         // MARK:  - RX Components
         

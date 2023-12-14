@@ -24,6 +24,7 @@ struct Currency {
     var name: String
     var shortName: String
     var logo: String
+    var colorIndex: Int
     
     init(rate: Double, previousRate: Double, base: String, shortName: String) {
 
@@ -33,6 +34,7 @@ struct Currency {
         self.rateRx = BehaviorSubject(value: rate)
         self.previousRateRx = BehaviorSubject(value: previousRate)
         self.flowRateRx = BehaviorSubject(value: 0)
+        self.colorIndex = 0
  
         //Set apperance
         switch shortName {

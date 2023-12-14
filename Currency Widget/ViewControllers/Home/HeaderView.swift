@@ -45,7 +45,8 @@ extension HeaderView {
         logoImageView.clipsToBounds = true
         logoImageView.layer.cornerRadius = logoImageView.bounds.height/2
         logoImageView.backgroundColor = Theme.Color.mainColorPale
-        logoImageView.image = UIImage(named: "iTunesArtwork-1024")
+        logoImageView.image = UIImage(named: "icon")
+        logoImageView.contentMode = .scaleAspectFill
         
     }
 

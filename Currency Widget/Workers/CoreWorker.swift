@@ -19,7 +19,9 @@ class CoreWorker {
     
     init() {
         getFavoritePairs()
-        
+        CurrencyFetcher.shared.fetchCurrencyDaily(completion: {
+            
+        })
     }
     
 }
@@ -39,9 +41,13 @@ extension CoreWorker {
                 baseCurrency: CurrencyList.shared.getBaseCurrency(),
                 position: 1),
             CurrencyPair(
+                valueCurrency: CurrencyList.shared.getCurrency(name: "AMD"),
+                baseCurrency: CurrencyList.shared.getBaseCurrency(),
+                position: 2),
+            CurrencyPair(
                 valueCurrency: CurrencyList.shared.getCurrency(name: "USD"),
                 baseCurrency: CurrencyList.shared.getCurrency(name: "GEL"),
-                position: 2)
+                position: 3)
         ]
         rxFavouritPairsCount.onNext(favoritePairList.count)
     }

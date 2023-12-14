@@ -16,6 +16,7 @@ class CurrencyListTableViewCell: UITableViewCell {
     let backgroundWhiteView = UIView()
     let logoView = UIView()
     let logoLabel = UILabel()
+    let gradientLayer = CAGradientLayer()
     
     let nameLabel = UILabel()
     
@@ -52,25 +53,28 @@ class CurrencyListTableViewCell: UITableViewCell {
     }
     
     // MARK:  - RX CONFIGURE
-    func rxConfigure(currency: Currency) { //I know, it is not good way, but too late components
+    func rxConfigure(currency: Currency, baseLogo: String) { //I know, it is not good way, but too late components
         logoLabel.text = currency.logo
+       
+        //Color logo View
+        gradientLayer.colors = Theme.colorsForGradient[currency.colorIndex]
         
         let name = "\(currency.shortName) - \(currency.name)"
         nameLabel.text = name
         
-        let baseCurrency = CurrencyList.shared.getBaseCurrency()
+        
         
         //Setup Value Label
         currency.rateRx.subscribe(onNext: { value in
         
             let rate = String(format: "%.2f", value)
-            self.valueLabel.text = "\(baseCurrency.logo) \(rate)"
+            self.valueLabel.text = "\(baseLogo) \(rate)"
             
         }).disposed(by: disposeBag)
         
         //Setup Changes Label
         currency.flowRateRx.subscribe(onNext: { flow in
-            self.changesLabel.text = baseCurrency.logo + " " + String(format: "%.2f", flow) + " "
+            self.changesLabel.text = baseLogo + " " + String(format: "%.2f", flow) + " "
             
             if flow >= 0 {
                 self.changesStackView.backgroundColor = Theme.Color.green
@@ -150,11 +154,11 @@ extension CurrencyListTableViewCell {
         self.logoView.layer.masksToBounds = true
         self.logoView.layer.cornerRadius = logoView.bounds.height/2
         
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.startPoint = CGPoint(x: 0, y: 0)
-        gradientLayer.endPoint = CGPoint(x: 1, y: 1 )
+        
+        gradientLayer.startPoint = CGPoint(x: 1, y: 0)
+        gradientLayer.endPoint = CGPoint(x: 0, y: 1)
         gradientLayer.frame = logoView.bounds
-        gradientLayer.colors = [Theme.Color.mainColor.cgColor, Theme.Color.mainColor.withAlphaComponent(0.8).cgColor]
+
         logoView.layer.insertSublayer(gradientLayer, at: 0)
         
     }

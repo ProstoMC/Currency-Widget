@@ -12,6 +12,7 @@ class ChooseCurrencyTableViewCell: UITableViewCell {
     let backgroundWhiteView = UIView()
     let logoView = UIView()
     let logoLabel = UILabel()
+    let gradientLayer = CAGradientLayer()
     
     let nameLabel = UILabel()
     
@@ -36,8 +37,10 @@ class ChooseCurrencyTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func configure(shortName: String, fullname: String, logo: String) {
+    func configure(shortName: String, fullname: String, logo: String, colorIndex: Int) {
         logoLabel.text = logo
+        //Color logo View
+        gradientLayer.colors = Theme.colorsForGradient[colorIndex]
         
         let name = "\(shortName) - \(fullname)"
         nameLabel.text = name
@@ -102,9 +105,9 @@ extension ChooseCurrencyTableViewCell {
         self.logoView.layer.masksToBounds = true
         self.logoView.layer.cornerRadius = logoView.bounds.height/2
         
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.startPoint = CGPoint(x: 0, y: 0)
-        gradientLayer.endPoint = CGPoint(x: 1, y: 1 )
+
+        gradientLayer.startPoint = CGPoint(x: 1, y: 0)
+        gradientLayer.endPoint = CGPoint(x: 0, y: 1)
         gradientLayer.frame = logoView.bounds
         gradientLayer.colors = [Theme.Color.mainColor.cgColor, Theme.Color.mainColor.withAlphaComponent(0.8).cgColor]
         logoView.layer.insertSublayer(gradientLayer, at: 0)

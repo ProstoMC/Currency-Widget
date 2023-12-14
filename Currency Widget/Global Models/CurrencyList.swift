@@ -73,7 +73,20 @@ class CurrencyList {
             Currency(rate: 1, previousRate: 1, base: "RUB", shortName: "JPY"),
             
         ]
+        
+        setColor()
     }
+    private func setColor() {
+        var index = 0
+        list.indices.forEach {
+            list[$0].colorIndex = index
+            index = index + 1
+            if index > Theme.colorsForGradient.count-1 {
+                index = 0
+            }
+        }
+    }
+    
 }
 
 // MARK:  - GETTING

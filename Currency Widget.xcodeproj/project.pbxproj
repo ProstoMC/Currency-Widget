@@ -37,7 +37,7 @@
 		A52D6E552B28C40A00A56541 /* ChooseCurrencyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52D6E542B28C40A00A56541 /* ChooseCurrencyViewModel.swift */; };
 		A52D6E572B28EC0800A56541 /* CoreWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52D6E562B28EC0800A56541 /* CoreWorker.swift */; };
 		A538C7712B025ACE007F2145 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A538C7702B025ACD007F2145 /* HeaderView.swift */; };
-		A53AB4432B18D7F0002DB100 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53AB4422B18D7F0002DB100 /* ListViewController.swift */; };
+		A53AB4432B18D7F0002DB100 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53AB4422B18D7F0002DB100 /* SecondViewController.swift */; };
 		A53EE5682B21E29500015339 /* CornersWhiteSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53EE5672B21E29500015339 /* CornersWhiteSegmentedControl.swift */; };
 		A54203922AF110C400A586D7 /* CurrencyPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54203912AF110C400A586D7 /* CurrencyPair.swift */; };
 		A54203952AF113A200A586D7 /* CurrencyPairsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54203942AF113A200A586D7 /* CurrencyPairsListViewModel.swift */; };
@@ -98,7 +98,7 @@
 		A52D6E542B28C40A00A56541 /* ChooseCurrencyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseCurrencyViewModel.swift; sourceTree = "<group>"; };
 		A52D6E562B28EC0800A56541 /* CoreWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreWorker.swift; sourceTree = "<group>"; };
 		A538C7702B025ACD007F2145 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
-		A53AB4422B18D7F0002DB100 /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
+		A53AB4422B18D7F0002DB100 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		A53EE5672B21E29500015339 /* CornersWhiteSegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornersWhiteSegmentedControl.swift; sourceTree = "<group>"; };
 		A54203912AF110C400A586D7 /* CurrencyPair.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPair.swift; sourceTree = "<group>"; };
 		A54203942AF113A200A586D7 /* CurrencyPairsListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPairsListViewModel.swift; sourceTree = "<group>"; };
@@ -218,15 +218,15 @@
 			path = ChooseCurrencyModule;
 			sourceTree = "<group>";
 		};
-		A53AB4412B18D781002DB100 /* ListController */ = {
+		A53AB4412B18D781002DB100 /* SecondController */ = {
 			isa = PBXGroup;
 			children = (
 				A59EFF282B21D9D3006A08A8 /* SubViews */,
-				A53AB4422B18D7F0002DB100 /* ListViewController.swift */,
+				A53AB4422B18D7F0002DB100 /* SecondViewController.swift */,
 				A5B9494A2B1E186A00D2B6A6 /* CurrencyListViewModel.swift */,
 				A5B949462B1BE26200D2B6A6 /* CurrencyListTableViewController.swift */,
 			);
-			path = ListController;
+			path = SecondController;
 			sourceTree = "<group>";
 		};
 		A54203932AF1134D00A586D7 /* SubViews */ = {
@@ -255,7 +255,7 @@
 			children = (
 				A5263DE82B05589100CAC378 /* TabBarViewController.swift */,
 				A55126F82B0CD49F00215C62 /* Home */,
-				A53AB4412B18D781002DB100 /* ListController */,
+				A53AB4412B18D781002DB100 /* SecondController */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -375,7 +375,7 @@
 				A547B2D52B039BD7008747A2 /* EnterCurrencyView.swift in Sources */,
 				A521DE452B0CD99300BF1899 /* CurrencyList.swift in Sources */,
 				A53EE5682B21E29500015339 /* CornersWhiteSegmentedControl.swift in Sources */,
-				A53AB4432B18D7F0002DB100 /* ListViewController.swift in Sources */,
+				A53AB4432B18D7F0002DB100 /* SecondViewController.swift in Sources */,
 				A524BE1C2ACDCF0E00D3303E /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

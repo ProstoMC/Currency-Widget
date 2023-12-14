@@ -38,7 +38,11 @@ class ChooseCurrencyViewController: UIViewController, UITableViewDelegate {
             configureCell: { dataSource, tableView, indexPath, item in
                 let cell = self.tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ChooseCurrencyTableViewCell
                 
-                cell.configure(shortName: item.shortName, fullname: item.name, logo: item.logo)
+                cell.configure(
+                    shortName: item.shortName,
+                    fullname: item.name,
+                    logo: item.logo,
+                    colorIndex: item.colorIndex)
                 
                 return cell
             })
