@@ -17,6 +17,7 @@ protocol ChooseCurrencyViewModelProtocol {
     var rxFiatList: BehaviorRelay<[SectionOfCurrencyList]> { get }
     
     func setCurrency(shortName: String)
+    func findCurrency(str: String)
 }
 
 class ChooseCurrencyViewModel: ChooseCurrencyViewModelProtocol {
@@ -48,6 +49,26 @@ class ChooseCurrencyViewModel: ChooseCurrencyViewModelProtocol {
             CoreWorker.shared.setToCurrencyExchange(name: shortName)
         }
         
+    }
+    
+    func findCurrency(str: String) {
+        
+        guard str != "" else { return }
+        
+        
+        let list = getCurrencyList()
+        var foundedList: [Currency] = []
+        print("Here")
+        //Delete each elements not contained
+        for item in list {
+            if item.name.uppercased().contains(str.uppercased()) ||
+                item.shortName.uppercased().contains(str.uppercased()) {
+                foundedList.append(item)
+            }
+        }
+        //Make new table
+        let section = SectionOfCurrencyList(header: "Header", items: foundedList)
+        rxFiatList.accept([section])
     }
     
 }

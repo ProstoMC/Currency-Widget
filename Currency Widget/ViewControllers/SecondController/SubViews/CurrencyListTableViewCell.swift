@@ -103,7 +103,7 @@ extension CurrencyListTableViewCell {
         backgroundWhiteView.translatesAutoresizingMaskIntoConstraints = false
         
         let height = Int(contentView.bounds.height*1.2) //I dont know why it should be more then contentView size
-        print("self = \(contentView.bounds.height) |  height = \(height)")
+        //print("self = \(contentView.bounds.height) |  height = \(height)")
         
         NSLayoutConstraint.activate([
             backgroundWhiteView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),

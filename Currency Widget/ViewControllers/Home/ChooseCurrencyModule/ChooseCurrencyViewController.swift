@@ -101,6 +101,17 @@ extension ChooseCurrencyViewController {
         textField.backgroundColor = Theme.Color.background
         textField.textColor = Theme.Color.secondText.withAlphaComponent(0.7)
         
+        //RX Part
+        
+        textField.rx.text.orEmpty
+            .throttle(.milliseconds(100), scheduler: MainScheduler.instance)
+            .distinctUntilChanged()
+            .subscribe(onNext: { str in
+                if str != "" {
+                    self.viewModel.findCurrency(str: str)
+                }
+            }).disposed(by: disposeBag)
+        
     }
     
     private func setupTableView(){

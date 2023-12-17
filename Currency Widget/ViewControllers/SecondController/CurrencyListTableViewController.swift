@@ -33,6 +33,7 @@ class CurrencyListTableViewController: UIViewController {
     
     var segmentedControl = CornersWhiteSegmentedControl(items: ["Fiat", "Crypto"])
     var textField = UITextField()
+    
     var tableView = UITableView()
     
     var baseHeightOfElements: Double!
@@ -93,7 +94,7 @@ extension CurrencyListTableViewController: UITableViewDelegate {
         
         viewModel.rxFiatList.bind(to: tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
         
-                tableView.rx.modelSelected(Currency.self).subscribe(onNext: { item in
+        tableView.rx.modelSelected(Currency.self).subscribe(onNext: { item in
                     print ("SELECTED")
                     self.viewModel.selectTail(currency: item)
                 }).disposed(by: disposeBag)
@@ -133,6 +134,17 @@ extension CurrencyListTableViewController: UITableViewDelegate {
         textField.keyboardType = .default
         textField.backgroundColor = Theme.Color.background
         textField.textColor = Theme.Color.secondText.withAlphaComponent(0.7)
+        
+        //RX Part
+        
+        textField.rx.text.orEmpty
+            .throttle(.milliseconds(100), scheduler: MainScheduler.instance)
+            .distinctUntilChanged()
+            .subscribe(onNext: { str in
+                if str != "" {
+                    self.viewModel.findCurrency(str: str)
+                }
+            }).disposed(by: disposeBag)
         
     }
 }
