@@ -54,6 +54,6 @@ class ChooseCurrencyViewModel: ChooseCurrencyViewModelProtocol {
 
 extension ChooseCurrencyViewModel {
     private func getCurrencyList() -> [Currency]{
-        return CurrencyList.shared.getFullList()
+        return CoreWorker.shared.currencyList.getFullList()
     }
 }

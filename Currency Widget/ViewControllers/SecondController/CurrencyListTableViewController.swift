@@ -82,7 +82,7 @@ extension CurrencyListTableViewController: UITableViewDelegate {
             configureCell: { dataSource, tableView, indexPath, item in
                 let cell = self.tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CurrencyListTableViewCell
                 
-                cell.rxConfigure(currency: item, baseLogo: CurrencyList.shared.getBaseCurrency().logo)
+                cell.rxConfigure(currency: item, baseLogo: CoreWorker.shared.currencyList.getBaseCurrency().logo)
                 
                 return cell
             })

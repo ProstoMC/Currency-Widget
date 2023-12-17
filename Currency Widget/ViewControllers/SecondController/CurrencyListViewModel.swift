@@ -47,10 +47,10 @@ class CurrencyListViewModel: CurrencyListViewModelProtocol {
 
 extension CurrencyListViewModel {
     private func getCurrencyList() -> [Currency]{
-        var list = CurrencyList.shared.getFullList()
+        var list = CoreWorker.shared.currencyList.getFullList()
         //removing base Currency from list
         list.enumerated().forEach { (index, item) in
-            if item.shortName == CurrencyList.shared.getBaseCurrency().shortName {
+            if item.shortName == CoreWorker.shared.currencyList.getBaseCurrency().shortName {
                 list.remove(at: index)
             }
         }

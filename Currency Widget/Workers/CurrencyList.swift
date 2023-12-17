@@ -8,10 +8,19 @@
 import Foundation
 import RxSwift
 
-
-class CurrencyList {
+protocol CurrencyListProtocol {
+    func getBaseCurrency() -> Currency
+    func getlistCount() -> Int
+    func getFullList() -> [Currency]
+    func getCurrency(name: String) -> Currency
     
-    static let shared = CurrencyList()
+    func setBaseCurrency(name: String)
+    func setCurrencyValue(name: String, value: Double, previousValue: Double)
+    
+}
+
+
+class CurrencyList: CurrencyListProtocol {
     
     private var base: Currency
     private var list: [Currency]

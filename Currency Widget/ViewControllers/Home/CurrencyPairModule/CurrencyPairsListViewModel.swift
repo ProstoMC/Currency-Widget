@@ -46,9 +46,9 @@ class CurrencyPairsListViewModel: CurrencyPairsListViewModelProtocol {
 
     func addCell() {
         CoreWorker.shared.addPairToFavoriteList(pair: CurrencyPair(
-                valueCurrency: CurrencyList.shared.getCurrency(name: "EUR"),
-                baseCurrency: CurrencyList.shared.getBaseCurrency(),
-                position: 3))
+            valueCurrency: CoreWorker.shared.currencyList.getCurrency(name: "EUR"),
+            baseCurrency: CoreWorker.shared.currencyList.getBaseCurrency(),
+            position: 3))
     }
     
     func selectTail(pair: CurrencyPair) {

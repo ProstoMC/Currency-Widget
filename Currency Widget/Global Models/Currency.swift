@@ -9,15 +9,10 @@ import Foundation
 import RxSwift
 
 struct Currency {
-//    var rate: Double
-//    var previousRate: Double
-//    var flowRate: Double
-//    var flowPercent: Double
     
     var rateRx: BehaviorSubject<Double>
     var previousRateRx: BehaviorSubject<Double>
     var flowRateRx: BehaviorSubject<Double>
-   // var flowPercentRx: BehaviorSubject<Double>
    
     var base: String
     

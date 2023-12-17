@@ -136,6 +136,7 @@
 			children = (
 				A52D6E562B28EC0800A56541 /* CoreWorker.swift */,
 				A50A21272AEA83AA00BBF543 /* CurrencyFetcher.swift */,
+				A521DE442B0CD99300BF1899 /* CurrencyList.swift */,
 			);
 			path = Workers;
 			sourceTree = "<group>";
@@ -274,7 +275,6 @@
 			children = (
 				A589C7792ACF0B95001ABF2C /* Theme.swift */,
 				A50A21292AEA841000BBF543 /* Currency.swift */,
-				A521DE442B0CD99300BF1899 /* CurrencyList.swift */,
 			);
 			path = "Global Models";
 			sourceTree = "<group>";

@@ -11,6 +11,9 @@ import RxSwift
 class CoreWorker {
     static let shared = CoreWorker()
     
+    let currencyFetcher = CurrencyFetcher()
+    let currencyList: CurrencyListProtocol = CurrencyList()
+    
     public var favoritePairList: [CurrencyPair] = []
     public let rxFavouritPairsCount = BehaviorSubject<Int>(value: 0)
     
@@ -19,9 +22,8 @@ class CoreWorker {
     
     init() {
         getFavoritePairs()
-        CurrencyFetcher.shared.fetchCurrencyDaily(completion: {
-            
-        })
+        updateRates()
+
     }
     
 }
@@ -33,23 +35,39 @@ extension CoreWorker {
     private func getFavoritePairs() {
         favoritePairList = [
             CurrencyPair(
-                valueCurrency: CurrencyList.shared.getCurrency(name: "GEL"),
-                baseCurrency: CurrencyList.shared.getBaseCurrency(),
+                valueCurrency: currencyList.getCurrency(name: "GEL"),
+                baseCurrency: currencyList.getBaseCurrency(),
                 position: 0),
             CurrencyPair(
-                valueCurrency: CurrencyList.shared.getCurrency(name: "USD"),
-                baseCurrency: CurrencyList.shared.getBaseCurrency(),
+                valueCurrency: currencyList.getCurrency(name: "USD"),
+                baseCurrency: currencyList.getBaseCurrency(),
                 position: 1),
             CurrencyPair(
-                valueCurrency: CurrencyList.shared.getCurrency(name: "AMD"),
-                baseCurrency: CurrencyList.shared.getBaseCurrency(),
+                valueCurrency: currencyList.getCurrency(name: "AMD"),
+                baseCurrency: currencyList.getBaseCurrency(),
                 position: 2),
             CurrencyPair(
-                valueCurrency: CurrencyList.shared.getCurrency(name: "USD"),
-                baseCurrency: CurrencyList.shared.getCurrency(name: "GEL"),
+                valueCurrency: currencyList.getCurrency(name: "USD"),
+                baseCurrency: currencyList.getCurrency(name: "GEL"),
                 position: 3)
         ]
         rxFavouritPairsCount.onNext(favoritePairList.count)
+    }
+    
+    private func updateRates() {
+        currencyFetcher.fetchCurrencyDaily(completion: { valuteList in
+            self.currencyList.setBaseCurrency(name: "RUB")
+            
+            for currency in valuteList {
+                
+                let charCode = currency.value.CharCode
+                let value = currency.value.Value / currency.value.Nominal
+                let previousValue = currency.value.Previous / currency.value.Nominal
+                //let name = currency.value.Name  //It is russian name
+                
+                self.currencyList.setCurrencyValue(name: charCode, value: value, previousValue: previousValue)
+            }
+        })
     }
 }
 
