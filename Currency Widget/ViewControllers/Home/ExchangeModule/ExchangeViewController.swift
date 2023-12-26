@@ -28,7 +28,7 @@ class ExchangeViewController: UIViewController {
     }
 
 }
-// MARK:  SETUP RX
+// MARK: -  SETUP RX
 extension ExchangeViewController {
     private func setupRx() {
         
@@ -98,6 +98,7 @@ extension ExchangeViewController {
         
         toView.currencyButton.rx.tap.asDriver().drive(onNext: {
             let vc = ChooseCurrencyViewController()
+            vc.modalPresentationStyle = .automatic
             vc.viewModel.type = "to"
             self.present(vc, animated: true)
         }).disposed(by: disposeBag)

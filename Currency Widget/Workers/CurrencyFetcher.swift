@@ -30,13 +30,13 @@ class CurrencyFetcher {
     }
     
     
-    func fetchCurrencyDaily(completion: @escaping ([String: Valute]) -> ()) {
+    func fetchCurrencyDaily(completion: @escaping ([String: Valute], String) -> ()) {
 //        CurrencyList.shared.setBaseCurrency(name: "RUB")
         let url = "https://www.cbr-xml-daily.ru/daily_json.js"
         AF.request(url).validate().responseDecodable(of: DailyJSONStruct.self) { (response) in
             DispatchQueue.main.async {
                 guard let dailyJSON = response.value else { return }
-                completion(dailyJSON.Valute)
+                completion(dailyJSON.Valute, dailyJSON.Date)
             }
         }.resume()
     }

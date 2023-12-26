@@ -63,7 +63,6 @@ class CurrencyPairsListViewController: UIViewController {
         viewModel.rxPairList.bind(to: collectionView.rx.items(dataSource: dataSource)).disposed(by: disposeBug)
         
         collectionView.rx.modelSelected(CurrencyPair.self).subscribe(onNext: { item in
-            print ("SELECTED")
             self.viewModel.selectTail(pair: item)
         }).disposed(by: disposeBug)
         

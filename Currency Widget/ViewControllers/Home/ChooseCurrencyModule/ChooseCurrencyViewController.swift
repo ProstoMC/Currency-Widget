@@ -17,6 +17,7 @@ class ChooseCurrencyViewController: UIViewController, UITableViewDelegate {
     var viewModel: ChooseCurrencyViewModelProtocol = ChooseCurrencyViewModel()
     let disposeBag = DisposeBag()
     
+    var closingLine = UIView()
     var segmentedControl = CornersWhiteSegmentedControl(items: ["Fiat", "Crypto"])
     var textField = UITextField()
     var tableView = UITableView()
@@ -63,9 +64,27 @@ extension ChooseCurrencyViewController {
     private func setupUI() {
         view.backgroundColor = Theme.Color.background
         baseHeightOfElements = getBaseHeight()
+        setupClosingLine()
         setupSegmentedControl()
         setupTextField()
         setupTableView()
+    }
+    
+    private func setupClosingLine() {
+        view.addSubview(closingLine)
+        closingLine.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            closingLine.topAnchor.constraint(equalTo: view.topAnchor, constant: baseHeightOfElements/3),
+            closingLine.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            closingLine.heightAnchor.constraint(equalToConstant: baseHeightOfElements/8),
+            closingLine.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.2)
+        ])
+        
+        closingLine.layer.cornerRadius = baseHeightOfElements/16
+        closingLine.backgroundColor = Theme.Color.mainColorPale
+        
+        
     }
     
     private func setupSegmentedControl() {
@@ -75,7 +94,7 @@ extension ChooseCurrencyViewController {
         NSLayoutConstraint.activate([
             segmentedControl.leftAnchor.constraint(equalTo: view.leftAnchor, constant: view.bounds.width*0.04),
             segmentedControl.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -view.bounds.width*0.04),
-            segmentedControl.topAnchor.constraint(equalTo: view.topAnchor, constant: baseHeightOfElements/2),
+            segmentedControl.topAnchor.constraint(equalTo: closingLine.bottomAnchor, constant: baseHeightOfElements/3),
             segmentedControl.heightAnchor.constraint(equalToConstant: baseHeightOfElements)
         ])
         

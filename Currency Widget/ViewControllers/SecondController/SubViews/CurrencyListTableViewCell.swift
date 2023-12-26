@@ -25,9 +25,12 @@ class CurrencyListTableViewCell: UITableViewCell {
     let changesArrowImageView = UIImageView()
     let changesLabel = UILabel()
     
-    let favoriteView = UIImageView()
+    let favoriteButton = UIButton()
     
     let disposeBag = DisposeBag()
+    
+    var baseName = ""
+    var valueName = ""
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -54,6 +57,9 @@ class CurrencyListTableViewCell: UITableViewCell {
     
     // MARK:  - RX CONFIGURE
     func rxConfigure(currency: Currency, baseLogo: String) { //I know, it is not good way, but too late components
+        valueName = currency.shortName
+        baseName = currency.base
+        
         logoLabel.text = currency.logo
        
         //Color logo View
@@ -61,8 +67,6 @@ class CurrencyListTableViewCell: UITableViewCell {
         
         let name = "\(currency.shortName) - \(currency.name)"
         nameLabel.text = name
-        
-        
         
         //Setup Value Label
         currency.rateRx.subscribe(onNext: { value in
@@ -87,6 +91,33 @@ class CurrencyListTableViewCell: UITableViewCell {
             
         }).disposed(by: disposeBag)
         
+        //Setup FavoriteButton
+        CoreWorker.shared.rxFavouritPairsCount.subscribe{_ in
+            let favoriteStatus = CoreWorker.shared.isPairExistInFavoriteList(
+                valueName: self.valueName,
+                baseName: self.baseName)
+            if favoriteStatus {
+                self.favoriteButton.setImage(UIImage(systemName: "suit.heart.fill"), for: .normal)
+            } else {
+                self.favoriteButton.setImage(UIImage(systemName: "suit.heart"), for: .normal)
+            }
+        }.disposed(by: disposeBag)
+
+        //RX drive doesn't work in the cell. Using usual way
+        favoriteButton.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func favoriteButtonTapped() {
+        print(valueName)
+        let favoriteStatus = CoreWorker.shared.isPairExistInFavoriteList(
+            valueName: valueName,
+            baseName: baseName)
+        if favoriteStatus {
+            CoreWorker.shared.deletePairFromeFavoriteList(valueName: valueName, baseName: baseName)
+        }
+        else {
+            CoreWorker.shared.addPairToFavoriteList(valueName: valueName, baseName: baseName)
+        }
     }
 }
 
@@ -256,19 +287,19 @@ extension CurrencyListTableViewCell {
     }
     
     private func setupFavoriteView() {
-        backgroundWhiteView.addSubview(favoriteView)
-        favoriteView.translatesAutoresizingMaskIntoConstraints = false
+        backgroundWhiteView.addSubview(favoriteButton)
+        favoriteButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            favoriteView.centerYAnchor.constraint(equalTo: backgroundWhiteView.centerYAnchor),
-            favoriteView.rightAnchor.constraint(equalTo: backgroundWhiteView.rightAnchor, constant: -self.bounds.height*0.25),
-            favoriteView.heightAnchor.constraint(equalTo: backgroundWhiteView.heightAnchor, multiplier: 0.5),
-            favoriteView.widthAnchor.constraint(equalTo: favoriteView.heightAnchor)
+            favoriteButton.centerYAnchor.constraint(equalTo: backgroundWhiteView.centerYAnchor),
+            favoriteButton.rightAnchor.constraint(equalTo: backgroundWhiteView.rightAnchor, constant: -self.bounds.height*0.25),
+            favoriteButton.heightAnchor.constraint(equalTo: backgroundWhiteView.heightAnchor, multiplier: 0.5),
+            favoriteButton.widthAnchor.constraint(equalTo: favoriteButton.heightAnchor)
         ])
         
-        favoriteView.image = UIImage(systemName: "suit.heart")
-        favoriteView.contentMode = .scaleAspectFit
-        favoriteView.tintColor = Theme.Color.mainColor
+        favoriteButton.setImage(UIImage(systemName: "suit.heart"), for: .normal)
+        favoriteButton.contentMode = .scaleAspectFit
+        favoriteButton.tintColor = Theme.Color.mainColor
     }
 
 }

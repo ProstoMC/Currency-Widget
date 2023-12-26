@@ -19,6 +19,7 @@ protocol CurrencyListViewModelProtocol {
     func selectTail(currency: Currency)
     
     func findCurrency(str: String)
+    func resetModel()
 }
 
 class CurrencyListViewModel: CurrencyListViewModelProtocol {
@@ -26,17 +27,16 @@ class CurrencyListViewModel: CurrencyListViewModelProtocol {
     var rxFiatList: BehaviorRelay<[SectionOfCurrencyList]>
     //var rxCoinList: BehaviorRelay<[SectionOfCurrencyList]>
     
-    //var fiatList: [Currency]
+    var fiatList: [Currency] = []
     
     init() {
         //making empty array
-        var list: [Currency] = []
-        var section = SectionOfCurrencyList(header: "Header", items: list)
+        var section = SectionOfCurrencyList(header: "Header", items: fiatList)
         rxFiatList = BehaviorRelay(value: [section]) //we have to define it before
         
         //filling array
-        list = getCurrencyList()
-        section = SectionOfCurrencyList(header: "Header", items: list)
+        fiatList = getCurrencyList()
+        section = SectionOfCurrencyList(header: "Header", items: fiatList)
         rxFiatList.accept([section])
     }
     
@@ -46,23 +46,32 @@ class CurrencyListViewModel: CurrencyListViewModelProtocol {
     }
     
     func findCurrency(str: String) {
-        
-        guard str != "" else { return }
-        
-        let list = getCurrencyList()
         var foundedList: [Currency] = []
-        print("Here")
-        //Delete each elements not contained
-        for item in list {
-            if item.name.uppercased().contains(str.uppercased()) ||
-                item.shortName.uppercased().contains(str.uppercased()) {
-                foundedList.append(item)
+
+        let list = getCurrencyList()
+        
+        if str == "" {
+            foundedList = list
+        } else {
+            //Delete each elements not contained
+            for item in list {
+                if item.name.uppercased().contains(str.uppercased()) ||
+                    item.shortName.uppercased().contains(str.uppercased()) {
+                    foundedList.append(item)
+                }
             }
         }
         //Make new table
         let section = SectionOfCurrencyList(header: "Header", items: foundedList)
         rxFiatList.accept([section])
     }
+    
+    func resetModel() {
+        fiatList = getCurrencyList()
+        let section = SectionOfCurrencyList(header: "Header", items: fiatList)
+        rxFiatList.accept([section])
+    }
+    
     
 }
 

@@ -28,7 +28,7 @@ extension SectionOfCurrencyList: SectionModelType {
 
 class CurrencyListTableViewController: UIViewController {
     
-    let viewModel: CurrencyListViewModelProtocol = CurrencyListViewModel()
+    var viewModel: CurrencyListViewModelProtocol = CurrencyListViewModel()
     let disposeBag = DisposeBag()
     
     var segmentedControl = CornersWhiteSegmentedControl(items: ["Fiat", "Crypto"])
@@ -87,15 +87,10 @@ extension CurrencyListTableViewController: UITableViewDelegate {
                 
                 return cell
             })
-        //        dataSource.canMoveItemAtIndexPath = { dataSource, indexPath in
-        //            return true
-        //
-        //        }
         
         viewModel.rxFiatList.bind(to: tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
         
         tableView.rx.modelSelected(Currency.self).subscribe(onNext: { item in
-                    print ("SELECTED")
                     self.viewModel.selectTail(currency: item)
                 }).disposed(by: disposeBag)
         
@@ -141,9 +136,9 @@ extension CurrencyListTableViewController: UITableViewDelegate {
             .throttle(.milliseconds(100), scheduler: MainScheduler.instance)
             .distinctUntilChanged()
             .subscribe(onNext: { str in
-                if str != "" {
+//                if str != "" {
                     self.viewModel.findCurrency(str: str)
-                }
+//                }
             }).disposed(by: disposeBag)
         
     }

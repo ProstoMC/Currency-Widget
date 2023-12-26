@@ -32,10 +32,7 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     
     private func setupRx() {
         //Return to first VC
-        CoreWorker.shared.rxExchangeFromCurrency.subscribe(onNext: {_ in
-            self.selectedIndex = 0
-        }).disposed(by: bag)
-        CoreWorker.shared.rxExchangeToCurrency.subscribe(onNext: {_ in
+        CoreWorker.shared.rxExhangeFlag.subscribe(onNext: {_ in
             self.selectedIndex = 0
         }).disposed(by: bag)
     }

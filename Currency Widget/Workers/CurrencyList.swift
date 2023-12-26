@@ -15,7 +15,7 @@ protocol CurrencyListProtocol {
     func getCurrency(name: String) -> Currency
     
     func setBaseCurrency(name: String)
-    func setCurrencyValue(name: String, value: Double, previousValue: Double)
+    func setCurrencyValue(name: String, value: Double, previousValue: Double, colorIndex: Int?) // Color Index not used if it nil
     
 }
 
@@ -146,14 +146,18 @@ extension CurrencyList {
         base = Currency(rate: 1, previousRate: 1, base: name, shortName: name)
     }
     
-    func setCurrencyValue(name: String, value: Double, previousValue: Double) {
+    func setCurrencyValue(name: String, value: Double, previousValue: Double, colorIndex: Int?) {
         list.indices.forEach {
             if list[$0].shortName == name {
                 list[$0].rateRx.on(.next(value))
                 list[$0].previousRateRx.on(.next(previousValue))
                 list[$0].flowRateRx.on(.next(value-previousValue))
+                if colorIndex != nil {
+                    list[$0].colorIndex = colorIndex!
+                }
             }
         }
+        
     }
 
 }

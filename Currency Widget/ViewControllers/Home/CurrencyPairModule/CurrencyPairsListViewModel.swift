@@ -14,7 +14,6 @@ import Differentiator
 protocol CurrencyPairsListViewModelProtocol {
     var rxPairList: BehaviorRelay<[SectionOfCustomData]> { get }
     
-    func addCell()
     func selectTail(pair: CurrencyPair)
     
 }
@@ -43,14 +42,6 @@ class CurrencyPairsListViewModel: CurrencyPairsListViewModelProtocol {
     }
     
 // MARK: - Funcions
-
-    func addCell() {
-        CoreWorker.shared.addPairToFavoriteList(pair: CurrencyPair(
-            valueCurrency: CoreWorker.shared.currencyList.getCurrency(name: "EUR"),
-            baseCurrency: CoreWorker.shared.currencyList.getBaseCurrency(),
-            position: 3))
-    }
-    
     func selectTail(pair: CurrencyPair) {
         CoreWorker.shared.setFromCurrencyExchange(name: pair.valueCurrencyShortName)
         CoreWorker.shared.setToCurrencyExchange(name: pair.baseCurrencyShortName)

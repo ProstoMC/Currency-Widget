@@ -55,10 +55,8 @@ class ChooseCurrencyViewModel: ChooseCurrencyViewModelProtocol {
         
         guard str != "" else { return }
         
-        
         let list = getCurrencyList()
         var foundedList: [Currency] = []
-        print("Here")
         //Delete each elements not contained
         for item in list {
             if item.name.uppercased().contains(str.uppercased()) ||

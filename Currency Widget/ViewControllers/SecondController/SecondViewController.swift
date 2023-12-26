@@ -38,7 +38,7 @@ extension SecondViewController {
             x: 0,
             y: headerView.frame.maxY + view.bounds.height*0.01,
             width: view.bounds.width,
-            height: view.bounds.height*0.9)
+            height: view.bounds.height*0.87)
         
         view.addSubview(headerView)
         view.addSubview(tableViewController.view)

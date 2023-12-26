@@ -16,6 +16,7 @@ class HomeViewController: UIViewController {
     var headerView = HeaderView()
     var currencyPairsListViewController = CurrencyPairsListViewController()
     var exchangeViewController = ExchangeViewController()
+    var detailsViewController = DetailsViewController()
     
     
     
@@ -48,11 +49,18 @@ class HomeViewController: UIViewController {
             y: currencyPairsListViewController.view.frame.maxY + view.bounds.height*0.025,
             width: view.bounds.width*0.92,
             height: view.bounds.height*0.23)
+        
+        detailsViewController.view.frame = CGRect(
+            x: view.bounds.width*0.04,
+            y: exchangeViewController.view.frame.maxY,
+            width: view.bounds.width*0.92,
+            height: view.bounds.height*0.35)
 
 
         view.addSubview(headerView)
         view.addSubview(currencyPairsListViewController.view)
         view.addSubview(exchangeViewController.view)
+        view.addSubview(detailsViewController.view)
 
         //pairsTileView.addView.label.text = "Add pair"
     }
