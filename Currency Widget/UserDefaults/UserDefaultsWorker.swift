@@ -51,7 +51,7 @@ extension UserDefaultsWorker {
         
         if let encodedList = try? encoder.encode(pairListForDefaults) {
             defaults.set(encodedList, forKey: "pairList")
-            //print("SAVING")
+            print("--Pairs saved--")
         }
     }
     

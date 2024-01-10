@@ -13,6 +13,7 @@ class DetailsViewController: UIViewController {
     let bag = DisposeBag()
     let viewModel: DetailsViewModuleProtocol = DetailsViewModule()
     
+    
     let favouriteButton = UIButton()
 
     override func viewDidLoad() {
@@ -44,8 +45,15 @@ extension DetailsViewController {
         }.disposed(by: bag)
         
         favouriteButton.rx.tap.asDriver().drive(onNext: {
-            self.viewModel.changeFavoriteStatus()
-            CoreWorker.shared.rxExhangeFlag.onNext(true)
+            do {
+                if try self.viewModel.rxFavoriteStatus.value() {
+                    self.showAlert(title: "", message: "Delete pair from favorite?")
+                } else {
+                    self.viewModel.changeFavoriteStatus()
+                }
+            } catch {
+                self.viewModel.changeFavoriteStatus()
+            }
         }).disposed(by: bag)
         
         
@@ -75,5 +83,22 @@ extension DetailsViewController {
         favouriteButton.tintColor = Theme.Color.mainColor
         self.favouriteButton.setImage(UIImage(systemName: "suit.heart"), for: .normal)
         favouriteButton.contentMode = .scaleAspectFit
+    }
+}
+// MARK:  - ALERT
+extension DetailsViewController {
+    func showAlert(title: String, message: String) {
+
+        let alert = UIAlertController(
+            title: title,
+            message: message,
+            preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: {_ in
+            self.viewModel.changeFavoriteStatus()
+        })
+        )
+        self.present(alert, animated: true, completion: nil)
+        
     }
 }

@@ -35,10 +35,10 @@ class CornersWhiteSegmentedControl: UISegmentedControl {
         
         selectedSegmentIndex = 0
         layer.backgroundColor = Theme.Color.backgroundForWidgets.cgColor
-        selectedSegmentTintColor = Theme.Color.mainColor
+        selectedSegmentTintColor = Theme.Color.segmentedControlBackground
         
         let selectedTextColor = [NSAttributedString.Key.foregroundColor: Theme.Color.backgroundForWidgets]
-        let normalTextColor = [NSAttributedString.Key.foregroundColor: Theme.Color.mainColor]
+        let normalTextColor = [NSAttributedString.Key.foregroundColor: Theme.Color.segmentedControlBackground]
         
         setTitleTextAttributes(selectedTextColor, for: .selected)
         setTitleTextAttributes(normalTextColor, for: .normal)

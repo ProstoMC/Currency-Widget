@@ -16,17 +16,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="EaS-Cx-kNR">
-                                <rect key="frame" x="186" y="416" width="20" height="20"/>
-                            </activityIndicatorView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchImage" translatesAutoresizingMaskIntoConstraints="NO" id="9Jo-yv-uIC">
+                                <rect key="frame" x="50" y="159" width="293" height="559"/>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                        <color key="backgroundColor" red="0.10588235294117647" green="0.24705882352941178" blue="0.26666666666666666" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.086272828280000005" green="0.11643946920000001" blue="0.1934950352" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="EaS-Cx-kNR" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="186" id="I5K-nT-2IX"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="EaS-Cx-kNR" secondAttribute="bottom" constant="382" id="Yte-4S-aHY"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="EaS-Cx-kNR" secondAttribute="trailing" constant="187" id="nsz-Go-Pac"/>
-                            <constraint firstItem="EaS-Cx-kNR" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="357" id="zjc-2A-2hg"/>
+                            <constraint firstItem="9Jo-yv-uIC" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="100" id="NnR-7B-PdP"/>
+                            <constraint firstItem="9Jo-yv-uIC" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="50" id="X7w-YJ-mcU"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="9Jo-yv-uIC" secondAttribute="bottom" constant="100" id="aje-e5-pgO"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="9Jo-yv-uIC" secondAttribute="trailing" constant="50" id="tum-d1-ija"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -35,4 +35,7 @@
             <point key="canvasLocation" x="53" y="375"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="LaunchImage" width="2201" height="1160"/>
+    </resources>
 </document>

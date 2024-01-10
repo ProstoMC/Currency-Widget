@@ -10,6 +10,7 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 
+
 // MARK:  - Setup sections for RxDataSource
 
 struct SectionOfCustomData {
@@ -37,14 +38,43 @@ class CurrencyPairsListViewController: UIViewController {
     }()
     
     var viewModel: CurrencyPairsListViewModelProtocol!
-    let disposeBug = DisposeBag()
+    let bag = DisposeBag()
+    
+    var movingIndexFrom = 0
+    var movingIndexTo = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel = CurrencyPairsListViewModel()
-        
+
         setupUI()
         bindCollectionView()
+    }
+    
+    //For reordering cells
+    @objc private func handleLongPressGR(gesture: UILongPressGestureRecognizer){
+        
+        switch gesture.state {
+        case .began:
+            guard let selectedIndexPath = collectionView.indexPathForItem(at: gesture.location(in: collectionView)) else {
+                break
+            }
+            movingIndexFrom = selectedIndexPath.row
+            collectionView.beginInteractiveMovementForItem(at: selectedIndexPath)
+        case .changed:
+            collectionView.updateInteractiveMovementTargetPosition(gesture.location(in: gesture.view!))
+        case .ended:
+            if let endedIndexPath = collectionView.indexPathForItem(at: gesture.location(in: collectionView)){
+                movingIndexTo = endedIndexPath.row
+            } else {
+                movingIndexTo = movingIndexFrom
+            }
+            collectionView.endInteractiveMovement()
+            print ("\(movingIndexFrom) -> \(movingIndexTo)")
+            viewModel.reorderPair(fromIndex: movingIndexFrom, toIndex: movingIndexTo)
+        default:
+            collectionView.cancelInteractiveMovement()
+        }
     }
     
     private func bindCollectionView() {
@@ -53,19 +83,31 @@ class CurrencyPairsListViewController: UIViewController {
               let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! Tile1x2CollectionViewCell
               cell.rxConfigure(currecnyPair: item)
               
+              //Setup selected cell
+//              self.viewModel.rxCellIsSelected.subscribe{ index in
+//                  print("==SELECTED CELL IS - \(index)")
+//                  if index == item.position {
+//                      cell.contentView.backgroundColor = Theme.Color.mainColorPale
+//                  } else {
+//                      cell.contentView.backgroundColor = Theme.Color.backgroundForWidgets
+//                  }
+//              }.disposed(by: self.bag)
+              
             return cell
         })
-        dataSource.canMoveItemAtIndexPath = { dataSource, indexPath in
-            return true
-            
-        }
         
-        viewModel.rxPairList.bind(to: collectionView.rx.items(dataSource: dataSource)).disposed(by: disposeBug)
+        viewModel.rxPairList.bind(to: collectionView.rx.items(dataSource: dataSource)).disposed(by: bag)
         
         collectionView.rx.modelSelected(CurrencyPair.self).subscribe(onNext: { item in
             self.viewModel.selectTail(pair: item)
-        }).disposed(by: disposeBug)
+
+        }).disposed(by: bag)
         
+        dataSource.canMoveItemAtIndexPath = { dataSource, indexPath in
+            //For reordering cells
+            return true
+        }
+      
     }
 
     
@@ -99,12 +141,16 @@ class CurrencyPairsListViewController: UIViewController {
             collectionView.leftAnchor.constraint(equalTo: view.leftAnchor),
             collectionView.rightAnchor.constraint(equalTo: view.rightAnchor)
         ])
+        //For reordering cells
+        let longPressGR = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPressGR(gesture:)))
+        collectionView.addGestureRecognizer(longPressGR)
     }
 }
 
 // MARK:  - CollectionView Appearing
 
 extension CurrencyPairsListViewController: UICollectionViewDelegateFlowLayout {
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.bounds.size.height*0.92, height: collectionView.bounds.height) //Size of Tale
     }
@@ -114,4 +160,35 @@ extension CurrencyPairsListViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let cell = collectionView.cellForItem(at: indexPath) as? Tile1x2CollectionViewCell {
+            //viewModel.selectTail(indexPath: indexPath)
+            
+            cell.contentView.backgroundColor = Theme.Color.mainColorPale
+            UIView.animate(withDuration: 1.0, delay: 0.0, options: [.allowUserInteraction], animations:
+                                        { () -> Void in
+                cell.contentView.backgroundColor = Theme.Color.backgroundForWidgets
+                                    })
+        }
+    }
+//
+//
+//    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+//        if let cell = collectionView.cellForItem(at: indexPath) as? Tile1x2CollectionViewCell {
+//            cell.contentView.backgroundColor = Theme.Color.backgroundForWidgets
+//        }
+//    }
+    
 }
+//For reordering cells
+//extension CurrencyPairsListViewController: UICollectionViewDelegate {
+//    private func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
+//       return true
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+//       print("Starting Index: \(sourceIndexPath.item)")
+//       print("Ending Index: \(destinationIndexPath.item)")
+//    }
+//}

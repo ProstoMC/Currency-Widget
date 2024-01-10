@@ -36,6 +36,10 @@
 		A52D6E522B28C14300A56541 /* ChooseCurrencyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52D6E512B28C14300A56541 /* ChooseCurrencyTableViewCell.swift */; };
 		A52D6E552B28C40A00A56541 /* ChooseCurrencyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52D6E542B28C40A00A56541 /* ChooseCurrencyViewModel.swift */; };
 		A52D6E572B28EC0800A56541 /* CoreWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52D6E562B28EC0800A56541 /* CoreWorker.swift */; };
+		A52E572F2B3CA2DC0094BAB5 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52E572E2B3CA2DC0094BAB5 /* SettingsViewController.swift */; };
+		A52E57312B3CA76F0094BAB5 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52E57302B3CA76F0094BAB5 /* SettingsViewModel.swift */; };
+		A52E57332B3CADB50094BAB5 /* SettingsWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52E57322B3CADB50094BAB5 /* SettingsWorker.swift */; };
+		A52E57352B3DAA780094BAB5 /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52E57342B3DAA780094BAB5 /* SettingsTableViewCell.swift */; };
 		A538C7712B025ACE007F2145 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A538C7702B025ACD007F2145 /* HeaderView.swift */; };
 		A53AB4432B18D7F0002DB100 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53AB4422B18D7F0002DB100 /* SecondViewController.swift */; };
 		A53EE5682B21E29500015339 /* CornersWhiteSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53EE5672B21E29500015339 /* CornersWhiteSegmentedControl.swift */; };
@@ -43,6 +47,7 @@
 		A54203952AF113A200A586D7 /* CurrencyPairsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54203942AF113A200A586D7 /* CurrencyPairsListViewModel.swift */; };
 		A547B2C92B03985B008747A2 /* ExchangeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A547B2C82B03985B008747A2 /* ExchangeViewController.swift */; };
 		A547B2D52B039BD7008747A2 /* EnterCurrencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A547B2D42B039BD7008747A2 /* EnterCurrencyView.swift */; };
+		A580E83A2B4ED378003C101E /* CoinUniversal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A580E8392B4ED378003C101E /* CoinUniversal.swift */; };
 		A589C77A2ACF0B95001ABF2C /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589C7792ACF0B95001ABF2C /* Theme.swift */; };
 		A589C77D2ACF0F56001ABF2C /* CurrencyPairsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589C77C2ACF0F56001ABF2C /* CurrencyPairsListViewController.swift */; };
 		A589C77F2ACF3926001ABF2C /* AddTileUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589C77E2ACF3926001ABF2C /* AddTileUIView.swift */; };
@@ -101,6 +106,10 @@
 		A52D6E512B28C14300A56541 /* ChooseCurrencyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseCurrencyTableViewCell.swift; sourceTree = "<group>"; };
 		A52D6E542B28C40A00A56541 /* ChooseCurrencyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseCurrencyViewModel.swift; sourceTree = "<group>"; };
 		A52D6E562B28EC0800A56541 /* CoreWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreWorker.swift; sourceTree = "<group>"; };
+		A52E572E2B3CA2DC0094BAB5 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		A52E57302B3CA76F0094BAB5 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		A52E57322B3CADB50094BAB5 /* SettingsWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWorker.swift; sourceTree = "<group>"; };
+		A52E57342B3DAA780094BAB5 /* SettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCell.swift; sourceTree = "<group>"; };
 		A538C7702B025ACD007F2145 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		A53AB4422B18D7F0002DB100 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		A53EE5672B21E29500015339 /* CornersWhiteSegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornersWhiteSegmentedControl.swift; sourceTree = "<group>"; };
@@ -108,6 +117,7 @@
 		A54203942AF113A200A586D7 /* CurrencyPairsListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPairsListViewModel.swift; sourceTree = "<group>"; };
 		A547B2C82B03985B008747A2 /* ExchangeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeViewController.swift; sourceTree = "<group>"; };
 		A547B2D42B039BD7008747A2 /* EnterCurrencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterCurrencyView.swift; sourceTree = "<group>"; };
+		A580E8392B4ED378003C101E /* CoinUniversal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinUniversal.swift; sourceTree = "<group>"; };
 		A589C7792ACF0B95001ABF2C /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		A589C77C2ACF0F56001ABF2C /* CurrencyPairsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPairsListViewController.swift; sourceTree = "<group>"; };
 		A589C77E2ACF3926001ABF2C /* AddTileUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTileUIView.swift; sourceTree = "<group>"; };
@@ -145,6 +155,7 @@
 				A52D6E562B28EC0800A56541 /* CoreWorker.swift */,
 				A50A21272AEA83AA00BBF543 /* CurrencyFetcher.swift */,
 				A521DE442B0CD99300BF1899 /* CurrencyList.swift */,
+				A52E57322B3CADB50094BAB5 /* SettingsWorker.swift */,
 			);
 			path = Workers;
 			sourceTree = "<group>";
@@ -154,7 +165,6 @@
 			children = (
 				A54203942AF113A200A586D7 /* CurrencyPairsListViewModel.swift */,
 				A589C77C2ACF0F56001ABF2C /* CurrencyPairsListViewController.swift */,
-				A54203912AF110C400A586D7 /* CurrencyPair.swift */,
 				A5D6DA882AD97FFF00E3D4F4 /* Tile1x2CollectionViewCell.swift */,
 			);
 			path = CurrencyPairModule;
@@ -228,6 +238,16 @@
 			path = ChooseCurrencyModule;
 			sourceTree = "<group>";
 		};
+		A52E572D2B3CA2850094BAB5 /* SettingsViewController */ = {
+			isa = PBXGroup;
+			children = (
+				A52E572E2B3CA2DC0094BAB5 /* SettingsViewController.swift */,
+				A52E57302B3CA76F0094BAB5 /* SettingsViewModel.swift */,
+				A52E57342B3DAA780094BAB5 /* SettingsTableViewCell.swift */,
+			);
+			path = SettingsViewController;
+			sourceTree = "<group>";
+		};
 		A53AB4412B18D781002DB100 /* SecondController */ = {
 			isa = PBXGroup;
 			children = (
@@ -267,6 +287,7 @@
 				A5263DE82B05589100CAC378 /* TabBarViewController.swift */,
 				A55126F82B0CD49F00215C62 /* Home */,
 				A53AB4412B18D781002DB100 /* SecondController */,
+				A52E572D2B3CA2850094BAB5 /* SettingsViewController */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -302,7 +323,9 @@
 			isa = PBXGroup;
 			children = (
 				A589C7792ACF0B95001ABF2C /* Theme.swift */,
+				A54203912AF110C400A586D7 /* CurrencyPair.swift */,
 				A50A21292AEA841000BBF543 /* Currency.swift */,
+				A580E8392B4ED378003C101E /* CoinUniversal.swift */,
 			);
 			path = "Global Models";
 			sourceTree = "<group>";
@@ -385,6 +408,8 @@
 				A52D6E552B28C40A00A56541 /* ChooseCurrencyViewModel.swift in Sources */,
 				A524BE1E2ACDCF0E00D3303E /* HomeViewController.swift in Sources */,
 				A54203922AF110C400A586D7 /* CurrencyPair.swift in Sources */,
+				A52E572F2B3CA2DC0094BAB5 /* SettingsViewController.swift in Sources */,
+				A52E57312B3CA76F0094BAB5 /* SettingsViewModel.swift in Sources */,
 				A589C77D2ACF0F56001ABF2C /* CurrencyPairsListViewController.swift in Sources */,
 				A524BE1A2ACDCF0E00D3303E /* AppDelegate.swift in Sources */,
 				A54203952AF113A200A586D7 /* CurrencyPairsListViewModel.swift in Sources */,
@@ -394,6 +419,7 @@
 				A5B949472B1BE26200D2B6A6 /* CurrencyListTableViewController.swift in Sources */,
 				A538C7712B025ACE007F2145 /* HeaderView.swift in Sources */,
 				A547B2C92B03985B008747A2 /* ExchangeViewController.swift in Sources */,
+				A52E57352B3DAA780094BAB5 /* SettingsTableViewCell.swift in Sources */,
 				A52D6E572B28EC0800A56541 /* CoreWorker.swift in Sources */,
 				A5D6DA892AD97FFF00E3D4F4 /* Tile1x2CollectionViewCell.swift in Sources */,
 				A589C77F2ACF3926001ABF2C /* AddTileUIView.swift in Sources */,
@@ -402,6 +428,8 @@
 				A5B74A0A2B3479B400F12088 /* DetailsViewModule.swift in Sources */,
 				A50A21282AEA83AA00BBF543 /* CurrencyFetcher.swift in Sources */,
 				A5B74A042B30A89500F12088 /* StructsForDefaults.swift in Sources */,
+				A52E57332B3CADB50094BAB5 /* SettingsWorker.swift in Sources */,
+				A580E83A2B4ED378003C101E /* CoinUniversal.swift in Sources */,
 				A547B2D52B039BD7008747A2 /* EnterCurrencyView.swift in Sources */,
 				A521DE452B0CD99300BF1899 /* CurrencyList.swift in Sources */,
 				A5B74A022B30A62000F12088 /* UserDefaultsWorker.swift in Sources */,

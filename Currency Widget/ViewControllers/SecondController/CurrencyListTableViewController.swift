@@ -12,17 +12,17 @@ import RxDataSources
 // MARK:  - Setup sections for RxDataSource
 
 struct SectionOfCurrencyList {
-  var header: String
-  var items: [Item]
+    var header: String
+    var items: [Item]
 }
 
 extension SectionOfCurrencyList: SectionModelType {
-  typealias Item = Currency
-
-   init(original: SectionOfCurrencyList, items: [Item]) {
-    self = original
-    self.items = items
-  }
+    typealias Item = Currency
+    
+    init(original: SectionOfCurrencyList, items: [Item]) {
+        self = original
+        self.items = items
+    }
 }
 
 
@@ -32,11 +32,12 @@ class CurrencyListTableViewController: UIViewController {
     let disposeBag = DisposeBag()
     
     var segmentedControl = CornersWhiteSegmentedControl(items: ["Fiat", "Crypto"])
-    var textField = UITextField()
+    var searchBar = UITextField()
     
     var tableView = UITableView()
     
     var baseHeightOfElements: Double!
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,14 +69,14 @@ extension CurrencyListTableViewController: UITableViewDelegate {
         NSLayoutConstraint.activate([
             tableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: view.bounds.width*0.04),
             tableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -view.bounds.width*0.04),
-            tableView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: view.bounds.height*0.02),
+            tableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: view.bounds.height*0.02),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
         tableView.backgroundColor = Theme.Color.background
         tableView.tableFooterView = UIView() // Dont show unused rows
         tableView.separatorStyle = .none // Dont show borders between rows
-        tableView.keyboardDismissMode = .interactiveWithAccessory // Close the keyboard by scrolling
+        tableView.keyboardDismissMode = .onDragWithAccessory // Close the keyboard by scrolling
     }
     
     private func bindTableView() {
@@ -111,28 +112,56 @@ extension CurrencyListTableViewController: UITableViewDelegate {
     }
     
     private func setupTextField() {
-        view.addSubview(textField)
-        textField.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(searchBar)
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            textField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: view.bounds.width*0.04),
-            textField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -view.bounds.width*0.04),
-            textField.topAnchor.constraint(equalTo: segmentedControl.bottomAnchor, constant: view.bounds.height*0.02),
-            textField.heightAnchor.constraint(equalToConstant: baseHeightOfElements*0.8)
+            searchBar.leftAnchor.constraint(equalTo: view.leftAnchor, constant: view.bounds.width*0.04),
+            searchBar.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -view.bounds.width*0.04),
+            searchBar.topAnchor.constraint(equalTo: segmentedControl.bottomAnchor, constant: view.bounds.height*0.02),
+            searchBar.heightAnchor.constraint(equalToConstant: baseHeightOfElements)
         ])
         
-        textField.layer.cornerRadius = segmentedControl.layer.cornerRadius
-        textField.layer.borderWidth = 1
-        textField.layer.borderColor = Theme.Color.separator.cgColor
-        textField.clearButtonMode = .always
-        textField.borderStyle = .roundedRect
-        textField.keyboardType = .default
-        textField.backgroundColor = Theme.Color.background
-        textField.textColor = Theme.Color.secondText.withAlphaComponent(0.7)
+        searchBar.layer.cornerRadius = segmentedControl.layer.cornerRadius
+        searchBar.layer.borderWidth = 1
+        searchBar.layer.borderColor = Theme.Color.separator.cgColor
+        searchBar.clearButtonMode = .always
+        searchBar.borderStyle = .roundedRect
+        searchBar.keyboardType = .default
+        searchBar.backgroundColor = Theme.Color.background
+        searchBar.textColor = Theme.Color.secondText.withAlphaComponent(0.7)
+        searchBar.attributedPlaceholder =
+        NSAttributedString(string: "Search", attributes: [NSAttributedString.Key.foregroundColor: Theme.Color.secondText])
+        
+        //Add left view and make it transparent
+        searchBar.leftViewMode = .always
+        searchBar.leftView?.contentMode = .center
+        searchBar.leftView = UIImageView(image: UIImage(systemName: "magnifyingglass"))
+        searchBar.leftView?.tintColor = .white.withAlphaComponent(0)
+        
+        //Setup color of clearButton
+        if let clearButton = searchBar.value(forKey: "_clearButton") as? UIButton {
+             let templateImage = clearButton.imageView?.image?.withRenderingMode(.alwaysTemplate)
+             clearButton.setImage(templateImage, for: .normal)
+             clearButton.tintColor = Theme.Color.segmentedControlBackground
+         }
+        
+        //Create custom image view and adding to search bar
+        let searchImage = UIImageView(image: UIImage(systemName: "magnifyingglass"))
+        searchImage.tintColor = Theme.Color.secondText
+        searchImage.contentMode = .scaleAspectFit
+        self.view.addSubview(searchImage)
+        searchImage.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            searchImage.leftAnchor.constraint(equalTo: searchBar.leftAnchor, constant: baseHeightOfElements*0.15),
+            searchImage.centerYAnchor.constraint(equalTo: searchBar.centerYAnchor),
+            searchImage.heightAnchor.constraint(equalToConstant: baseHeightOfElements*0.5),
+            searchImage.widthAnchor.constraint(equalToConstant: baseHeightOfElements*0.5),
+        ])
         
         //RX Part
         
-        textField.rx.text.orEmpty
+        searchBar.rx.text.orEmpty
             .throttle(.milliseconds(100), scheduler: MainScheduler.instance)
             .distinctUntilChanged()
             .subscribe(onNext: { str in
@@ -161,6 +190,17 @@ extension CurrencyListTableViewController {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return baseHeightOfElements*1.5
+    }
+}
+
+// MARK:  - SETUP KEYBOARD
+extension CurrencyListTableViewController: UITextFieldDelegate {
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let _ = touches.first {
+            view.endEditing(true)
+        }
+        super.touchesBegan(touches, with: event)
     }
 }
 

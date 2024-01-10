@@ -19,6 +19,9 @@ class CoreWorker {
     
     let bag = DisposeBag()
     
+    //Settings List
+    let settingsWorker: SettingsProtocol = SettingsWorker()
+    let rxSettingsChangedFlag = BehaviorSubject<Bool>(value: false)
     
     //Currency List
     let currencyList: CurrencyListProtocol = CurrencyList()
@@ -33,6 +36,7 @@ class CoreWorker {
     public let rxExchangeToCurrency = BehaviorSubject<String>(value: "USD")
     
     //Updating date
+    public let rxValuesWasFetchedFlag = BehaviorSubject<Bool>(value: false)
     public let rxUptadingDate = BehaviorSubject<String>(value: "Error")
     
     //Workers
@@ -40,11 +44,22 @@ class CoreWorker {
     let userDefaultsWorker = UserDefaultsWorker()
     
     init() {
-        rxSubscribing()
         getPairsFromDefaults()
         getCurrencyValuesFromDefaults()
+        rxSubscribing()
+        
+
         
         fetchDataFromEthAndSaveToDefaults()
+        currencyFetcher.updateRatesFromCryptoCompare(completion: {successStatus in
+
+        })
+        
+
+        
+//        for currency in currencyList.getFullList(){
+//            print("CoinUniversal(type: .fiat, code: \"\(currency.shortName)\", name: \"\(currency.name)\", base: \"USD\", rate: 0, flow24Hours: 0, logo: \"\(currency.logo)\", imageUrl: \"\", colorIndex: \(currency.colorIndex)),")
+//        }
         
     }
     
@@ -52,16 +67,14 @@ class CoreWorker {
     private func rxSubscribing() { //Something changed. We must renumerate positions and save
         rxFavouritPairsCount.subscribe{ count in
             print("=FLAG-favorite pairs count = \(count)")
-            self.renumeratePair()
             self.savePairsToDefaults()
         }.disposed(by: bag)
         
-        rxUptadingDate.subscribe {_ in
-            print("=FLAG-updating date")
+        rxValuesWasFetchedFlag.subscribe {_ in
+            print("=FLAG-values was updated")
             self.getCurrencyValuesFromDefaults()
         }.disposed(by: bag)
     }
-
 }
 
 // MARK:  - Ethernet
@@ -94,11 +107,11 @@ extension CoreWorker {
             
             self.userDefaultsWorker.saveCurrencyListToDefaults(currencyList: listForSaving)
             //Make flag for updatingvalues
-            self.rxUptadingDate.onNext(normalDate)
-            
+            self.rxValuesWasFetchedFlag.onNext(true)
         })
     }
 }
+
 
 // MARK:  - Currency Pair Module
 extension CoreWorker {
@@ -121,19 +134,19 @@ extension CoreWorker {
         }
         if !pairExist {
             print("ADDING")
+            
             favoritePairList.append(CurrencyPair(
                 valueCurrency: currencyList.getCurrency(name: valueName),
                 baseCurrency: currencyList.getCurrency(name: baseName),
                 position: currencyList.getlistCount())
             )
+            renumeratePair()
             //Push for updating view
             rxFavouritPairsCount.onNext(favoritePairList.count)
-            
         }
-
     }
     
-    func deletePairFromeFavoriteList(valueName: String, baseName: String) {
+    func deletePairFromFavoriteList(valueName: String, baseName: String) {
         var deleteIndex = -1
         for (index, pair) in favoritePairList.enumerated(){
             if pair.valueCurrencyShortName == valueName && pair.baseCurrencyShortName == baseName {
@@ -144,13 +157,26 @@ extension CoreWorker {
             print("Delete index = \(deleteIndex)")
             favoritePairList.remove(at: deleteIndex)
         }
+        renumeratePair()
         //Push for updating view
         rxFavouritPairsCount.onNext(favoritePairList.count)
-        
     }
+    func deletePairFromFavoriteList(index: Int) {
+        favoritePairList.remove(at: index)
+        renumeratePair()
+        rxFavouritPairsCount.onNext(favoritePairList.count)
+    }
+    
     
     func deleteAllFavoritePairs(){
         favoritePairList.removeAll()
+        rxFavouritPairsCount.onNext(favoritePairList.count)
+    }
+    
+    func reorderPairOnList(fromIndex: Int, toIndex: Int){
+        let pair = favoritePairList.remove(at: fromIndex)
+        favoritePairList.insert(pair, at: toIndex)
+        renumeratePair()
         rxFavouritPairsCount.onNext(favoritePairList.count)
     }
     
@@ -180,7 +206,7 @@ extension CoreWorker {
             rxExchangeToCurrency.onNext(try rxExchangeFromCurrency.value())
             rxExchangeFromCurrency.onNext(newFromName)
             rxExhangeFlag.onNext(true)
-        }catch {
+        } catch {
             return
         }
     }
@@ -201,7 +227,6 @@ extension CoreWorker {
     }
     func getPairsFromDefaults() {
         var listFromDefaults = userDefaultsWorker.getPairsFromDefaults()
-        print(listFromDefaults.pairs.count)
         //Check null array and then making one Tile
         if listFromDefaults.pairs.count == 0 {
             favoritePairList.append(CurrencyPair(
@@ -265,7 +290,18 @@ extension CoreWorker {
                 previousValue: item.previousRate,
                 colorIndex: item.colorIndex)
         }
+        rxUptadingDate.onNext(savedList.lastUpdate)
     }
     
     
+}
+
+
+// MARK:  - Settings
+extension CoreWorker {
+    func changeBaseCurrency(newBaseShorName: String) {
+        settingsWorker.changeBaseCurrency(newBaseShortName: newBaseShorName)
+        currencyList.setBaseCurrency(name: newBaseShorName)
+        rxSettingsChangedFlag.onNext(true)
+    }
 }

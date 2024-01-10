@@ -16,7 +16,7 @@ class CurrencyListTableViewCell: UITableViewCell {
     let backgroundWhiteView = UIView()
     let logoView = UIView()
     let logoLabel = UILabel()
-    let gradientLayer = CAGradientLayer()
+    
     
     let nameLabel = UILabel()
     
@@ -63,7 +63,9 @@ class CurrencyListTableViewCell: UITableViewCell {
         logoLabel.text = currency.logo
        
         //Color logo View
-        gradientLayer.colors = Theme.colorsForGradient[currency.colorIndex]
+        //gradientLayer.colors = Theme.currencyColors[currecnyPair.colorIndex]
+        logoLabel.textColor = Theme.currencyColors[currency.colorIndex]
+        logoView.backgroundColor = Theme.currencyColors[currency.colorIndex].withAlphaComponent(0.1)
         
         let name = "\(currency.shortName) - \(currency.name)"
         nameLabel.text = name
@@ -113,7 +115,7 @@ class CurrencyListTableViewCell: UITableViewCell {
             valueName: valueName,
             baseName: baseName)
         if favoriteStatus {
-            CoreWorker.shared.deletePairFromeFavoriteList(valueName: valueName, baseName: baseName)
+            CoreWorker.shared.deletePairFromFavoriteList(valueName: valueName, baseName: baseName)
         }
         else {
             CoreWorker.shared.addPairToFavoriteList(valueName: valueName, baseName: baseName)
@@ -176,8 +178,8 @@ extension CurrencyListTableViewCell {
         NSLayoutConstraint.activate([
             logoLabel.centerYAnchor.constraint(equalTo: logoView.centerYAnchor),
             logoLabel.centerXAnchor.constraint(equalTo: logoView.centerXAnchor),
-            logoLabel.heightAnchor.constraint(equalTo: logoView.heightAnchor, multiplier: 0.8),
-            logoLabel.widthAnchor.constraint(equalTo: logoView.heightAnchor, multiplier: 0.8)
+            logoLabel.heightAnchor.constraint(equalTo: logoView.heightAnchor, multiplier: 0.6),
+            logoLabel.widthAnchor.constraint(equalTo: logoView.heightAnchor, multiplier: 0.6)
         ])
         
         self.layoutIfNeeded()  // For making corner radius
@@ -186,11 +188,10 @@ extension CurrencyListTableViewCell {
         self.logoView.layer.cornerRadius = logoView.bounds.height/2
         
         
-        gradientLayer.startPoint = CGPoint(x: 1, y: 0)
-        gradientLayer.endPoint = CGPoint(x: 0, y: 1)
-        gradientLayer.frame = logoView.bounds
-
-        logoView.layer.insertSublayer(gradientLayer, at: 0)
+//        gradientLayer.startPoint = CGPoint(x: 1, y: 0)
+//        gradientLayer.endPoint = CGPoint(x: 0, y: 1)
+//        gradientLayer.frame = logoView.bounds
+//        logoView.layer.insertSublayer(gradientLayer, at: 0)
         
     }
     

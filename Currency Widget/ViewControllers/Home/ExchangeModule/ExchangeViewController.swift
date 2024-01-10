@@ -20,6 +20,8 @@ class ExchangeViewController: UIViewController {
     let fromView = EnterCurrencyView()
     let toView = EnterCurrencyView()
     
+    var typeOfRow = "" //To or From
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         //view.backgroundColor = .yellow
@@ -91,19 +93,29 @@ extension ExchangeViewController {
         //Setup Choose currency button
         
         fromView.currencyButton.rx.tap.asDriver().drive(onNext: {
+            self.typeOfRow = "From"
             let vc = ChooseCurrencyViewController()
-            vc.viewModel.type = "from"
+            vc.delegate = self
             self.present(vc, animated: true)
         }).disposed(by: disposeBag)
         
         toView.currencyButton.rx.tap.asDriver().drive(onNext: {
+            self.typeOfRow = "To"
             let vc = ChooseCurrencyViewController()
             vc.modalPresentationStyle = .automatic
-            vc.viewModel.type = "to"
+            vc.delegate = self
             self.present(vc, animated: true)
         }).disposed(by: disposeBag)
    
     }
+}
+
+extension ExchangeViewController: ReturnDataFromChooseViewControllerProtocol {
+    func passCurrencyShortName(name: String?) {
+        if name != nil {
+            viewModel.setCurrency(shortName: name!, type: typeOfRow)
+        }
+    }   
 }
 
 // MARK:  - SETUP UI
@@ -130,9 +142,9 @@ extension ExchangeViewController: UITextFieldDelegate {
         view.layoutIfNeeded()
         changeButton.clipsToBounds = true
         changeButton.layer.cornerRadius = Theme.Radius.minimal
-        changeButton.backgroundColor = Theme.Color.mainColorPale
+        changeButton.backgroundColor = Theme.Color.accentColor
         changeButton.setImage(UIImage(systemName: "arrow.up.arrow.down"), for: .normal)
-        changeButton.imageView?.tintColor = Theme.Color.mainColor.withAlphaComponent(0.4)
+        changeButton.imageView?.tintColor = Theme.Color.mainColor
         changeButton.imageView?.contentMode = .scaleAspectFit
 
     }
@@ -189,3 +201,5 @@ extension ExchangeViewController: UITextFieldDelegate {
         
     }
 }
+
+

@@ -18,7 +18,9 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     
     let homeVC = HomeViewController()
     let listVC = SecondViewController()
-    let settingsVC = HomeViewController()
+    let settingsVC = SettingsViewController()
+    
+    let backgroundView = UIView()
     
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +30,10 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         setupTabBarUI()
         setupViewControllers()
         setupRx()
+    }
+    
+    override func viewWillLayoutSubviews() {
+
     }
     
     private func setupRx() {
@@ -73,10 +79,31 @@ extension TabBarViewController {
     
     
     private func setupTabBarUI() {
-        tabBar.backgroundColor = Theme.Color.mainColor
+        tabBar.backgroundColor = Theme.Color.tabBarBackground
+        tabBar.itemPositioning = .centered
+        //tabBar.itemSpacing = UIScreen.main.bounds.width/30
+        
 //        tabBar.layer.cornerRadius = Theme.Radius.mainWidget
 //        tabBar.layer.maskedCorners = [.layerMinXMinYCorner,.layerMaxXMinYCorner]
-        tabBar.tintColor = Theme.Color.background.withAlphaComponent(0.5)
-        tabBar.unselectedItemTintColor = Theme.Color.background.withAlphaComponent(0.9)
+        tabBar.tintColor = Theme.Color.tabBarText.withAlphaComponent(1)
+        tabBar.unselectedItemTintColor = Theme.Color.tabBarText.withAlphaComponent(0.5)
+        
+        
+//        backgroundView.translatesAutoresizingMaskIntoConstraints = false
+//        tabBar.addSubview(backgroundView)
+//        backgroundView.backgroundColor = Theme.Color.mainColor
+//
+//        NSLayoutConstraint.activate([
+//            backgroundView.centerXAnchor.constraint(equalTo: tabBar.centerXAnchor),
+//            backgroundView.topAnchor.constraint(equalTo: tabBar.topAnchor),
+//            backgroundView.widthAnchor.constraint(equalTo: tabBar.widthAnchor, multiplier: 0.45),
+//            backgroundView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height/20),
+//            //backgroundView.height.constraint(equalToConstant: tabBarItem.accessibilityPath?.bounds.height)
+//        ])
+//
+//        self.title = nil
+//
+//        backgroundView.layer.masksToBounds = true
+//        backgroundView.layer.cornerRadius = 5
     }
 }

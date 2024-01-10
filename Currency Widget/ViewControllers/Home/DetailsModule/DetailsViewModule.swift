@@ -34,11 +34,12 @@ class DetailsViewModule: DetailsViewModuleProtocol {
             let to = try CoreWorker.shared.rxExchangeToCurrency.value()
             
             if status {
-                CoreWorker.shared.deletePairFromeFavoriteList(valueName: from, baseName: to)
+                CoreWorker.shared.deletePairFromFavoriteList(valueName: from, baseName: to)
             }
             else {
                 CoreWorker.shared.addPairToFavoriteList(valueName: from, baseName: to)
             }
+            CoreWorker.shared.rxExhangeFlag.onNext(true)
 
         } catch {
             return

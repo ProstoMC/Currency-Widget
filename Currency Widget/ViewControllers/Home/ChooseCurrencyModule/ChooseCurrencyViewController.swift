@@ -10,8 +10,14 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 
+protocol ReturnDataFromChooseViewControllerProtocol {
+    func passCurrencyShortName(name: String?)
+}
+
+
 class ChooseCurrencyViewController: UIViewController, UITableViewDelegate {
     
+    var delegate: ReturnDataFromChooseViewControllerProtocol!
     
     //We have to provide type of VM from mother VC
     var viewModel: ChooseCurrencyViewModelProtocol = ChooseCurrencyViewModel()
@@ -19,10 +25,12 @@ class ChooseCurrencyViewController: UIViewController, UITableViewDelegate {
     
     var closingLine = UIView()
     var segmentedControl = CornersWhiteSegmentedControl(items: ["Fiat", "Crypto"])
-    var textField = UITextField()
+    var searchBar = UITextField()
     var tableView = UITableView()
     
     var baseHeightOfElements: Double!
+    
+    var choosenCurrencyName: String? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +40,10 @@ class ChooseCurrencyViewController: UIViewController, UITableViewDelegate {
         super.viewWillLayoutSubviews()
         setupUI()
         bindTableView()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.delegate.passCurrencyShortName(name: choosenCurrencyName)
     }
     
     private func bindTableView() {
@@ -51,8 +63,9 @@ class ChooseCurrencyViewController: UIViewController, UITableViewDelegate {
         viewModel.rxFiatList.bind(to: tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
         
         tableView.rx.modelSelected(Currency.self).subscribe(onNext: { item in
-            print ("SELECTED")
-            self.viewModel.setCurrency(shortName: item.shortName)
+            //print ("SELECTED")
+            //self.viewModel.setCurrency(shortName: item.shortName)
+            self.choosenCurrencyName = item.shortName
             self.dismiss(animated: true)
         }).disposed(by: disposeBag)
         
@@ -101,28 +114,58 @@ extension ChooseCurrencyViewController {
     }
     
     private func setupTextField() {
-        view.addSubview(textField)
-        textField.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(searchBar)
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            textField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: view.bounds.width*0.04),
-            textField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -view.bounds.width*0.04),
-            textField.topAnchor.constraint(equalTo: segmentedControl.bottomAnchor, constant: view.bounds.height*0.02),
-            textField.heightAnchor.constraint(equalToConstant: baseHeightOfElements*0.8)
+            searchBar.leftAnchor.constraint(equalTo: view.leftAnchor, constant: view.bounds.width*0.04),
+            searchBar.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -view.bounds.width*0.04),
+            searchBar.topAnchor.constraint(equalTo: segmentedControl.bottomAnchor, constant: view.bounds.height*0.02),
+            searchBar.heightAnchor.constraint(equalToConstant: baseHeightOfElements)
+        ])
+        //Set normal appearing for search bar
+        searchBar.layer.cornerRadius = segmentedControl.layer.cornerRadius
+        searchBar.layer.masksToBounds = true
+        searchBar.layer.borderWidth = 1
+        searchBar.layer.borderColor = Theme.Color.separator.cgColor
+        searchBar.clearButtonMode = .always
+        searchBar.borderStyle = .roundedRect
+        searchBar.keyboardType = .default
+        searchBar.backgroundColor = Theme.Color.background
+        searchBar.textColor = Theme.Color.secondText.withAlphaComponent(0.7)
+        searchBar.attributedPlaceholder =
+        NSAttributedString(string: "Search", attributes: [NSAttributedString.Key.foregroundColor: Theme.Color.secondText])
+        
+        //Setup color of clearButton
+        if let clearButton = searchBar.value(forKey: "_clearButton") as? UIButton {
+             let templateImage = clearButton.imageView?.image?.withRenderingMode(.alwaysTemplate)
+             clearButton.setImage(templateImage, for: .normal)
+             clearButton.tintColor = Theme.Color.segmentedControlBackground
+         }
+        
+        //Add left view and make it transparent
+        searchBar.leftViewMode = .always
+        searchBar.leftView?.contentMode = .center
+        searchBar.leftView = UIImageView(image: UIImage(systemName: "magnifyingglass"))
+        searchBar.leftView?.tintColor = .white.withAlphaComponent(0)
+        
+        //Create custom image view and adding to search bar
+        let searchImage = UIImageView(image: UIImage(systemName: "magnifyingglass"))
+        searchImage.tintColor = Theme.Color.secondText
+        searchImage.contentMode = .scaleAspectFit
+        self.view.addSubview(searchImage)
+        searchImage.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            searchImage.leftAnchor.constraint(equalTo: searchBar.leftAnchor, constant: baseHeightOfElements*0.15),
+            searchImage.centerYAnchor.constraint(equalTo: searchBar.centerYAnchor),
+            searchImage.heightAnchor.constraint(equalToConstant: baseHeightOfElements*0.5),
+            searchImage.widthAnchor.constraint(equalToConstant: baseHeightOfElements*0.5),
         ])
         
-        textField.layer.cornerRadius = segmentedControl.layer.cornerRadius
-        textField.layer.borderWidth = 1
-        textField.layer.borderColor = Theme.Color.separator.cgColor
-        textField.clearButtonMode = .always
-        textField.borderStyle = .roundedRect
-        textField.keyboardType = .default
-        textField.backgroundColor = Theme.Color.background
-        textField.textColor = Theme.Color.secondText.withAlphaComponent(0.7)
-        
+
         //RX Part
         
-        textField.rx.text.orEmpty
+        searchBar.rx.text.orEmpty
             .throttle(.milliseconds(100), scheduler: MainScheduler.instance)
             .distinctUntilChanged()
             .subscribe(onNext: { str in
@@ -142,7 +185,7 @@ extension ChooseCurrencyViewController {
         NSLayoutConstraint.activate([
             tableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: view.bounds.width*0.04),
             tableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -view.bounds.width*0.04),
-            tableView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: view.bounds.height*0.02),
+            tableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: view.bounds.height*0.02),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         

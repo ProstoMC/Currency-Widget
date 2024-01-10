@@ -27,6 +27,7 @@ class CurrencyList: CurrencyListProtocol {
     
     init() {
         base = Currency(rate: 1, previousRate: 1, base: "RUB", shortName: "RUB")
+        
         list = [
             Currency(rate: 1, previousRate: 1, base: "RUB", shortName: "RUB"),
             Currency(rate: 1, previousRate: 1, base: "RUB", shortName: "AUD"),
@@ -90,7 +91,7 @@ class CurrencyList: CurrencyListProtocol {
         list.indices.forEach {
             list[$0].colorIndex = index
             index = index + 1
-            if index > Theme.colorsForGradient.count-1 {
+            if index > Theme.currencyColors.count-1 {
                 index = 0
             }
         }
@@ -143,7 +144,22 @@ extension CurrencyList {
 extension CurrencyList {
     
     func setBaseCurrency(name: String) {
-        base = Currency(rate: 1, previousRate: 1, base: name, shortName: name)
+        do {
+            let ratio = try getCurrency(name: name).rateRx.value()
+            base = Currency(rate: 1, previousRate: 1, base: name, shortName: name)
+            
+            for i in list.indices {
+                
+                list[i].base = name
+                let oldRate = try list[i].rateRx.value()
+                let oldPrevious = try list[i].previousRateRx.value()
+                list[i].rateRx.onNext(oldRate/ratio)
+                list[i].previousRateRx.onNext(oldPrevious/ratio)
+            }
+            
+        } catch {
+            return
+        }
     }
     
     func setCurrencyValue(name: String, value: Double, previousValue: Double, colorIndex: Int?) {

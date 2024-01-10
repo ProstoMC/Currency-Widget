@@ -12,7 +12,6 @@ class ChooseCurrencyTableViewCell: UITableViewCell {
     let backgroundWhiteView = UIView()
     let logoView = UIView()
     let logoLabel = UILabel()
-    let gradientLayer = CAGradientLayer()
     
     let nameLabel = UILabel()
     
@@ -39,8 +38,11 @@ class ChooseCurrencyTableViewCell: UITableViewCell {
     
     func configure(shortName: String, fullname: String, logo: String, colorIndex: Int) {
         logoLabel.text = logo
+        
         //Color logo View
-        gradientLayer.colors = Theme.colorsForGradient[colorIndex]
+        
+        logoLabel.textColor = Theme.currencyColors[colorIndex]
+        logoView.backgroundColor = Theme.currencyColors[colorIndex].withAlphaComponent(0.1)
         
         let name = "\(shortName) - \(fullname)"
         nameLabel.text = name
@@ -96,21 +98,14 @@ extension ChooseCurrencyTableViewCell {
         NSLayoutConstraint.activate([
             logoLabel.centerYAnchor.constraint(equalTo: logoView.centerYAnchor),
             logoLabel.centerXAnchor.constraint(equalTo: logoView.centerXAnchor),
-            logoLabel.heightAnchor.constraint(equalTo: logoView.heightAnchor, multiplier: 0.8),
-            logoLabel.widthAnchor.constraint(equalTo: logoView.heightAnchor, multiplier: 0.8)
+            logoLabel.heightAnchor.constraint(equalTo: logoView.heightAnchor, multiplier: 0.7),
+            logoLabel.widthAnchor.constraint(equalTo: logoView.heightAnchor, multiplier: 0.7)
         ])
         
         self.layoutIfNeeded()  // For making corner radius
         
         self.logoView.layer.masksToBounds = true
         self.logoView.layer.cornerRadius = logoView.bounds.height/2
-        
-
-        gradientLayer.startPoint = CGPoint(x: 1, y: 0)
-        gradientLayer.endPoint = CGPoint(x: 0, y: 1)
-        gradientLayer.frame = logoView.bounds
-        gradientLayer.colors = [Theme.Color.mainColor.cgColor, Theme.Color.mainColor.withAlphaComponent(0.8).cgColor]
-        logoView.layer.insertSublayer(gradientLayer, at: 0)
         
     }
     

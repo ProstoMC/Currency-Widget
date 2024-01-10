@@ -52,6 +52,7 @@ extension EnterCurrencyView {
 
         
         textField.layer.cornerRadius = Theme.Radius.minimal
+        textField.layer.masksToBounds = true
         textField.layer.borderWidth = 1
         textField.layer.borderColor = Theme.Color.separator.cgColor
         textField.clearButtonMode = .always
@@ -61,6 +62,7 @@ extension EnterCurrencyView {
         textField.textColor = Theme.Color.secondText.withAlphaComponent(0.7)
         textField.keyboardType = .decimalPad
         textField.clearButtonMode = .never
+        
         
     }
     
@@ -141,7 +143,7 @@ extension EnterCurrencyView {
         ])
         
         chevronImageView.image = UIImage(systemName: "chevron.down")
-        chevronImageView.tintColor = Theme.Color.mainColor
+        chevronImageView.tintColor = Theme.Color.accentColor
         chevronImageView.contentMode = .scaleAspectFit
 
     }

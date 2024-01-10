@@ -50,7 +50,7 @@ extension HeaderView {
         logoImageView.clipsToBounds = true
         logoImageView.layer.cornerRadius = logoImageView.bounds.height/2
         logoImageView.backgroundColor = Theme.Color.mainColorPale
-        logoImageView.image = UIImage(named: "icon")
+        logoImageView.image = UIImage(named: "LogoLightMode")
         logoImageView.contentMode = .scaleAspectFill
         
     }
@@ -73,7 +73,7 @@ extension HeaderView {
         dateTextLabel.textColor = Theme.Color.secondText.withAlphaComponent(0.4)
         
         CoreWorker.shared.rxUptadingDate.subscribe{ updatingDate in
-            self.dateTextLabel.text = "Last update: " + updatingDate
+            self.dateTextLabel.text = "Actual to " + updatingDate
         }.disposed(by: bag)
         
     }

@@ -19,6 +19,7 @@ protocol ExchangeViewModelProtocol {
     func makeExchangeNormal()
     func makeExchangeReverse()
     func switchFields()
+    func setCurrency(shortName: String, type: String)
     
 }
 
@@ -86,6 +87,17 @@ class ExchangeViewModel: ExchangeViewModelProtocol  {
     
     func switchFields() {
         CoreWorker.shared.switchExchangeFields()
+    }
+    
+    func setCurrency(shortName: String, type: String) {
+        print("--Setted currency = \(shortName) -- type = \(type)")
+        if type == "From" {
+            CoreWorker.shared.setFromCurrencyExchange(name: shortName)
+        }
+        if type == "To" {
+            CoreWorker.shared.setToCurrencyExchange(name: shortName)
+        }
+        
     }
     
 }
