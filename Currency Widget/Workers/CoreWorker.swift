@@ -25,25 +25,28 @@ class CoreWorker {
     
     //Currency List
     let currencyList: CurrencyListProtocol = CurrencyList()
+    let coinList: CoinListProtocol = UniversalCoinWorker()
+    let rxCoinsRateUpdated = RxSwift.BehaviorSubject<Bool>(value: false)
     
     //Currency Pairs
     public var favoritePairList: [CurrencyPair] = []
     public let rxFavouritPairsCount = BehaviorSubject<Int>(value: 0)
     
     //Exchange values
-    public let rxExhangeFlag = BehaviorSubject<Bool>(value: false) // Used for hide and unhide Details
-    public let rxExchangeFromCurrency = BehaviorSubject<String>(value: "RUB")
-    public let rxExchangeToCurrency = BehaviorSubject<String>(value: "USD")
+    let rxExhangeFlag = BehaviorSubject<Bool>(value: false) // Used for hide and unhide Details
+    let rxExchangeFromCurrency = BehaviorSubject<String>(value: "RUB")
+    let rxExchangeToCurrency = BehaviorSubject<String>(value: "USD")
     
     //Updating date
-    public let rxValuesWasFetchedFlag = BehaviorSubject<Bool>(value: false)
-    public let rxUptadingDate = BehaviorSubject<String>(value: "Error")
+    let rxValuesWasFetchedFlag = BehaviorSubject<Bool>(value: false)
+    let rxUptadingDate = BehaviorSubject<String>(value: "Error")
     
     //Workers
     let currencyFetcher = CurrencyFetcher()
     let userDefaultsWorker = UserDefaultsWorker()
     
     init() {
+        
         getPairsFromDefaults()
         getCurrencyValuesFromDefaults()
         rxSubscribing()
@@ -51,15 +54,13 @@ class CoreWorker {
 
         
         fetchDataFromEthAndSaveToDefaults()
-        currencyFetcher.updateRatesFromCryptoCompare(completion: {successStatus in
-
-        })
+        updateCoinsList()
         
-
         
-//        for currency in currencyList.getFullList(){
-//            print("CoinUniversal(type: .fiat, code: \"\(currency.shortName)\", name: \"\(currency.name)\", base: \"USD\", rate: 0, flow24Hours: 0, logo: \"\(currency.logo)\", imageUrl: \"\", colorIndex: \(currency.colorIndex)),")
+//        for coin in cryptoList {
+//            print ("\"\(coin.code)\": \"\(coin.name)\",")
 //        }
+
         
     }
     
@@ -74,6 +75,15 @@ class CoreWorker {
             print("=FLAG-values was updated")
             self.getCurrencyValuesFromDefaults()
         }.disposed(by: bag)
+        
+        rxCoinsRateUpdated.subscribe{ status in
+            if status {
+                for coin in self.coinList.fiatList {
+                    print ("\(coin.code): \(coin.rate)")
+                }
+            }
+        }.disposed(by: bag)
+        
     }
 }
 
@@ -110,6 +120,47 @@ extension CoreWorker {
             self.rxValuesWasFetchedFlag.onNext(true)
         })
     }
+    
+    func updateCoinsList() {
+        
+        currencyFetcher.fetchCurrencyDaily(completion: { valuteList, _ in
+            var baseRate = 1.0
+            //Finding USD for convert from RUB
+            for currency in valuteList {
+                if currency.value.CharCode == self.coinList.baseCoin.code {
+                    baseRate = currency.value.Value
+                    break
+                }
+            }
+            
+            for currency in valuteList {
+                //let name = currency.value.Name  //It is russian name
+                self.coinList.updateRatesFromCB(
+                    code: currency.value.CharCode,
+                    rate: currency.value.Value/baseRate,
+                    flow: (currency.value.Value - currency.value.Previous)/baseRate)
+            }
+        })
+
+        var coinsCodes = ""
+        
+        for element in coinList.fiatList {
+            coinsCodes.append(element.code)
+            coinsCodes.append(",")
+        }
+        for element in coinList.cryptoList {
+            coinsCodes.append(element.code)
+            coinsCodes.append(",")
+        }
+        
+        currencyFetcher.updateCoinRates(base: coinList.baseCoin.code, coinCodes: coinsCodes, completion: { list in
+            self.coinList.updateRates(json: list)
+            self.rxCoinsRateUpdated.onNext(true)
+        })
+        
+    }
+    
+    
 }
 
 

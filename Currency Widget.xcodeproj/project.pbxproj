@@ -51,6 +51,7 @@
 		A589C77A2ACF0B95001ABF2C /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589C7792ACF0B95001ABF2C /* Theme.swift */; };
 		A589C77D2ACF0F56001ABF2C /* CurrencyPairsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589C77C2ACF0F56001ABF2C /* CurrencyPairsListViewController.swift */; };
 		A589C77F2ACF3926001ABF2C /* AddTileUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589C77E2ACF3926001ABF2C /* AddTileUIView.swift */; };
+		A58ADAFE2B501F6B00FE9BAA /* UniversalCoinWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58ADAFD2B501F6A00FE9BAA /* UniversalCoinWorker.swift */; };
 		A5B74A022B30A62000F12088 /* UserDefaultsWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B74A012B30A62000F12088 /* UserDefaultsWorker.swift */; };
 		A5B74A042B30A89500F12088 /* StructsForDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B74A032B30A89500F12088 /* StructsForDefaults.swift */; };
 		A5B74A082B31F8E300F12088 /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B74A072B31F8E300F12088 /* DetailsViewController.swift */; };
@@ -59,6 +60,10 @@
 		A5B949492B1E08F400D2B6A6 /* CurrencyListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B949482B1E08F400D2B6A6 /* CurrencyListTableViewCell.swift */; };
 		A5B9494B2B1E186A00D2B6A6 /* CurrencyListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B9494A2B1E186A00D2B6A6 /* CurrencyListViewModel.swift */; };
 		A5D6DA892AD97FFF00E3D4F4 /* Tile1x2CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D6DA882AD97FFF00E3D4F4 /* Tile1x2CollectionViewCell.swift */; };
+		A5E65FCE2B507D9A0087199F /* CurrencyListViewModelV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E65FCD2B507D9A0087199F /* CurrencyListViewModelV2.swift */; };
+		A5E65FD02B51B8EC0087199F /* RxImageFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E65FCF2B51B8EC0087199F /* RxImageFetcher.swift */; };
+		A5F96D662B51E7C70060455A /* SDWebImage.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5F96D652B51E7C60060455A /* SDWebImage.xcframework */; };
+		A5F96D672B51E7C70060455A /* SDWebImage.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A5F96D652B51E7C60060455A /* SDWebImage.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -73,6 +78,7 @@
 				A50FDF502B14B01D00E1F54A /* Alamofire.xcframework in Embed Frameworks */,
 				A50FDF582B14B01E00E1F54A /* RxDataSources.xcframework in Embed Frameworks */,
 				A50FDF5A2B14B01E00E1F54A /* RxBlocking.xcframework in Embed Frameworks */,
+				A5F96D672B51E7C70060455A /* SDWebImage.xcframework in Embed Frameworks */,
 				A50FDF522B14B01D00E1F54A /* RxRelay.xcframework in Embed Frameworks */,
 				A50FDF5C2B14B01E00E1F54A /* Differentiator.xcframework in Embed Frameworks */,
 			);
@@ -121,6 +127,7 @@
 		A589C7792ACF0B95001ABF2C /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		A589C77C2ACF0F56001ABF2C /* CurrencyPairsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPairsListViewController.swift; sourceTree = "<group>"; };
 		A589C77E2ACF3926001ABF2C /* AddTileUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTileUIView.swift; sourceTree = "<group>"; };
+		A58ADAFD2B501F6A00FE9BAA /* UniversalCoinWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversalCoinWorker.swift; sourceTree = "<group>"; };
 		A5B74A012B30A62000F12088 /* UserDefaultsWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsWorker.swift; sourceTree = "<group>"; };
 		A5B74A032B30A89500F12088 /* StructsForDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StructsForDefaults.swift; sourceTree = "<group>"; };
 		A5B74A072B31F8E300F12088 /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
@@ -129,6 +136,9 @@
 		A5B949482B1E08F400D2B6A6 /* CurrencyListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyListTableViewCell.swift; sourceTree = "<group>"; };
 		A5B9494A2B1E186A00D2B6A6 /* CurrencyListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyListViewModel.swift; sourceTree = "<group>"; };
 		A5D6DA882AD97FFF00E3D4F4 /* Tile1x2CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tile1x2CollectionViewCell.swift; sourceTree = "<group>"; };
+		A5E65FCD2B507D9A0087199F /* CurrencyListViewModelV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyListViewModelV2.swift; sourceTree = "<group>"; };
+		A5E65FCF2B51B8EC0087199F /* RxImageFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxImageFetcher.swift; sourceTree = "<group>"; };
+		A5F96D652B51E7C60060455A /* SDWebImage.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDWebImage.xcframework; path = Carthage/Build/SDWebImage.xcframework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +151,7 @@
 				A50FDF4F2B14B01D00E1F54A /* Alamofire.xcframework in Frameworks */,
 				A50FDF572B14B01E00E1F54A /* RxDataSources.xcframework in Frameworks */,
 				A50FDF592B14B01E00E1F54A /* RxBlocking.xcframework in Frameworks */,
+				A5F96D662B51E7C70060455A /* SDWebImage.xcframework in Frameworks */,
 				A50FDF512B14B01D00E1F54A /* RxRelay.xcframework in Frameworks */,
 				A50FDF5B2B14B01E00E1F54A /* Differentiator.xcframework in Frameworks */,
 			);
@@ -156,6 +167,8 @@
 				A50A21272AEA83AA00BBF543 /* CurrencyFetcher.swift */,
 				A521DE442B0CD99300BF1899 /* CurrencyList.swift */,
 				A52E57322B3CADB50094BAB5 /* SettingsWorker.swift */,
+				A58ADAFD2B501F6A00FE9BAA /* UniversalCoinWorker.swift */,
+				A5E65FCF2B51B8EC0087199F /* RxImageFetcher.swift */,
 			);
 			path = Workers;
 			sourceTree = "<group>";
@@ -217,6 +230,7 @@
 		A5270F372B1235E0006DE662 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A5F96D652B51E7C60060455A /* SDWebImage.xcframework */,
 				A50FDF472B14B01700E1F54A /* Alamofire.xcframework */,
 				A50FDF4D2B14B01C00E1F54A /* Differentiator.xcframework */,
 				A50FDF4C2B14B01B00E1F54A /* RxBlocking.xcframework */,
@@ -254,6 +268,7 @@
 				A59EFF282B21D9D3006A08A8 /* SubViews */,
 				A53AB4422B18D7F0002DB100 /* SecondViewController.swift */,
 				A5B9494A2B1E186A00D2B6A6 /* CurrencyListViewModel.swift */,
+				A5E65FCD2B507D9A0087199F /* CurrencyListViewModelV2.swift */,
 				A5B949462B1BE26200D2B6A6 /* CurrencyListTableViewController.swift */,
 			);
 			path = SecondController;
@@ -402,6 +417,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A52D6E502B28A37800A56541 /* ChooseCurrencyViewController.swift in Sources */,
+				A58ADAFE2B501F6B00FE9BAA /* UniversalCoinWorker.swift in Sources */,
 				A50A212A2AEA841000BBF543 /* Currency.swift in Sources */,
 				A5B949492B1E08F400D2B6A6 /* CurrencyListTableViewCell.swift in Sources */,
 				A50FDF622B160F6400E1F54A /* ExchangeViewModel.swift in Sources */,
@@ -423,10 +439,12 @@
 				A52D6E572B28EC0800A56541 /* CoreWorker.swift in Sources */,
 				A5D6DA892AD97FFF00E3D4F4 /* Tile1x2CollectionViewCell.swift in Sources */,
 				A589C77F2ACF3926001ABF2C /* AddTileUIView.swift in Sources */,
+				A5E65FD02B51B8EC0087199F /* RxImageFetcher.swift in Sources */,
 				A5B9494B2B1E186A00D2B6A6 /* CurrencyListViewModel.swift in Sources */,
 				A52D6E522B28C14300A56541 /* ChooseCurrencyTableViewCell.swift in Sources */,
 				A5B74A0A2B3479B400F12088 /* DetailsViewModule.swift in Sources */,
 				A50A21282AEA83AA00BBF543 /* CurrencyFetcher.swift in Sources */,
+				A5E65FCE2B507D9A0087199F /* CurrencyListViewModelV2.swift in Sources */,
 				A5B74A042B30A89500F12088 /* StructsForDefaults.swift in Sources */,
 				A52E57332B3CADB50094BAB5 /* SettingsWorker.swift in Sources */,
 				A580E83A2B4ED378003C101E /* CoinUniversal.swift in Sources */,

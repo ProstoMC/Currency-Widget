@@ -26,7 +26,7 @@ struct CoinUniversal: Codable {
     var colorIndex: Int
 }
 
-var fiatList: [CoinUniversal] = [
+var fiatListGlobal: [CoinUniversal] = [
     CoinUniversal(type: .fiat, code: "RUB", name: "Russian Ruble", base: "USD", rate: 0, flow24Hours: 0, logo: "₽", imageUrl: "", colorIndex: 0),
     CoinUniversal(type: .fiat, code: "AUD", name: "Australian Dollar", base: "USD", rate: 0, flow24Hours: 0, logo: "A$", imageUrl: "", colorIndex: 1),
     CoinUniversal(type: .fiat, code: "AZN", name: "Azerbaijani Manat", base: "USD", rate: 0, flow24Hours: 0, logo: "₼", imageUrl: "", colorIndex: 2),
@@ -73,7 +73,7 @@ var fiatList: [CoinUniversal] = [
     CoinUniversal(type: .fiat, code: "JPY", name: "Japanese Yen", base: "USD", rate: 0, flow24Hours: 0, logo: "¥", imageUrl: "", colorIndex: 3),
 ]
 
-var cryptoList: [CoinUniversal] = [
+var cryptoListGlobal: [CoinUniversal] = [
     CoinUniversal(type: .crypto, code: "BTC", name: "Bitcoin", base: "USD", rate: 0, flow24Hours: 0, logo: "", imageUrl: "www.cryptocompare.com/media/37746251/btc.png", colorIndex: -1),
     CoinUniversal(type: .crypto, code: "ETH", name: "Ethereum", base: "USD", rate: 0, flow24Hours: 0, logo: "", imageUrl: "www.cryptocompare.com/media/37746238/eth.png", colorIndex: -1),
     CoinUniversal(type: .crypto, code: "SOL", name: "Solana", base: "USD", rate: 0, flow24Hours: 0, logo: "", imageUrl: "www.cryptocompare.com/media/37747734/sol.png", colorIndex: -1),
@@ -116,3 +116,18 @@ var cryptoList: [CoinUniversal] = [
     CoinUniversal(type: .crypto, code: "WBTC", name: "Wrapped Bitcoin", base: "USD", rate: 0, flow24Hours: 0, logo: "", imageUrl: "www.cryptocompare.com/media/35309588/wbtc.png", colorIndex: -1),
 ]
 
+
+//JSON {
+//    lastUpdate: 178249273,
+//    baseCode: "USD",
+//    coins: [
+//        {
+//            "code": "BTC",
+//            "name": "Bitcoin",
+//            "nameRU": "",
+//            "rate": 378483.234,
+//            "flowRate24": -0.22,
+//            "urlImage": "/media/..."
+//        }
+//    ]
+//}

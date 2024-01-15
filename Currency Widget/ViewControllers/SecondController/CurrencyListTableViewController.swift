@@ -6,29 +6,35 @@
 //
 
 import UIKit
+import Foundation
 import RxSwift
 import RxDataSources
+import RxCocoa
+import Differentiator
+
+
+protocol CurrencyListViewModelProtocol {
+//    var rxFiatList: BehaviorRelay<[SectionOfCurrencyList]> { get }
+//    func selectTail(currency: Currency)
+
+    func findCurrency(str: String)
+   
+    var rxUpdateRatesFlag: BehaviorSubject<Bool> { get }
+    var rxCoinList: BehaviorRelay<[TableSectionOfCoinUniversal]> { get }
+    var typeOfCoin: TypeOfCoin { get set }
+    
+    func selectTail(coin: CoinUniversal)
+    func resetModel()
+}
 
 // MARK:  - Setup sections for RxDataSource
 
-struct SectionOfCurrencyList {
-    var header: String
-    var items: [Item]
-}
 
-extension SectionOfCurrencyList: SectionModelType {
-    typealias Item = Currency
-    
-    init(original: SectionOfCurrencyList, items: [Item]) {
-        self = original
-        self.items = items
-    }
-}
 
 
 class CurrencyListTableViewController: UIViewController {
     
-    var viewModel: CurrencyListViewModelProtocol = CurrencyListViewModel()
+    var viewModel: CurrencyListViewModelProtocol = CurrencyListViewModelV2()
     let disposeBag = DisposeBag()
     
     var segmentedControl = CornersWhiteSegmentedControl(items: ["Fiat", "Crypto"])
@@ -38,7 +44,7 @@ class CurrencyListTableViewController: UIViewController {
     
     var baseHeightOfElements: Double!
     
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         baseHeightOfElements = getBaseHeight()
@@ -47,8 +53,79 @@ class CurrencyListTableViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         setupUI()
+        setupUsage()
+    }
+}
+
+// MARK:  - SETUP USAGE
+extension CurrencyListTableViewController {
+    
+    private func setupUsage(){
+        usageTableView()
+        usageSegmentedControl()
+        usageSearchBar()
     }
     
+    //    private func bindTableView() {
+    //        let dataSource = RxTableViewSectionedReloadDataSource<SectionOfCurrencyList>(
+    //            configureCell: { dataSource, tableView, indexPath, item in
+    //                let cell = self.tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CurrencyListTableViewCell
+    //
+    //                cell.rxConfigure(currency: item, baseLogo: CoreWorker.shared.currencyList.getBaseCurrency().logo)
+    //
+    //                return cell
+    //            })
+    //
+    //        viewModel.rxFiatList.bind(to: tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
+    //
+    //        tableView.rx.modelSelected(Currency.self).subscribe(onNext: { item in
+    //                    self.viewModel.selectTail(currency: item)
+    //                }).disposed(by: disposeBag)
+    //
+    //    }
+        
+    private func usageTableView(){
+        let dataSource = RxTableViewSectionedReloadDataSource<TableSectionOfCoinUniversal>(
+            configureCell: { dataSource, tableView, indexPath, item in
+                let cell = self.tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CurrencyListTableViewCell
+                
+                cell.configureWithUniversalCoin(coin: item)
+                
+                //                self.viewModel.rxUpdateRatesFlag.subscribe{_ in
+                //                    cell.rxUpdaterates(rate: item.rate, flow: item.flow24Hours)
+                //                }.disposed(by: self.disposeBag)
+                
+                return cell
+            })
+        
+        viewModel.rxCoinList.bind(to: tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
+        
+        tableView.rx.modelSelected(CoinUniversal.self).subscribe(onNext: { item in
+            self.viewModel.selectTail(coin: item)
+        }).disposed(by: disposeBag)
+    }
+    
+    private func usageSegmentedControl() {
+        segmentedControl.rx.value.subscribe{ index in
+            if index == 0 {
+                self.viewModel.typeOfCoin = .fiat
+            } else {
+                self.viewModel.typeOfCoin = .crypto
+            }
+            self.viewModel.resetModel()
+        }.disposed(by: disposeBag)
+    }
+    
+    
+    private func usageSearchBar() {
+        searchBar.rx.text.orEmpty
+            .throttle(.milliseconds(100), scheduler: MainScheduler.instance)
+            .distinctUntilChanged()
+            .subscribe(onNext: { str in
+                    self.viewModel.findCurrency(str: str)
+            }).disposed(by: disposeBag)
+        
+    }
 }
 
 extension CurrencyListTableViewController: UITableViewDelegate {
@@ -57,7 +134,7 @@ extension CurrencyListTableViewController: UITableViewDelegate {
         setupSegmentedControl()
         setupTextField()
         setupTableView()
-        bindTableView()
+
     }
     
     private func setupTableView(){
@@ -79,25 +156,8 @@ extension CurrencyListTableViewController: UITableViewDelegate {
         tableView.keyboardDismissMode = .onDragWithAccessory // Close the keyboard by scrolling
     }
     
-    private func bindTableView() {
-        let dataSource = RxTableViewSectionedReloadDataSource<SectionOfCurrencyList>(
-            configureCell: { dataSource, tableView, indexPath, item in
-                let cell = self.tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CurrencyListTableViewCell
-                
-                cell.rxConfigure(currency: item, baseLogo: CoreWorker.shared.currencyList.getBaseCurrency().logo)
-                
-                return cell
-            })
-        
-        viewModel.rxFiatList.bind(to: tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
-        
-        tableView.rx.modelSelected(Currency.self).subscribe(onNext: { item in
-                    self.viewModel.selectTail(currency: item)
-                }).disposed(by: disposeBag)
-        
-    }
-    
-    
+
+
     private func setupSegmentedControl() {
         view.addSubview(segmentedControl)
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
@@ -158,18 +218,6 @@ extension CurrencyListTableViewController: UITableViewDelegate {
             searchImage.heightAnchor.constraint(equalToConstant: baseHeightOfElements*0.5),
             searchImage.widthAnchor.constraint(equalToConstant: baseHeightOfElements*0.5),
         ])
-        
-        //RX Part
-        
-        searchBar.rx.text.orEmpty
-            .throttle(.milliseconds(100), scheduler: MainScheduler.instance)
-            .distinctUntilChanged()
-            .subscribe(onNext: { str in
-//                if str != "" {
-                    self.viewModel.findCurrency(str: str)
-//                }
-            }).disposed(by: disposeBag)
-        
     }
 }
 

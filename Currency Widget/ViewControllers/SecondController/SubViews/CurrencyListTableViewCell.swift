@@ -8,15 +8,17 @@
 import UIKit
 import RxSwift
 import RxDataSources
+import SDWebImage
 
 class CurrencyListTableViewCell: UITableViewCell {
+
     
     var standartLayoutSpace: CGFloat!
     
     let backgroundWhiteView = UIView()
     let logoView = UIView()
     let logoLabel = UILabel()
-    
+    let logoImageView = UIImageView()
     
     let nameLabel = UILabel()
     
@@ -44,15 +46,10 @@ class CurrencyListTableViewCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        //setupUI()
-
-        // Initialization code
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
     
     // MARK:  - RX CONFIGURE
@@ -106,7 +103,61 @@ class CurrencyListTableViewCell: UITableViewCell {
         }.disposed(by: disposeBag)
 
         //RX drive doesn't work in the cell. Using usual way
+        
+    }
+    
+    func configureWithUniversalCoin(coin: CurrencyCellViewModel) {
+        configureLogo(coin: coin)
+        
+        nameLabel.text = coin.name
+        
+        let rate = String(format: "%.2f", coin.rate)
+        //self.valueLabel.text = "\(baseLogo) \(rate)"
+        self.valueLabel.text = "\(coin.baseLogo) \(rate)"
+        
+        let flow = String(format: "%.3f", coin.flow)
+        changesLabel.text = coin.baseLogo + " " + flow + " "
+        
+        if coin.flow >= 0 {
+            self.changesStackView.backgroundColor = Theme.Color.green
+            
+            self.changesArrowImageView.image = UIImage(systemName: "arrow.up.right")
+        } else {
+            self.changesStackView.backgroundColor = Theme.Color.red
+            self.changesArrowImageView.image = UIImage(systemName: "arrow.down.right")
+        }
+        
         favoriteButton.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
+    }
+    
+    func configureLogo(coin: CurrencyCellViewModel){
+        if coin.type == .fiat {
+            logoImageView.isHidden = true
+            logoLabel.text = coin.logo
+            if coin.colorIndex >= 0 && coin.colorIndex < Theme.currencyColors.count {
+                logoLabel.textColor = Theme.currencyColors[coin.colorIndex]
+                logoView.backgroundColor = Theme.currencyColors[coin.colorIndex].withAlphaComponent(0.1)
+            } else {
+                logoLabel.textColor = Theme.Color.tabBarBackground
+                logoView.backgroundColor = Theme.Color.tabBarBackground.withAlphaComponent(0.1)
+            }
+        } else {
+            guard let url = URL(string: coin.imageUrl ?? "Error") else {
+                print ("\(coin.code) : \(coin.imageUrl ?? "No image for")")
+                logoImageView.isHidden = true
+                logoLabel.text = coin.logo
+                return
+            }
+            logoLabel.text = ""
+            logoImageView.isHidden = false
+            logoView.backgroundColor = backgroundView?.backgroundColor
+            let placeHolder = UIImage(systemName: "gyroscope")
+            
+            logoImageView.sd_setImage(with: url, placeholderImage: placeHolder)
+            logoImageView.tintColor = Theme.Color.tabBarBackground
+        }
+        
+        
     }
     
     @objc private func favoriteButtonTapped() {
@@ -187,11 +238,8 @@ extension CurrencyListTableViewCell {
         self.logoView.layer.masksToBounds = true
         self.logoView.layer.cornerRadius = logoView.bounds.height/2
         
-        
-//        gradientLayer.startPoint = CGPoint(x: 1, y: 0)
-//        gradientLayer.endPoint = CGPoint(x: 0, y: 1)
-//        gradientLayer.frame = logoView.bounds
-//        logoView.layer.insertSublayer(gradientLayer, at: 0)
+        logoView.addSubview(logoImageView)
+        logoImageView.frame = logoView.bounds
         
     }
     
