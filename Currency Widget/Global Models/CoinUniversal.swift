@@ -7,9 +7,9 @@
 
 import Foundation
 
-enum TypeOfCoin: Codable {
-    case fiat
-    case crypto
+enum TypeOfCoin: String, Codable {
+    case fiat = "fiat"
+    case crypto = "crypto"
 }
 
 struct CoinUniversal: Codable {

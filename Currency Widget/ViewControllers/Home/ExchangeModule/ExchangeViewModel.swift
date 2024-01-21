@@ -36,10 +36,9 @@ class ExchangeViewModel: ExchangeViewModelProtocol  {
     //let formatter = NumberFormatter().numberStyle = .decimal
     
     init() {
-        // Just for update after fetching currency rates
-        CoreWorker.shared.currencyList.getCurrency(name: "USD").rateRx.subscribe(onNext: { rate in
+        // Update after fetching currency rates
+        CoreWorker.shared.coinList.rxRateUpdated.subscribe(onNext: {_ in
             self.makeExchangeNormal()
-            print(rate)
         }).disposed(by: disposeBag)
         
         subscrubeToCoreWorker()
@@ -47,12 +46,9 @@ class ExchangeViewModel: ExchangeViewModelProtocol  {
     
     private func subscrubeToCoreWorker() {
         //Update exchanging and fields after new currency on the fields
-        CoreWorker.shared.rxExchangeFromCurrency.subscribe({ name in
-            self.fromCurrency.on(name)
-            self.makeExchangeNormal()
-        }).disposed(by: disposeBag)
-        CoreWorker.shared.rxExchangeToCurrency.subscribe({ name in
-            self.toCurrency.on(name)
+        CoreWorker.shared.exchangeWorker.rxExchangeFlag.subscribe({ _ in
+            self.fromCurrency.onNext(CoreWorker.shared.exchangeWorker.fromCoin)
+            self.toCurrency.onNext(CoreWorker.shared.exchangeWorker.toCoin)
             self.makeExchangeNormal()
         }).disposed(by: disposeBag)
     }
@@ -60,8 +56,9 @@ class ExchangeViewModel: ExchangeViewModelProtocol  {
     func makeExchangeNormal() {
         do {
             let fromValue = convertStringToDouble(text: try fromText.value())
-            let fromRate = try CoreWorker.shared.currencyList.getCurrency(name: try fromCurrency.value()).rateRx.value()
-            let toRate = try CoreWorker.shared.currencyList.getCurrency(name: try toCurrency.value()).rateRx.value()
+            let fromRate = CoreWorker.shared.coinList.returnCoin(code: try fromCurrency.value())?.rate ?? 1
+            let toRate = CoreWorker.shared.coinList.returnCoin(code: try toCurrency.value())?.rate ?? 1
+            
             let rate = toRate/fromRate
             let value = fromValue/rate
             let valueText = String(Double(round(100*value)/100))
@@ -74,8 +71,9 @@ class ExchangeViewModel: ExchangeViewModelProtocol  {
     func makeExchangeReverse() {
         do {
             let fromValue = convertStringToDouble(text: try toText.value())
-            let fromRate = try CoreWorker.shared.currencyList.getCurrency(name: try fromCurrency.value()).rateRx.value()
-            let toRate = try CoreWorker.shared.currencyList.getCurrency(name: try toCurrency.value()).rateRx.value()
+            let fromRate = CoreWorker.shared.coinList.returnCoin(code: try fromCurrency.value())?.rate ?? 1
+            let toRate = CoreWorker.shared.coinList.returnCoin(code: try toCurrency.value())?.rate ?? 1
+            
             let rate = fromRate/toRate
             let value = fromValue/rate
             let valueText = String(Double(round(100*value)/100))
@@ -86,16 +84,16 @@ class ExchangeViewModel: ExchangeViewModelProtocol  {
     }
     
     func switchFields() {
-        CoreWorker.shared.switchExchangeFields()
+        CoreWorker.shared.exchangeWorker.switchRows()
     }
     
     func setCurrency(shortName: String, type: String) {
         print("--Setted currency = \(shortName) -- type = \(type)")
         if type == "From" {
-            CoreWorker.shared.setFromCurrencyExchange(name: shortName)
+            CoreWorker.shared.exchangeWorker.setFromCoin(code: shortName)
         }
         if type == "To" {
-            CoreWorker.shared.setToCurrencyExchange(name: shortName)
+            CoreWorker.shared.exchangeWorker.setToCoin(code: shortName)
         }
         
     }

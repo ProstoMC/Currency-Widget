@@ -18,7 +18,7 @@ struct SectionOfCustomData {
   var items: [Item]
 }
 extension SectionOfCustomData: SectionModelType {
-  typealias Item = CurrencyPair
+  typealias Item = CurrencyPairCellModel
 
    init(original: SectionOfCustomData, items: [Item]) {
     self = original
@@ -80,7 +80,7 @@ class CurrencyPairsListViewController: UIViewController {
     private func bindCollectionView() {
         let dataSource = RxCollectionViewSectionedReloadDataSource<SectionOfCustomData>(
           configureCell: { dataSource, tableView, indexPath, item in
-              let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! Tile1x2CollectionViewCell
+              let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CurrencyPairCell
               cell.rxConfigure(currecnyPair: item)
               
               //Setup selected cell
@@ -98,7 +98,7 @@ class CurrencyPairsListViewController: UIViewController {
         
         viewModel.rxPairList.bind(to: collectionView.rx.items(dataSource: dataSource)).disposed(by: bag)
         
-        collectionView.rx.modelSelected(CurrencyPair.self).subscribe(onNext: { item in
+        collectionView.rx.modelSelected(CurrencyPairCellModel.self).subscribe(onNext: { item in
             self.viewModel.selectTail(pair: item)
 
         }).disposed(by: bag)
@@ -130,7 +130,7 @@ class CurrencyPairsListViewController: UIViewController {
         
         collectionView.delegate = self
         
-        collectionView.register(Tile1x2CollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.register(CurrencyPairCell.self, forCellWithReuseIdentifier: "cell")
         
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
@@ -162,7 +162,7 @@ extension CurrencyPairsListViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let cell = collectionView.cellForItem(at: indexPath) as? Tile1x2CollectionViewCell {
+        if let cell = collectionView.cellForItem(at: indexPath) as? CurrencyPairCell {
             //viewModel.selectTail(indexPath: indexPath)
             
             cell.contentView.backgroundColor = Theme.Color.mainColorPale

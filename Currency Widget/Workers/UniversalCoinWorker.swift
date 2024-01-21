@@ -6,29 +6,47 @@
 //
 
 import Foundation
+import RxSwift
 
 protocol CoinListProtocol {
     var baseCoin: CoinUniversal { get }
+    var lastUpdate: String { get }
     var fiatList: [CoinUniversal] { get }
     var cryptoList: [CoinUniversal] { get }
+    var rxRateUpdated: BehaviorSubject<Bool> { get }
     
-    func updateRates(json: [String: Any])
-    func updateRatesFromCB(code: String, rate: Double, flow: Double)
+    func updateRatesFromEth()
+    func returnCoin(code: String) -> CoinUniversal?
+    func setBaseCoin(newCode: String)
 }
 
 
 
 class UniversalCoinWorker {
-    
-    var baseCoin = CoinUniversal(type: .fiat, code: "USD", name: "United States Dollar", base: "USD", rate: 0, flow24Hours: 0, logo: "$", imageUrl: "", colorIndex: 2)
-    
+    var rxRateUpdated = BehaviorSubject(value: false)
+
+    var baseCoin = CoinUniversal(type: .fiat, code: "USD", name: "United States Dollar", base: "USD", rate: 1, flow24Hours: 0, logo: "$", imageUrl: "", colorIndex: 2)
+    var lastUpdate = "Error"
     var fiatList: [CoinUniversal] = []
     var cryptoList: [CoinUniversal] = []
     
+    let fetcher = CurrencyFetcher()
+    let defaults = UserDefaults.standard
+    let bag = DisposeBag()
+    
     init() {
-        fiatList = createFiatList()
-        cryptoList = createCryptoList()
+        rxSubscribing()
+        getFromDefaulst()
+        updateRatesFromEth()
         
+    }
+    
+    func rxSubscribing() {
+        rxRateUpdated.subscribe{ success in
+            if success {
+                self.saveCoinsToDefaults()
+            }
+        }.disposed(by: bag)
     }
     
     func returnFiatList() -> [CoinUniversal] {
@@ -38,18 +56,84 @@ class UniversalCoinWorker {
     func returnBaseCode() -> String {
         return baseCoin.code
     }
-    
-    func updateBaseCoin(code: String) {
-        for item in fiatList {
-            if item.code == code {
-                baseCoin = item
-            }
-        }
-    }
 
 }
 
 extension UniversalCoinWorker: CoinListProtocol {
+    func updateRatesFromEth() {
+        
+        //FETCHING FROM CB
+        fetcher.fetchCurrencyDaily(completion: { valuteList, _ in
+            var baseRate = 1.0
+            //Finding Base Currency for convert from RUB
+            for currency in valuteList {
+                if currency.value.CharCode == self.baseCoin.code {
+                    baseRate = currency.value.Value
+                    break
+                }
+            }
+            
+            for currency in valuteList {
+                //let name = currency.value.Name  //It is russian name
+                self.updateRatesFromCB(
+                    code: currency.value.CharCode,
+                    rate: currency.value.Value/baseRate,
+                    flow: (currency.value.Value - currency.value.Previous)/baseRate)
+            }
+        })
+        
+        //FETCHING FROM CRYPTOMARKET
+        
+        //Preparing Codes for request
+        var coinsCodes = ""
+        
+        for element in fiatList {
+            coinsCodes.append(element.code)
+            coinsCodes.append(",")
+        }
+        for element in cryptoList {
+            coinsCodes.append(element.code)
+            coinsCodes.append(",")
+        }
+        // Request
+        fetcher.updateCoinRates(base: "USD", coinCodes: coinsCodes, completion: { list in
+            self.updateRates(json: list)
+            DispatchQueue.main.async {
+                self.rxRateUpdated.onNext(true)
+            }
+        })
+    }
+    
+    func returnCoin(code: String) -> CoinUniversal? {
+        for coin in fiatList {
+            if coin.code == code {
+                return coin
+            }
+        }
+        for coin in cryptoList {
+            if coin.code == code {
+                return coin
+            }
+        }
+        return nil
+    }
+    
+    func setBaseCoin(newCode: String) {
+        guard let newBaseCoin = returnCoin(code: newCode) else { return }
+        let ratio = newBaseCoin.rate / baseCoin.rate
+        for i in fiatList.indices {
+            fiatList[i].rate = fiatList[i].rate / ratio
+            fiatList[i].flow24Hours = fiatList[i].flow24Hours / ratio
+        }
+        baseCoin = returnCoin(code: newCode)! // Get updated values. And we've checked existing in first line
+        rxRateUpdated.onNext(true)
+    }
+    
+}
+
+//MARK: - ETHERNET
+
+extension UniversalCoinWorker {
     func updateRatesFromCB(code: String, rate: Double, flow: Double) {
         
         for i in fiatList.indices {
@@ -62,10 +146,35 @@ extension UniversalCoinWorker: CoinListProtocol {
     }
     
     func updateRates(json: [String : Any]) {
+        //Set previous rate in USD
+        var baseRate = returnCoin(code: "USD")!.rate
+        
+        //Find Last Update and Base Currency for convert from USD
+        if let coinsProperty = json[baseCoin.code] as? [String: Any] {
+            if let properties = coinsProperty["USD"] as? [String: Any] {
+                //Set rate
+                if let rate = properties["PRICE"] as? Double {
+                    baseRate = rate
+                }
+                //Set date
+                if let date = properties["LASTUPDATE"] as? Int {
+                    // convert Int to TimeInterval (typealias for Double)
+                    let timeInterval = TimeInterval(date)
+                    // create NSDate from Double (NSTimeInterval)
+                    let nsDate = Date(timeIntervalSince1970: timeInterval)
+   
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "YY.MM.dd HH:mm"
+                    
+                    lastUpdate = dateFormatter.string(from: nsDate)
+                }
+            }
+            
+        }
         
         for i in fiatList.indices {
             guard let coinsProperty = json[fiatList[i].code] as? [String: Any] else { continue }
-            guard let properties = coinsProperty[baseCoin.code] as? [String: Any] else { continue }
+            guard let properties = coinsProperty["USD"] as? [String: Any] else { continue }
             
             guard let rate = properties["PRICE"] as? Double else { continue }
             guard let flow = properties["CHANGE24HOUR"] as? Double else { continue }
@@ -75,14 +184,14 @@ extension UniversalCoinWorker: CoinListProtocol {
                 imageUrl = "Error"
             }
             
-            fiatList[i].rate = rate
-            fiatList[i].flow24Hours = flow
+            fiatList[i].rate = rate / baseRate
+            fiatList[i].flow24Hours = flow / baseRate
             fiatList[i].imageUrl = "https://www.cryptocompare.com" + imageUrl
         }
         
         for i in cryptoList.indices {
             guard let coinsProperty = json[cryptoList[i].code] as? [String: Any] else { continue }
-            guard let properties = coinsProperty[baseCoin.code] as? [String: Any] else { continue }
+            guard let properties = coinsProperty["USD"] as? [String: Any] else { continue }
             
             guard let rate = properties["PRICE"] as? Double else { continue }
             guard let flow = properties["CHANGE24HOUR"] as? Double else { continue }
@@ -92,16 +201,97 @@ extension UniversalCoinWorker: CoinListProtocol {
                 imageUrl = "Error"
             }
             
-            cryptoList[i].rate = rate
-            cryptoList[i].flow24Hours = flow
+            cryptoList[i].rate = rate / baseRate
+            cryptoList[i].flow24Hours = flow / baseRate
             cryptoList[i].imageUrl = "https://www.cryptocompare.com" + imageUrl
         }
     }
-}
     
+}
 
+    
+// MARK: - USER DEFAULTS
+extension UniversalCoinWorker {
 
-// MARK:  - CREATING LISTS
+    func saveCoinsToDefaults() {
+        let encoder = JSONEncoder()
+        
+        if let fiats = try? encoder.encode(fiatList) {
+            defaults.set(fiats, forKey: TypeOfCoin.fiat.rawValue)
+            print("--Fiats was saved--")
+        }
+        if let coins = try? encoder.encode(cryptoList) {
+            defaults.set(coins, forKey: TypeOfCoin.crypto.rawValue)
+            print("--Coins was saved--")
+        }
+        if let base = try? encoder.encode(baseCoin){
+            defaults.set(base, forKey: "baseCoin")
+            print("--Base coin was saved--")
+        }
+        defaults.set(lastUpdate, forKey: "lastUpdate")
+    }
+    
+    func getFromDefaulst() {
+        //Get coins
+        fiatList = getCoinsFromDefaults(type: .fiat)
+        if fiatList.isEmpty {
+            fiatList = createFiatList()
+        }
+        cryptoList = getCoinsFromDefaults(type: .crypto)
+        if cryptoList.isEmpty {
+            cryptoList = createCryptoList()
+        }
+        //Get baseCoin
+        let coin = getBaseCoinFromDefaults()
+        if coin == nil {
+            setBaseCoin(newCode: "USD")
+        } else {
+            baseCoin = coin!
+        }
+        //Get lastUpdate
+        let date = getLastUpdateFromDefaults()
+        if date == nil {
+            lastUpdate = "Error"
+        } else {
+            lastUpdate = date!
+        }
+        
+        rxRateUpdated.onNext(true)
+    }
+    
+    func getCoinsFromDefaults(type: TypeOfCoin) -> [CoinUniversal] {
+        
+        var list: [CoinUniversal] = []
+        
+        if let savedData = defaults.object(forKey: type.rawValue) as? Data {
+            let decoder = JSONDecoder()
+            do {
+                let savedList = try decoder.decode([CoinUniversal].self, from: savedData)
+                list = savedList
+            }
+            catch { list = [] }
+        }
+        return list
+    }
+    func getBaseCoinFromDefaults() -> CoinUniversal? {
+        
+        if let savedData = defaults.object(forKey: "baseCoin") as? Data {
+            let decoder = JSONDecoder()
+            do {
+                let coin = try decoder.decode(CoinUniversal.self, from: savedData)
+                return coin
+            }
+            catch { return nil }
+        }
+        return nil
+    }
+    func getLastUpdateFromDefaults() -> String? {
+        return defaults.object(forKey: "lastUpdate") as? String
+    }
+    
+}
+
+// MARK: - DEFAULT LISTS
 extension UniversalCoinWorker {
     private func createFiatList() -> [CoinUniversal] {
         return [

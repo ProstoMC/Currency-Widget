@@ -26,17 +26,17 @@ class SettingsViewModel: SettingsViewModelProtocol {
     
     init() {
         //making empty array
-        let section = SectionOfSettings(header: "Header", items: CoreWorker.shared.settingsWorker.getSettings())
+        let section = SectionOfSettings(header: "Header", items: [])
         rxSettingsList = BehaviorRelay(value: [section]) 
         rxSettingsList.accept([section])
         
-        CoreWorker.shared.rxSettingsChangedFlag.subscribe { status in
-            self.rxSettingsUpdated.onNext(status)
-        }.disposed(by: bag)
+//        CoreWorker.shared.rxSettingsChangedFlag.subscribe { status in
+//            self.rxSettingsUpdated.onNext(status)
+//        }.disposed(by: bag)
     }
     
     func changeBaseCurrency(name: String) {
-        CoreWorker.shared.changeBaseCurrency(newBaseShorName: name)
+        //CoreWorker.shared.coinList.setBaseCoin(newCode: name)
     }
     
 

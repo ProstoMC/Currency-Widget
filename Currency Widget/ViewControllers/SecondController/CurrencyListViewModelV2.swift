@@ -20,11 +20,13 @@ struct CurrencyCellViewModel {
     
     let baseCode: String
     let baseLogo: String
-    let rate: Double
-    let flow: Double
+    var rate: Double
+    var flow: Double
     
     let imageUrl: String?
-    let colorIndex: Int
+    var colorIndex: Int
+    
+    var isFavorite: Bool
     
 }
 
@@ -60,43 +62,31 @@ class CurrencyListViewModelV2: CurrencyListViewModelProtocol {
         subscribing()
     }
     
-
-    
-    func selectTail(currency: Currency) {
-        CoreWorker.shared.setFromCurrencyExchange(name: currency.shortName)
-        CoreWorker.shared.setToCurrencyExchange(name: currency.base)
-    }
-    
-    func selectTail(coin: CoinUniversal) {
-        return
+    func selectTail(coin: CurrencyCellViewModel) {
+        CoreWorker.shared.exchangeWorker.setFromCoin(code: coin.code)
+        CoreWorker.shared.exchangeWorker.setToCoin(code: coin.baseCode)
     }
     
     func findCurrency(str: String) {
-        var foundedList: [Currency] = []
+        var foundedList: [CurrencyCellViewModel] = []
 
-//        let list = getCurrencyList()
-//
-//        if str == "" {
-//            foundedList = list
-//        } else {
-//            //Delete each elements not contained
-//            for item in list {
-//                if item.name.uppercased().contains(str.uppercased()) ||
-//                    item.shortName.uppercased().contains(str.uppercased()) {
-//                    foundedList.append(item)
-//                }
-//            }
+        if str == "" {
+            foundedList = createCoinList(type: typeOfCoin)
+        } else {
+            //Create Full list of coins
+            let list = createCoinList(type: .fiat) + createCoinList(type: .crypto)
+            //Delete each elements not contained
+            for item in list {
+                if item.code.uppercased().contains(str.uppercased()) ||
+                    item.name.uppercased().contains(str.uppercased()) {
+                    foundedList.append(item)
+                }
+            }
         }
-//        //Make new table
-//        let section = SectionOfCurrencyList(header: "Header", items: foundedList)
-//        rxFiatList.accept([section])
-//    }
-//
-//    func resetModel() {
-//        fiatList = getCurrencyList()
-//        let section = SectionOfCurrencyList(header: "Header", items: fiatList)
-//        rxFiatList.accept([section])
-//    }
+        //Make new table
+        let section = TableSectionOfCoinUniversal(header: "Header", items: foundedList)
+        rxCoinList.accept([section])
+    }
     
     func resetModel() {
         let list = createCoinList(type: typeOfCoin)
@@ -104,13 +94,12 @@ class CurrencyListViewModelV2: CurrencyListViewModelProtocol {
         rxCoinList.accept([section])
     }
     
-    
 }
 
 extension CurrencyListViewModelV2 {
 
     private func subscribing(){
-        CoreWorker.shared.rxCoinsRateUpdated.subscribe{ status in
+        CoreWorker.shared.coinList.rxRateUpdated.subscribe{ status in
             let list = self.createCoinList(type: self.typeOfCoin)
             let section = TableSectionOfCoinUniversal(header: "Header", items: list)
             self.rxCoinList.accept([section])
@@ -129,6 +118,10 @@ extension CurrencyListViewModelV2 {
         
         var list: [CurrencyCellViewModel] = []
         for coin in universalCoinList {
+            
+            //CheckIsExist
+            let isFavorite = CoreWorker.shared.favouritePairList.checkIsExist(valueCode: coin.code, baseCode: coin.base)
+            
             list.append(CurrencyCellViewModel(
                 type: coin.type,
                 code: coin.code,
@@ -139,22 +132,11 @@ extension CurrencyListViewModelV2 {
                 rate: coin.rate,
                 flow: coin.flow24Hours,
                 imageUrl: coin.imageUrl,
-                colorIndex: coin.colorIndex))
+                colorIndex: coin.colorIndex,
+                isFavorite: isFavorite
+            ))
         }
         return list
     }
-    
-    private func getCurrencyList() -> [Currency]{
-        var list = CoreWorker.shared.currencyList.getFullList()
-        //removing base Currency from list
-        list.enumerated().forEach { (index, item) in
-            if item.shortName == CoreWorker.shared.currencyList.getBaseCurrency().shortName {
-                list.remove(at: index)
-            }
-        }
-        return list
-    }
-    
-    
-    
+
 }

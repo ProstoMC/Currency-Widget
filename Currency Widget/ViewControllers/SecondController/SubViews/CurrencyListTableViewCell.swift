@@ -53,61 +53,12 @@ class CurrencyListTableViewCell: UITableViewCell {
     }
     
     // MARK:  - RX CONFIGURE
-    func rxConfigure(currency: Currency, baseLogo: String) { //I know, it is not good way, but too late components
-        valueName = currency.shortName
-        baseName = currency.base
-        
-        logoLabel.text = currency.logo
-       
-        //Color logo View
-        //gradientLayer.colors = Theme.currencyColors[currecnyPair.colorIndex]
-        logoLabel.textColor = Theme.currencyColors[currency.colorIndex]
-        logoView.backgroundColor = Theme.currencyColors[currency.colorIndex].withAlphaComponent(0.1)
-        
-        let name = "\(currency.shortName) - \(currency.name)"
-        nameLabel.text = name
-        
-        //Setup Value Label
-        currency.rateRx.subscribe(onNext: { value in
-        
-            let rate = String(format: "%.2f", value)
-            self.valueLabel.text = "\(baseLogo) \(rate)"
-            
-        }).disposed(by: disposeBag)
-        
-        //Setup Changes Label
-        currency.flowRateRx.subscribe(onNext: { flow in
-            self.changesLabel.text = baseLogo + " " + String(format: "%.2f", flow) + " "
-            
-            if flow >= 0 {
-                self.changesStackView.backgroundColor = Theme.Color.green
-                
-                self.changesArrowImageView.image = UIImage(systemName: "arrow.up.right")
-            } else {
-                self.changesStackView.backgroundColor = Theme.Color.red
-                self.changesArrowImageView.image = UIImage(systemName: "arrow.down.right")
-            }
-            
-        }).disposed(by: disposeBag)
-        
-        //Setup FavoriteButton
-        CoreWorker.shared.rxFavouritPairsCount.subscribe{_ in
-            let favoriteStatus = CoreWorker.shared.isPairExistInFavoriteList(
-                valueName: self.valueName,
-                baseName: self.baseName)
-            if favoriteStatus {
-                self.favoriteButton.setImage(UIImage(systemName: "suit.heart.fill"), for: .normal)
-            } else {
-                self.favoriteButton.setImage(UIImage(systemName: "suit.heart"), for: .normal)
-            }
-        }.disposed(by: disposeBag)
-
-        //RX drive doesn't work in the cell. Using usual way
-        
-    }
     
     func configureWithUniversalCoin(coin: CurrencyCellViewModel) {
         configureLogo(coin: coin)
+        
+        valueName = coin.code
+        baseName = coin.baseCode
         
         nameLabel.text = coin.name
         
@@ -127,7 +78,28 @@ class CurrencyListTableViewCell: UITableViewCell {
             self.changesArrowImageView.image = UIImage(systemName: "arrow.down.right")
         }
         
+        setupButton(isfavorite: coin.isFavorite)
+
+    }
+    
+    func setupButton(isfavorite: Bool) {
         favoriteButton.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
+        
+        if isfavorite {
+            favoriteButton.setImage(UIImage(systemName: "suit.heart.fill"), for: .normal)
+        } else {
+            favoriteButton.setImage(UIImage(systemName: "suit.heart"), for: .normal)
+        }
+        
+        CoreWorker.shared.favouritePairList.rxPairListCount.subscribe { _ in
+            let isExist = CoreWorker.shared.favouritePairList.checkIsExist(valueCode: self.valueName, baseCode: self.baseName)
+            if isExist {
+                self.favoriteButton.setImage(UIImage(systemName: "suit.heart.fill"), for: .normal)
+            } else {
+                self.favoriteButton.setImage(UIImage(systemName: "suit.heart"), for: .normal)
+            }
+        }.disposed(by: disposeBag)
+        
     }
     
     func configureLogo(coin: CurrencyCellViewModel){
@@ -162,14 +134,13 @@ class CurrencyListTableViewCell: UITableViewCell {
     
     @objc private func favoriteButtonTapped() {
         print(valueName)
-        let favoriteStatus = CoreWorker.shared.isPairExistInFavoriteList(
-            valueName: valueName,
-            baseName: baseName)
+        let favoriteStatus = CoreWorker.shared.favouritePairList.checkIsExist(valueCode: valueName, baseCode: baseName)
         if favoriteStatus {
-            CoreWorker.shared.deletePairFromFavoriteList(valueName: valueName, baseName: baseName)
+            CoreWorker.shared.favouritePairList.deletePair(valueCode: valueName, baseCode: baseName)
         }
         else {
-            CoreWorker.shared.addPairToFavoriteList(valueName: valueName, baseName: baseName)
+            let colorIndex = CoreWorker.shared.favouritePairList.pairList.count % Theme.currencyColors.count
+            CoreWorker.shared.favouritePairList.addNewPair(valueCode: valueName, baseCode: baseName, colorIndex: colorIndex)
         }
     }
 }

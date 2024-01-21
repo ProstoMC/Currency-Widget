@@ -12,6 +12,7 @@ class ChooseCurrencyTableViewCell: UITableViewCell {
     let backgroundWhiteView = UIView()
     let logoView = UIView()
     let logoLabel = UILabel()
+    let logoImageView = UIImageView()
     
     let nameLabel = UILabel()
     
@@ -36,16 +37,40 @@ class ChooseCurrencyTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func configure(shortName: String, fullname: String, logo: String, colorIndex: Int) {
-        logoLabel.text = logo
-        
+    func configure(coin: CurrencyCellViewModel) {
+        configureLogo(coin: coin)
         //Color logo View
         
-        logoLabel.textColor = Theme.currencyColors[colorIndex]
-        logoView.backgroundColor = Theme.currencyColors[colorIndex].withAlphaComponent(0.1)
-        
-        let name = "\(shortName) - \(fullname)"
+        let name = "\(coin.code) - \(coin.name)"
         nameLabel.text = name
+    }
+    
+    func configureLogo(coin: CurrencyCellViewModel){
+        if coin.type == .fiat {
+            logoImageView.isHidden = true
+            logoLabel.text = coin.logo
+            if coin.colorIndex >= 0 && coin.colorIndex < Theme.currencyColors.count {
+                logoLabel.textColor = Theme.currencyColors[coin.colorIndex]
+                logoView.backgroundColor = Theme.currencyColors[coin.colorIndex].withAlphaComponent(0.1)
+            } else {
+                logoLabel.textColor = Theme.Color.tabBarBackground
+                logoView.backgroundColor = Theme.Color.tabBarBackground.withAlphaComponent(0.1)
+            }
+        } else {
+            guard let url = URL(string: coin.imageUrl ?? "Error") else {
+                print ("\(coin.code) : \(coin.imageUrl ?? "No image for")")
+                logoImageView.isHidden = true
+                logoLabel.text = coin.logo
+                return
+            }
+            logoLabel.text = ""
+            logoImageView.isHidden = false
+            logoView.backgroundColor = backgroundView?.backgroundColor
+            let placeHolder = UIImage(systemName: "gyroscope")
+            
+            logoImageView.sd_setImage(with: url, placeholderImage: placeHolder)
+            logoImageView.tintColor = Theme.Color.tabBarBackground
+        }
     }
 
 }
@@ -106,6 +131,9 @@ extension ChooseCurrencyTableViewCell {
         
         self.logoView.layer.masksToBounds = true
         self.logoView.layer.cornerRadius = logoView.bounds.height/2
+        
+        logoView.addSubview(logoImageView)
+        logoImageView.frame = logoView.bounds
         
     }
     

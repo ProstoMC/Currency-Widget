@@ -14,14 +14,27 @@ class HeaderView: UIView {
     
     let logoImageView = UIImageView()
     let dateTextLabel = UILabel()
+    let rxDate = BehaviorSubject(value: "No date")
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
+        rxSubscribing()
     }
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setup()
+        rxSubscribing()
+    }
+    
+    private func rxSubscribing() {
+        CoreWorker.shared.coinList.rxRateUpdated.subscribe(onNext: { _ in
+            self.dateTextLabel.text = "Actual to " + CoreWorker.shared.coinList.lastUpdate
+        }).disposed(by: bag)
+        
+
+        
+
     }
     
 }
@@ -71,10 +84,7 @@ extension HeaderView {
         dateTextLabel.adjustsFontSizeToFitWidth = true
         dateTextLabel.textAlignment = .right
         dateTextLabel.textColor = Theme.Color.secondText.withAlphaComponent(0.4)
-        
-        CoreWorker.shared.rxUptadingDate.subscribe{ updatingDate in
-            self.dateTextLabel.text = "Actual to " + updatingDate
-        }.disposed(by: bag)
+
         
     }
 

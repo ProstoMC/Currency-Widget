@@ -9,13 +9,18 @@ import UIKit
 import RxSwift
 import RxDataSources
 
+struct SettingsCellViewModel {
+    let name: String
+    let value: String
+}
+
 struct SectionOfSettings {
     var header: String
     var items: [Item]
 }
 
 extension SectionOfSettings: SectionModelType {
-    typealias Item = Property
+    typealias Item = SettingsCellViewModel
     
     init(original: SectionOfSettings, items: [Item]) {
         self = original
@@ -52,7 +57,7 @@ class SettingsViewController: UIViewController {
             configureCell: { dataSource, tableView, indexPath, item in
                 let cell = self.tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! SettingsTableViewCell
                 
-                cell.nameLabel.text = item.type.rawValue
+                cell.nameLabel.text = item.name
                 cell.valueLabel.text = item.value
                 
                 return cell
@@ -60,7 +65,7 @@ class SettingsViewController: UIViewController {
         
         viewModel.rxSettingsList.bind(to: tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
 
-        tableView.rx.modelSelected(Property.self).subscribe(onNext: { item in
+        tableView.rx.modelSelected(SettingsViewModel.self).subscribe(onNext: { item in
             let vc = ChooseCurrencyViewController()
             vc.modalPresentationStyle = .automatic
             vc.delegate = self

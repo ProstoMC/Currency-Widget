@@ -20,7 +20,7 @@ class ChooseCurrencyViewController: UIViewController, UITableViewDelegate {
     var delegate: ReturnDataFromChooseViewControllerProtocol!
     
     //We have to provide type of VM from mother VC
-    var viewModel: ChooseCurrencyViewModelProtocol = ChooseCurrencyViewModel()
+    var viewModel: CurrencyListViewModelProtocol = CurrencyListViewModelV2()
     let disposeBag = DisposeBag()
     
     var closingLine = UIView()
@@ -40,6 +40,8 @@ class ChooseCurrencyViewController: UIViewController, UITableViewDelegate {
         super.viewWillLayoutSubviews()
         setupUI()
         bindTableView()
+        usageSegmentedControl()
+        usageSearchBar()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -47,28 +49,44 @@ class ChooseCurrencyViewController: UIViewController, UITableViewDelegate {
     }
     
     private func bindTableView() {
-        let dataSource = RxTableViewSectionedReloadDataSource<SectionOfCurrencyList>(
+        let dataSource = RxTableViewSectionedReloadDataSource<TableSectionOfCoinUniversal>(
             configureCell: { dataSource, tableView, indexPath, item in
                 let cell = self.tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ChooseCurrencyTableViewCell
                 
-                cell.configure(
-                    shortName: item.shortName,
-                    fullname: item.name,
-                    logo: item.logo,
-                    colorIndex: item.colorIndex)
+                cell.configure(coin: item)
                 
                 return cell
             })
         
-        viewModel.rxFiatList.bind(to: tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
+        viewModel.rxCoinList.bind(to: tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
         
-        tableView.rx.modelSelected(Currency.self).subscribe(onNext: { item in
+        tableView.rx.modelSelected(CurrencyCellViewModel.self).subscribe(onNext: { item in
             //print ("SELECTED")
             //self.viewModel.setCurrency(shortName: item.shortName)
-            self.choosenCurrencyName = item.shortName
+            self.choosenCurrencyName = item.code
             self.dismiss(animated: true)
         }).disposed(by: disposeBag)
         
+    }
+    
+    private func usageSegmentedControl() {
+        segmentedControl.rx.value.subscribe{ index in
+            if index == 0 {
+                self.viewModel.typeOfCoin = .fiat
+            } else {
+                self.viewModel.typeOfCoin = .crypto
+            }
+            self.viewModel.resetModel()
+        }.disposed(by: disposeBag)
+    }
+    
+    private func usageSearchBar() {
+        searchBar.rx.text.orEmpty
+            .throttle(.milliseconds(100), scheduler: MainScheduler.instance)
+            .distinctUntilChanged()
+            .subscribe(onNext: { str in
+                self.viewModel.findCurrency(str: str)
+            }).disposed(by: disposeBag)
     }
 }
 

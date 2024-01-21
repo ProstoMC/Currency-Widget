@@ -7,44 +7,72 @@
 
 import Foundation
 
-struct Property {
-    var type: PropertyType
-    var value: String
-}
 
-enum PropertyType: String {
+
+enum PropertyType: String, Codable {
     case baseCurrency = "Base currency"
+    case actualTo = "Actual to"
 }
 
 protocol SettingsProtocol {
-    //var settingsList: [Property] { get }
-    func getSettings() -> [Property]
-    func changeBaseCurrency(newBaseShortName: String)
+    func getSettings() -> [PropertyType: String]
+    func getProperty(key: PropertyType) -> String
+    func changeProperty(key: PropertyType, newValue: String)
 }
 
 class SettingsWorker: SettingsProtocol {
-    var settingsList: [Property] = []
+    let defaults = UserDefaults.standard
+    
+    var settingsList: [PropertyType: String] = [:]
     
     init() {
-        fetchSettingsFromDefaults()
+        settingsList=fetchFromDefaults()
     }
     
-    func changeBaseCurrency(newBaseShortName: String) {
-        if settingsList[0].type == .baseCurrency { // For being sure
-            settingsList[0].value = newBaseShortName
-        }
+    func changeProperty(key: PropertyType, newValue: String) {
+        settingsList.updateValue(newValue, forKey: key)
     }
     
-    func getSettings() -> [Property] {
+    func getSettings() -> [PropertyType: String] {
         return settingsList
+    }
+    func getProperty(key: PropertyType) -> String {
+        return settingsList[key] ?? "Property is wrong"
     }
   
 }
 
+
+// MARK: - USER DEFAULTS
 extension SettingsWorker {
-    private func fetchSettingsFromDefaults() {
-        settingsList.append(Property(type: .baseCurrency, value: "RUB"))
+    private func saveToDefaults() {
+        let encoder = JSONEncoder()
+        
+        if let settings = try? encoder.encode(settingsList) {
+            defaults.set(settings, forKey: "SettingsList")
+            print("--Settings was saved--")
+        }
+    }
+    
+    private func fetchFromDefaults() -> [PropertyType: String] {
+        var list: [PropertyType: String] = [
+            PropertyType.baseCurrency: "USD",
+            PropertyType.actualTo: "Date Error"
+        ]
+        
+        if let savedData = defaults.object(forKey: "SettingsList") as? Data {
+            let decoder = JSONDecoder()
+            do {
+                let savedList = try decoder.decode([PropertyType: String].self, from: savedData)
+                list = savedList
+            }
+            catch {
+                return list
+            }
+        }
+        return list
     }
 }
+
 
 

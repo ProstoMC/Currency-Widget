@@ -38,7 +38,7 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     
     private func setupRx() {
         //Return to first VC
-        CoreWorker.shared.rxExhangeFlag.subscribe(onNext: {_ in
+        CoreWorker.shared.exchangeWorker.rxExchangeFlag.subscribe(onNext: {_ in
             self.selectedIndex = 0
         }).disposed(by: bag)
     }

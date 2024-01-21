@@ -14,15 +14,17 @@ import Differentiator
 protocol CurrencyPairsListViewModelProtocol {
     var rxPairList: BehaviorRelay<[SectionOfCustomData]> { get }
     
-    func selectTail(pair: CurrencyPair)
+    func selectTail(pair: CurrencyPairCellModel)
     func selectTail(indexPath: IndexPath)
     func reorderPair(fromIndex: Int, toIndex: Int)
     func deletePair(index: Int)
     
 }
 
-class CurrencyPairsListViewModel: CurrencyPairsListViewModelProtocol {
+class CurrencyPairsListViewModel {
 
+    
+    
     var rxPairList: BehaviorRelay<[SectionOfCustomData]>
     
     var section: SectionOfCustomData!
@@ -39,37 +41,57 @@ class CurrencyPairsListViewModel: CurrencyPairsListViewModelProtocol {
     func subscribeToCoreWorker(){
         
         //Update view after pairsList was updated
-        CoreWorker.shared.rxFavouritPairsCount.subscribe({ _ in  //I dont need count
-            self.section = SectionOfCustomData(header: "Header", items: CoreWorker.shared.favoritePairList)
+        CoreWorker.shared.favouritePairList.rxPairListCount.subscribe{ _ in  //I dont need count
+            self.section = SectionOfCustomData(header: "Header", items: self.createList())
             self.rxPairList.accept([self.section])
-            for pair in CoreWorker.shared.favoritePairList {
-                print(pair.valueCurrencyShortName)
-            }
-            //self.changeSelectedCell()
-        }).disposed(by: bag)
-
+        }.disposed(by: bag)
+        
+        CoreWorker.shared.coinList.rxRateUpdated.subscribe { _ in
+            self.section = SectionOfCustomData(header: "Header", items: self.createList())
+            self.rxPairList.accept([self.section])
+        }
+        .disposed(by: bag)
+        
     }
     
+    func createList() -> [CurrencyPairCellModel] {
+        var list: [CurrencyPairCellModel] = []
+        
+        for pair in CoreWorker.shared.favouritePairList.pairList {
+            guard let valueCurrency = CoreWorker.shared.coinList.returnCoin(code: pair.valueCode) else { continue }
+            guard let baseCurrency = CoreWorker.shared.coinList.returnCoin(code: pair.baseCode) else { continue }
+            
+            list.append(CurrencyPairCellModel(
+                valueCurrency: valueCurrency,
+                baseCurrency: baseCurrency,
+                colorIndex: pair.colorIndex)
+            )
+        }
+        return list
+        
+    }
+}
+
+
 // MARK: - Protocol Funcions
-    func selectTail(pair: CurrencyPair) {
-        CoreWorker.shared.setFromCurrencyExchange(name: pair.valueCurrencyShortName)
-        CoreWorker.shared.setToCurrencyExchange(name: pair.baseCurrencyShortName)
+extension CurrencyPairsListViewModel: CurrencyPairsListViewModelProtocol {
+
+    func selectTail(pair: CurrencyPairCellModel) {
+        CoreWorker.shared.exchangeWorker.setFromCoin(code: pair.valueCurrencyShortName)
+        CoreWorker.shared.exchangeWorker.setToCoin(code: pair.baseCurrencyShortName)
     }
     func selectTail(indexPath: IndexPath){
-        let pair = CoreWorker.shared.favoritePairList[indexPath.row]
-        print("SELECTED INDEX - \(pair.position)")
-        selectTail(pair: pair)
+        let pair = CoreWorker.shared.favouritePairList.pairList[indexPath.row]
+        CoreWorker.shared.exchangeWorker.setFromCoin(code: pair.valueCode)
+        CoreWorker.shared.exchangeWorker.setToCoin(code: pair.baseCode)
     }
     
     func reorderPair(fromIndex: Int, toIndex: Int) {
-        CoreWorker.shared.reorderPairOnList(fromIndex: fromIndex, toIndex: toIndex)
+        CoreWorker.shared.favouritePairList.reorderPair(from: fromIndex, to: toIndex)
     }
     
     func deletePair(index: Int) {
-        CoreWorker.shared.deletePairFromFavoriteList(index: index)
+        CoreWorker.shared.favouritePairList.deletePair(index: index)
     }
-    
-
-    
     
 }

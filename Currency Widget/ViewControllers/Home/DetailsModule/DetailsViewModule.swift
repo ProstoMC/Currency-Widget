@@ -28,18 +28,19 @@ class DetailsViewModule: DetailsViewModuleProtocol {
     }
     
     func changeFavoriteStatus() {
+        
         do {
             let status = try rxFavoriteStatus.value()
-            let from = try CoreWorker.shared.rxExchangeFromCurrency.value()
-            let to = try CoreWorker.shared.rxExchangeToCurrency.value()
-            
+            let from = CoreWorker.shared.exchangeWorker.fromCoin
+            let to = CoreWorker.shared.exchangeWorker.toCoin
+
             if status {
-                CoreWorker.shared.deletePairFromFavoriteList(valueName: from, baseName: to)
+                CoreWorker.shared.favouritePairList.deletePair(valueCode: from, baseCode: to)
             }
             else {
-                CoreWorker.shared.addPairToFavoriteList(valueName: from, baseName: to)
+                CoreWorker.shared.favouritePairList.addNewPair(valueCode: from, baseCode: to, colorIndex: nil)
             }
-            CoreWorker.shared.rxExhangeFlag.onNext(true)
+            CoreWorker.shared.exchangeWorker.rxExchangeFlag.onNext(true)
 
         } catch {
             return
@@ -51,19 +52,18 @@ class DetailsViewModule: DetailsViewModuleProtocol {
 extension DetailsViewModule {
     
     private func subscribeToExchangeFlag() {
-        CoreWorker.shared.rxExhangeFlag.subscribe { flag in
+        CoreWorker.shared.exchangeWorker.rxExchangeFlag.subscribe { flag in
             self.rxIsAppearFlag.onNext(flag)
             self.getFavouriteStatus()
         }.disposed(by: bag)
     }
     
     private func getFavouriteStatus() {
-        do {
-            let from = try CoreWorker.shared.rxExchangeFromCurrency.value()
-            let to = try CoreWorker.shared.rxExchangeToCurrency.value()
-            rxFavoriteStatus.onNext(CoreWorker.shared.isPairExistInFavoriteList(valueName: from, baseName: to))
-        } catch {
-            return
-        }
+        
+        rxFavoriteStatus.onNext(
+            CoreWorker.shared.favouritePairList.checkIsExist(
+            valueCode: CoreWorker.shared.exchangeWorker.fromCoin,
+            baseCode: CoreWorker.shared.exchangeWorker.toCoin)
+        )
     }
 }

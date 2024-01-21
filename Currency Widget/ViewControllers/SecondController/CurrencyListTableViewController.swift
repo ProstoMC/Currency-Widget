@@ -23,7 +23,7 @@ protocol CurrencyListViewModelProtocol {
     var rxCoinList: BehaviorRelay<[TableSectionOfCoinUniversal]> { get }
     var typeOfCoin: TypeOfCoin { get set }
     
-    func selectTail(coin: CoinUniversal)
+    func selectTail(coin: CurrencyCellViewModel)
     func resetModel()
 }
 
@@ -66,41 +66,18 @@ extension CurrencyListTableViewController {
         usageSearchBar()
     }
     
-    //    private func bindTableView() {
-    //        let dataSource = RxTableViewSectionedReloadDataSource<SectionOfCurrencyList>(
-    //            configureCell: { dataSource, tableView, indexPath, item in
-    //                let cell = self.tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CurrencyListTableViewCell
-    //
-    //                cell.rxConfigure(currency: item, baseLogo: CoreWorker.shared.currencyList.getBaseCurrency().logo)
-    //
-    //                return cell
-    //            })
-    //
-    //        viewModel.rxFiatList.bind(to: tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
-    //
-    //        tableView.rx.modelSelected(Currency.self).subscribe(onNext: { item in
-    //                    self.viewModel.selectTail(currency: item)
-    //                }).disposed(by: disposeBag)
-    //
-    //    }
-        
     private func usageTableView(){
         let dataSource = RxTableViewSectionedReloadDataSource<TableSectionOfCoinUniversal>(
             configureCell: { dataSource, tableView, indexPath, item in
                 let cell = self.tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CurrencyListTableViewCell
                 
                 cell.configureWithUniversalCoin(coin: item)
-                
-                //                self.viewModel.rxUpdateRatesFlag.subscribe{_ in
-                //                    cell.rxUpdaterates(rate: item.rate, flow: item.flow24Hours)
-                //                }.disposed(by: self.disposeBag)
-                
                 return cell
             })
         
         viewModel.rxCoinList.bind(to: tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
         
-        tableView.rx.modelSelected(CoinUniversal.self).subscribe(onNext: { item in
+        tableView.rx.modelSelected(CurrencyCellViewModel.self).subscribe(onNext: { item in
             self.viewModel.selectTail(coin: item)
         }).disposed(by: disposeBag)
     }
@@ -225,7 +202,6 @@ extension CurrencyListTableViewController {
     
     private func getBaseHeight() -> Double {
         var height = UIScreen.main.bounds.height*0.058
-        
         
         if height > 40 {
             height = 40
