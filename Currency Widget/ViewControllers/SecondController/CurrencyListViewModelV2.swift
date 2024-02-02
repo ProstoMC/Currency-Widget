@@ -27,6 +27,7 @@ struct CurrencyCellViewModel {
     var colorIndex: Int
     
     var isFavorite: Bool
+    var colorSet: AppColors
     
 }
 
@@ -44,16 +45,26 @@ extension TableSectionOfCoinUniversal: SectionModelType {
     }
 }
 
+enum TypeOfCurrencyListViewModel {
+    case fullList
+    case withoutBaseCoin
+}
+
 class CurrencyListViewModelV2: CurrencyListViewModelProtocol {
     
-    
+    var typeOfViewModel: TypeOfCurrencyListViewModel
+
     let bag = DisposeBag()
+    
+    var rxAppThemeUpdated = BehaviorSubject(value: false)
+    var colorSet = CoreWorker.shared.colorsWorker.returnColors()
 
     var rxUpdateRatesFlag = BehaviorSubject(value: false)
     var rxCoinList = BehaviorRelay(value: [TableSectionOfCoinUniversal(header: "", items: [])])
     var typeOfCoin: TypeOfCoin = .fiat
     
-    init() {
+    init(type: TypeOfCurrencyListViewModel) {
+        typeOfViewModel = type
         
         let list = createCoinList(type: typeOfCoin) //Always start with fiat
         let section = TableSectionOfCoinUniversal(header: "Header", items: list)
@@ -104,6 +115,18 @@ extension CurrencyListViewModelV2 {
             let section = TableSectionOfCoinUniversal(header: "Header", items: list)
             self.rxCoinList.accept([section])
         }.disposed(by: bag)
+        
+        //Update colors
+        CoreWorker.shared.colorsWorker.rxAppThemeUpdated.subscribe(onNext: { flag in
+            if flag {
+                self.colorSet = CoreWorker.shared.colorsWorker.returnColors()
+                self.rxAppThemeUpdated.onNext(true)
+                //Reload full cells
+                let list = self.createCoinList(type: self.typeOfCoin)
+                let section = TableSectionOfCoinUniversal(header: "Header", items: list)
+                self.rxCoinList.accept([section])
+            }
+        }).disposed(by: bag)
     }
     
     private func createCoinList(type: TypeOfCoin) -> [CurrencyCellViewModel] {
@@ -118,7 +141,7 @@ extension CurrencyListViewModelV2 {
         
         var list: [CurrencyCellViewModel] = []
         for coin in universalCoinList {
-            
+            if typeOfViewModel == .withoutBaseCoin && coin.code == baseCoin.code { continue } //Skip base coin
             //CheckIsExist
             let isFavorite = CoreWorker.shared.favouritePairList.checkIsExist(valueCode: coin.code, baseCode: coin.base)
             
@@ -133,7 +156,8 @@ extension CurrencyListViewModelV2 {
                 flow: coin.flow24Hours,
                 imageUrl: coin.imageUrl,
                 colorIndex: coin.colorIndex,
-                isFavorite: isFavorite
+                isFavorite: isFavorite,
+                colorSet: colorSet
             ))
         }
         return list

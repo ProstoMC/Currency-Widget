@@ -48,7 +48,7 @@ class CurrencyPairsListViewController: UIViewController {
         viewModel = CurrencyPairsListViewModel()
 
         setupUI()
-        bindCollectionView()
+        subscribing()
     }
     
     //For reordering cells
@@ -77,22 +77,13 @@ class CurrencyPairsListViewController: UIViewController {
         }
     }
     
-    private func bindCollectionView() {
+    private func subscribing() {
         let dataSource = RxCollectionViewSectionedReloadDataSource<SectionOfCustomData>(
           configureCell: { dataSource, tableView, indexPath, item in
               let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CurrencyPairCell
-              cell.rxConfigure(currecnyPair: item)
+              cell.rxConfigure(currecnyPair: item, colors: self.viewModel.colorSet)
               
-              //Setup selected cell
-//              self.viewModel.rxCellIsSelected.subscribe{ index in
-//                  print("==SELECTED CELL IS - \(index)")
-//                  if index == item.position {
-//                      cell.contentView.backgroundColor = Theme.Color.mainColorPale
-//                  } else {
-//                      cell.contentView.backgroundColor = Theme.Color.backgroundForWidgets
-//                  }
-//              }.disposed(by: self.bag)
-              
+     
             return cell
         })
         
@@ -100,21 +91,36 @@ class CurrencyPairsListViewController: UIViewController {
         
         collectionView.rx.modelSelected(CurrencyPairCellModel.self).subscribe(onNext: { item in
             self.viewModel.selectTail(pair: item)
-
+            
         }).disposed(by: bag)
         
         dataSource.canMoveItemAtIndexPath = { dataSource, indexPath in
             //For reordering cells
             return true
         }
+        
+        viewModel.rxAppThemeUpdated.subscribe(onNext: { flag in
+            if flag {
+                self.updateColors()
+            }
+        }).disposed(by: bag)
       
     }
 
     
     // MARK: - Collection View Appearing
     private func setupUI() {
-        view.backgroundColor = Theme.Color.background
+        
         setupCollectionView()
+        updateColors()
+    }
+    
+    private func updateColors() {
+        UIView.animate(withDuration: 0.5, delay: 0.0,
+                       options: [.allowUserInteraction], animations: { () -> Void in
+            self.view.backgroundColor = self.viewModel.colorSet.background
+            self.collectionView.backgroundColor = self.viewModel.colorSet.background
+        })
     }
 
     private func setupCollectionView(){
@@ -126,7 +132,7 @@ class CurrencyPairsListViewController: UIViewController {
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.showsVerticalScrollIndicator = false
         
-        collectionView.backgroundColor = Theme.Color.background
+        
         
         collectionView.delegate = self
         
@@ -163,32 +169,14 @@ extension CurrencyPairsListViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let cell = collectionView.cellForItem(at: indexPath) as? CurrencyPairCell {
-            //viewModel.selectTail(indexPath: indexPath)
-            
-            cell.contentView.backgroundColor = Theme.Color.mainColorPale
-            UIView.animate(withDuration: 1.0, delay: 0.0, options: [.allowUserInteraction], animations:
-                                        { () -> Void in
-                cell.contentView.backgroundColor = Theme.Color.backgroundForWidgets
-                                    })
+           
+            cell.contentView.backgroundColor = viewModel.colorSet.mainColorPale
+            UIView.animate(withDuration: 1.0, delay: 0.0,
+                           options: [.allowUserInteraction], animations: { () -> Void in
+                cell.contentView.backgroundColor = self.viewModel.colorSet.backgroundForWidgets
+            })
         }
     }
-//
-//
-//    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-//        if let cell = collectionView.cellForItem(at: indexPath) as? Tile1x2CollectionViewCell {
-//            cell.contentView.backgroundColor = Theme.Color.backgroundForWidgets
-//        }
-//    }
     
 }
-//For reordering cells
-//extension CurrencyPairsListViewController: UICollectionViewDelegate {
-//    private func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
-//       return true
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-//       print("Starting Index: \(sourceIndexPath.item)")
-//       print("Ending Index: \(destinationIndexPath.item)")
-//    }
-//}
+

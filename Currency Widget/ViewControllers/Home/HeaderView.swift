@@ -32,8 +32,13 @@ class HeaderView: UIView {
             self.dateTextLabel.text = "Actual to " + CoreWorker.shared.coinList.lastUpdate
         }).disposed(by: bag)
         
-
-        
+        CoreWorker.shared.colorsWorker.rxAppThemeUpdated.subscribe{ _ in
+            UIView.animate(withDuration: 0.5, delay: 0.0,
+                           options: [.allowUserInteraction], animations: { () -> Void in
+                self.colorsUpdate()
+            })
+            
+        }.disposed(by: bag)
 
     }
     
@@ -41,9 +46,16 @@ class HeaderView: UIView {
 extension HeaderView {
     
     private func setup() {
-        self.backgroundColor = Theme.Color.background
+        
+        colorsUpdate()
         setupLogo()
         setupTextField()
+    }
+    
+    private func colorsUpdate() {
+        self.backgroundColor = CoreWorker.shared.colorsWorker.returnColors().background
+        logoImageView.backgroundColor = CoreWorker.shared.colorsWorker.returnColors().mainColorPale
+        dateTextLabel.textColor = CoreWorker.shared.colorsWorker.returnColors().secondText.withAlphaComponent(0.4)
     }
     
     // MARK:  - Setup logo
@@ -62,7 +74,6 @@ extension HeaderView {
         //Apperance
         logoImageView.clipsToBounds = true
         logoImageView.layer.cornerRadius = logoImageView.bounds.height/2
-        logoImageView.backgroundColor = Theme.Color.mainColorPale
         logoImageView.image = UIImage(named: "LogoLightMode")
         logoImageView.contentMode = .scaleAspectFill
         
@@ -83,7 +94,7 @@ extension HeaderView {
         dateTextLabel.font = UIFont.systemFont(ofSize: 100, weight: .medium) //Just set max and resize after
         dateTextLabel.adjustsFontSizeToFitWidth = true
         dateTextLabel.textAlignment = .right
-        dateTextLabel.textColor = Theme.Color.secondText.withAlphaComponent(0.4)
+        
 
         
     }

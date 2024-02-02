@@ -14,6 +14,7 @@ class EnterCurrencyView: UIView {
     let separatorView = UIView()
     let currencyButton = UIButton()
     let chevronView = UIView()
+    let chevronImageView = UIImageView()
     
     
 
@@ -26,6 +27,17 @@ class EnterCurrencyView: UIView {
       setupUI()
     }
     
+    func updateColors(colorSet: AppColors) {
+        header.textColor = colorSet.secondText
+        
+        textField.backgroundColor = colorSet.backgroundForWidgets
+        textField.layer.borderColor = colorSet.separator.cgColor
+        textField.textColor = colorSet.secondText.withAlphaComponent(0.7)
+        
+        separatorView.backgroundColor = colorSet.separator
+        currencyButton.setTitleColor(colorSet.mainText, for: .normal)
+        chevronImageView.tintColor = colorSet.accentColor
+    }
 
 }
 
@@ -51,15 +63,15 @@ extension EnterCurrencyView {
         ])
 
         
-        textField.layer.cornerRadius = Theme.Radius.minimal
+        textField.layer.cornerRadius = UIScreen.main.bounds.height/100
         textField.layer.masksToBounds = true
         textField.layer.borderWidth = 1
-        textField.layer.borderColor = Theme.Color.separator.cgColor
+        
         textField.clearButtonMode = .always
         textField.borderStyle = .roundedRect
         textField.keyboardType = .default
-        textField.backgroundColor = Theme.Color.backgroundForWidgets
-        textField.textColor = Theme.Color.secondText.withAlphaComponent(0.7)
+        
+        
         textField.keyboardType = .decimalPad
         textField.clearButtonMode = .never
         
@@ -82,7 +94,7 @@ extension EnterCurrencyView {
         
         header.adjustsFontSizeToFitWidth = true
         header.textAlignment = .left
-        header.textColor = Theme.Color.secondText
+        
     }
     
     private func setupSeparator() {
@@ -96,7 +108,7 @@ extension EnterCurrencyView {
             separatorView.heightAnchor.constraint(equalTo: textField.heightAnchor, multiplier: 0.8)
         ])
         
-        separatorView.backgroundColor = Theme.Color.separator
+        
     }
     
     private func setupCurrencyButton() {
@@ -111,7 +123,7 @@ extension EnterCurrencyView {
         ])
         
         currencyButton.setTitle(" RUB", for: .normal)
-        currencyButton.setTitleColor(Theme.Color.mainColor, for: .normal)
+        
         currencyButton.contentHorizontalAlignment = .left
         
         //Changing font size *0.8 of that depended on Buttons size
@@ -131,7 +143,7 @@ extension EnterCurrencyView {
             chevronView.heightAnchor.constraint(equalTo: textField.heightAnchor)
         ])
         
-        let chevronImageView = UIImageView()
+        
         chevronView.addSubview(chevronImageView)
         chevronImageView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -143,7 +155,7 @@ extension EnterCurrencyView {
         ])
         
         chevronImageView.image = UIImage(systemName: "chevron.down")
-        chevronImageView.tintColor = Theme.Color.accentColor
+        
         chevronImageView.contentMode = .scaleAspectFit
 
     }

@@ -6,9 +6,10 @@
 //
 
 import UIKit
+import RxSwift
 
 class SettingsTableViewCell: UITableViewCell {
-    
+    let bag = DisposeBag()
     let nameLabel = UILabel()
     let valueLabel = UILabel()
 
@@ -26,13 +27,46 @@ class SettingsTableViewCell: UITableViewCell {
         super.awakeFromNib()
         //setupUI()
     }
+    
+    func dataConfigure(viewModel: SettingsCellViewModel) {
+        nameLabel.text = viewModel.name
+        
+        viewModel.value.subscribe(onNext: { value in
+            self.valueLabel.text = value
+        }).disposed(by: bag)
+        
+        // Colors
+        viewModel.backgroundColor.subscribe(onNext: { color in
+            UIView.animate(withDuration: 0.5, delay: 0.0,
+                           options: [.allowUserInteraction], animations: { () -> Void in
+            self.contentView.backgroundColor = color
+            })
+        }).disposed(by: bag)
+        
+        viewModel.nameLabelColor.subscribe(onNext: { color in
+            UIView.animate(withDuration: 0.5, delay: 0.0,
+                           options: [.allowUserInteraction], animations: { () -> Void in
+            self.nameLabel.textColor = color
+            })
+        }).disposed(by: bag)
+        
+        viewModel.valueLabelColor.subscribe(onNext: { color in
+            UIView.animate(withDuration: 0.5, delay: 0.0,
+                           options: [.allowUserInteraction], animations: { () -> Void in
+            self.valueLabel.textColor = color
+            })
+        }).disposed(by: bag)
+        
+        
+        
+    }
 }
 
 // MARK:  - SETUP UI
 extension SettingsTableViewCell {
     private func setupUI() {
         
-        contentView.backgroundColor = Theme.Color.background
+        
         self.selectionStyle = .none
         
         contentView.addSubview(nameLabel)
@@ -52,8 +86,7 @@ extension SettingsTableViewCell {
             valueLabel.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.3)
         ])
         
-        nameLabel.textColor = Theme.Color.mainText
-        valueLabel.textColor = Theme.Color.secondText
+
         
         valueLabel.textAlignment = .right
         

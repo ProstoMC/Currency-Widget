@@ -14,8 +14,8 @@ import Differentiator
 
 
 protocol CurrencyListViewModelProtocol {
-//    var rxFiatList: BehaviorRelay<[SectionOfCurrencyList]> { get }
-//    func selectTail(currency: Currency)
+    var rxAppThemeUpdated: BehaviorSubject<Bool> { get }
+    var colorSet: AppColors { get }
 
     func findCurrency(str: String)
    
@@ -34,11 +34,12 @@ protocol CurrencyListViewModelProtocol {
 
 class CurrencyListTableViewController: UIViewController {
     
-    var viewModel: CurrencyListViewModelProtocol = CurrencyListViewModelV2()
+    var viewModel: CurrencyListViewModelProtocol = CurrencyListViewModelV2(type: .withoutBaseCoin)
     let disposeBag = DisposeBag()
     
     var segmentedControl = CornersWhiteSegmentedControl(items: ["Fiat", "Crypto"])
     var searchBar = UITextField()
+    let searchImage = UIImageView()
     
     var tableView = UITableView()
     
@@ -64,6 +65,7 @@ extension CurrencyListTableViewController {
         usageTableView()
         usageSegmentedControl()
         usageSearchBar()
+        usageColors()
     }
     
     private func usageTableView(){
@@ -83,14 +85,16 @@ extension CurrencyListTableViewController {
     }
     
     private func usageSegmentedControl() {
-        segmentedControl.rx.value.subscribe{ index in
+        segmentedControl.rx.value.subscribe(onNext: { index in
             if index == 0 {
                 self.viewModel.typeOfCoin = .fiat
-            } else {
+                
+            }
+            if index == 1 {
                 self.viewModel.typeOfCoin = .crypto
             }
             self.viewModel.resetModel()
-        }.disposed(by: disposeBag)
+        }).disposed(by: disposeBag)
     }
     
     
@@ -103,15 +107,44 @@ extension CurrencyListTableViewController {
             }).disposed(by: disposeBag)
         
     }
+    
+    private func usageColors() {
+        viewModel.rxAppThemeUpdated.subscribe(onNext: { flag in
+            if flag {
+                self.updateColors()
+            }
+        }).disposed(by: disposeBag)
+    }
 }
 
 extension CurrencyListTableViewController: UITableViewDelegate {
     private func setupUI(){
-        view.backgroundColor = Theme.Color.background
+        
         setupSegmentedControl()
         setupTextField()
         setupTableView()
+        updateColors()
 
+    }
+    
+    private func updateColors(){
+        view.backgroundColor = viewModel.colorSet.background
+        tableView.backgroundColor = viewModel.colorSet.background
+        
+        segmentedControl.configureColors(
+            backgroundColor: viewModel.colorSet.backgroundForWidgets,
+            segmentColor: viewModel.colorSet.segmentedControlSegment,
+            selectedTextColor: viewModel.colorSet.segmentedControlSelectedText,
+            secondTextColor: viewModel.colorSet.segmentedControlSecondText
+        )
+        
+        searchBar.layer.borderColor = viewModel.colorSet.separator.cgColor
+        
+        searchBar.backgroundColor = viewModel.colorSet.background
+        searchBar.textColor = viewModel.colorSet.secondText.withAlphaComponent(0.7)
+        searchBar.attributedPlaceholder =
+        NSAttributedString(string: "Search", attributes: [NSAttributedString.Key.foregroundColor: viewModel.colorSet.secondText])
+        searchImage.tintColor = viewModel.colorSet.secondText
     }
     
     private func setupTableView(){
@@ -127,9 +160,12 @@ extension CurrencyListTableViewController: UITableViewDelegate {
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
-        tableView.backgroundColor = Theme.Color.background
+        
         tableView.tableFooterView = UIView() // Dont show unused rows
         tableView.separatorStyle = .none // Dont show borders between rows
+        tableView.showsVerticalScrollIndicator = false
+        tableView.showsHorizontalScrollIndicator = false
+        
         tableView.keyboardDismissMode = .onDragWithAccessory // Close the keyboard by scrolling
     }
     
@@ -161,14 +197,11 @@ extension CurrencyListTableViewController: UITableViewDelegate {
         
         searchBar.layer.cornerRadius = segmentedControl.layer.cornerRadius
         searchBar.layer.borderWidth = 1
-        searchBar.layer.borderColor = Theme.Color.separator.cgColor
+        
         searchBar.clearButtonMode = .always
         searchBar.borderStyle = .roundedRect
         searchBar.keyboardType = .default
-        searchBar.backgroundColor = Theme.Color.background
-        searchBar.textColor = Theme.Color.secondText.withAlphaComponent(0.7)
-        searchBar.attributedPlaceholder =
-        NSAttributedString(string: "Search", attributes: [NSAttributedString.Key.foregroundColor: Theme.Color.secondText])
+
         
         //Add left view and make it transparent
         searchBar.leftViewMode = .always
@@ -180,12 +213,12 @@ extension CurrencyListTableViewController: UITableViewDelegate {
         if let clearButton = searchBar.value(forKey: "_clearButton") as? UIButton {
              let templateImage = clearButton.imageView?.image?.withRenderingMode(.alwaysTemplate)
              clearButton.setImage(templateImage, for: .normal)
-             clearButton.tintColor = Theme.Color.segmentedControlBackground
+            clearButton.tintColor = viewModel.colorSet.clearButton
          }
         
         //Create custom image view and adding to search bar
-        let searchImage = UIImageView(image: UIImage(systemName: "magnifyingglass"))
-        searchImage.tintColor = Theme.Color.secondText
+        searchImage.image = UIImage(systemName: "magnifyingglass")
+        
         searchImage.contentMode = .scaleAspectFit
         self.view.addSubview(searchImage)
         searchImage.translatesAutoresizingMaskIntoConstraints = false

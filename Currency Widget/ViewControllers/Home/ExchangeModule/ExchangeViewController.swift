@@ -33,13 +33,13 @@ class ExchangeViewController: UIViewController {
 // MARK: -  SETUP RX
 extension ExchangeViewController {
     private func setupRx() {
-        
+  
         //Setting to FromView
         viewModel.fromText.subscribe(onNext: { text in
             self.fromView.textField.text = text
             if text != "1.0" {
-                self.fromView.textField.textColor = Theme.Color.mainText
-                self.toView.textField.textColor = Theme.Color.mainText
+                self.fromView.textField.textColor = self.viewModel.colorSet.mainText
+                self.toView.textField.textColor = self.viewModel.colorSet.mainText
             }
         }).disposed(by: disposeBag)
         
@@ -67,11 +67,11 @@ extension ExchangeViewController {
                 self.viewModel.makeExchangeNormal()
                 
                 if str == "1" {
-                    self.fromView.textField.textColor = Theme.Color.secondText.withAlphaComponent(0.7)
-                    self.toView.textField.textColor = Theme.Color.secondText.withAlphaComponent(0.7)
+                    self.fromView.textField.textColor = self.viewModel.colorSet.secondText.withAlphaComponent(0.7)
+                    self.toView.textField.textColor = self.viewModel.colorSet.secondText.withAlphaComponent(0.7)
                 } else {
-                    self.fromView.textField.textColor = Theme.Color.mainText
-                    self.toView.textField.textColor = Theme.Color.mainText
+                    self.fromView.textField.textColor = self.viewModel.colorSet.mainText
+                    self.toView.textField.textColor = self.viewModel.colorSet.mainText
                 }
             }).disposed(by: disposeBag)
         
@@ -122,11 +122,27 @@ extension ExchangeViewController: ReturnDataFromChooseViewControllerProtocol {
 extension ExchangeViewController: UITextFieldDelegate {
     private func setupUI() {
         
-        //self.backgroundColor = .yellow
         setupChangeButton()
         setupHeader()
         setupFromView()
         setupToView()
+        rxColors()
+    }
+    
+    private func rxColors() {
+        viewModel.rxAppThemeUpdated.subscribe(onNext: { flag in
+            if flag {
+                self.colorsUpdate()
+            }
+        }).disposed(by: disposeBag)
+    }
+    
+    private func colorsUpdate() {
+        changeButton.imageView?.tintColor = viewModel.colorSet.mainColor
+        exchangeLabel.textColor = viewModel.colorSet.mainText
+        changeButton.backgroundColor = viewModel.colorSet.accentColor
+        fromView.updateColors(colorSet: viewModel.colorSet)
+        toView.updateColors(colorSet: viewModel.colorSet)
     }
     
     private func setupChangeButton() {
@@ -141,10 +157,10 @@ extension ExchangeViewController: UITextFieldDelegate {
         ])
         view.layoutIfNeeded()
         changeButton.clipsToBounds = true
-        changeButton.layer.cornerRadius = Theme.Radius.minimal
-        changeButton.backgroundColor = Theme.Color.accentColor
+        changeButton.layer.cornerRadius = UIScreen.main.bounds.height/100
+        
         changeButton.setImage(UIImage(systemName: "arrow.up.arrow.down"), for: .normal)
-        changeButton.imageView?.tintColor = Theme.Color.mainColor
+        
         changeButton.imageView?.contentMode = .scaleAspectFit
 
     }
@@ -164,12 +180,8 @@ extension ExchangeViewController: UITextFieldDelegate {
         
         exchangeLabel.text = "Exchange"
         exchangeLabel.font = UIFont.systemFont(ofSize: 100, weight: .medium) //Just set max and resize after
-        
         exchangeLabel.adjustsFontSizeToFitWidth = true
         exchangeLabel.textAlignment = .left
-        exchangeLabel.textColor = Theme.Color.mainText
-        //exchangeLabel.backgroundColor = .white
-        
         
     }
     

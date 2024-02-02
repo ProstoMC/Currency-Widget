@@ -20,12 +20,14 @@ class ChooseCurrencyViewController: UIViewController, UITableViewDelegate {
     var delegate: ReturnDataFromChooseViewControllerProtocol!
     
     //We have to provide type of VM from mother VC
-    var viewModel: CurrencyListViewModelProtocol = CurrencyListViewModelV2()
+    var viewModel: CurrencyListViewModelProtocol = CurrencyListViewModelV2(type: .fullList)
     let disposeBag = DisposeBag()
     
     var closingLine = UIView()
     var segmentedControl = CornersWhiteSegmentedControl(items: ["Fiat", "Crypto"])
     var searchBar = UITextField()
+    let searchImage = UIImageView()
+    
     var tableView = UITableView()
     
     var baseHeightOfElements: Double!
@@ -39,7 +41,7 @@ class ChooseCurrencyViewController: UIViewController, UITableViewDelegate {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         setupUI()
-        bindTableView()
+        subscribing()
         usageSegmentedControl()
         usageSearchBar()
     }
@@ -48,7 +50,7 @@ class ChooseCurrencyViewController: UIViewController, UITableViewDelegate {
         self.delegate.passCurrencyShortName(name: choosenCurrencyName)
     }
     
-    private func bindTableView() {
+    private func subscribing() {
         let dataSource = RxTableViewSectionedReloadDataSource<TableSectionOfCoinUniversal>(
             configureCell: { dataSource, tableView, indexPath, item in
                 let cell = self.tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ChooseCurrencyTableViewCell
@@ -67,13 +69,20 @@ class ChooseCurrencyViewController: UIViewController, UITableViewDelegate {
             self.dismiss(animated: true)
         }).disposed(by: disposeBag)
         
+        viewModel.rxAppThemeUpdated.subscribe(onNext: { flag in
+            if flag {
+                self.updateColors()
+            }
+        }).disposed(by: disposeBag)
+        
     }
     
     private func usageSegmentedControl() {
         segmentedControl.rx.value.subscribe{ index in
             if index == 0 {
                 self.viewModel.typeOfCoin = .fiat
-            } else {
+            }
+            if index == 1 {
                 self.viewModel.typeOfCoin = .crypto
             }
             self.viewModel.resetModel()
@@ -87,18 +96,45 @@ class ChooseCurrencyViewController: UIViewController, UITableViewDelegate {
             .subscribe(onNext: { str in
                 self.viewModel.findCurrency(str: str)
             }).disposed(by: disposeBag)
+        
+        
     }
 }
 
 // MARK:  - SETUP UI
 extension ChooseCurrencyViewController {
     private func setupUI() {
-        view.backgroundColor = Theme.Color.background
+        
         baseHeightOfElements = getBaseHeight()
         setupClosingLine()
         setupSegmentedControl()
         setupTextField()
         setupTableView()
+        updateColors()
+    }
+    
+    private func updateColors(){
+        
+        view.backgroundColor = viewModel.colorSet.background
+        closingLine.backgroundColor = viewModel.colorSet.closingLine
+        
+        searchBar.backgroundColor = viewModel.colorSet.background
+        searchBar.textColor = viewModel.colorSet.secondText.withAlphaComponent(0.7)
+        searchBar.attributedPlaceholder =
+        NSAttributedString(string: "Search", attributes: [NSAttributedString.Key.foregroundColor: viewModel.colorSet.secondText])
+        searchBar.layer.borderColor = viewModel.colorSet.separator.cgColor
+        searchImage.tintColor = viewModel.colorSet.secondText
+        
+        tableView.backgroundColor = viewModel.colorSet.background
+        
+        segmentedControl.configureColors(
+            backgroundColor: viewModel.colorSet.backgroundForWidgets,
+            segmentColor: viewModel.colorSet.segmentedControlSegment,
+            selectedTextColor: viewModel.colorSet.segmentedControlSelectedText,
+            secondTextColor: viewModel.colorSet.segmentedControlSecondText
+        )
+        
+        
     }
     
     private func setupClosingLine() {
@@ -113,7 +149,7 @@ extension ChooseCurrencyViewController {
         ])
         
         closingLine.layer.cornerRadius = baseHeightOfElements/16
-        closingLine.backgroundColor = Theme.Color.mainColorPale
+        
         
         
     }
@@ -145,31 +181,28 @@ extension ChooseCurrencyViewController {
         searchBar.layer.cornerRadius = segmentedControl.layer.cornerRadius
         searchBar.layer.masksToBounds = true
         searchBar.layer.borderWidth = 1
-        searchBar.layer.borderColor = Theme.Color.separator.cgColor
+        
         searchBar.clearButtonMode = .always
         searchBar.borderStyle = .roundedRect
         searchBar.keyboardType = .default
-        searchBar.backgroundColor = Theme.Color.background
-        searchBar.textColor = Theme.Color.secondText.withAlphaComponent(0.7)
-        searchBar.attributedPlaceholder =
-        NSAttributedString(string: "Search", attributes: [NSAttributedString.Key.foregroundColor: Theme.Color.secondText])
+
         
         //Setup color of clearButton
         if let clearButton = searchBar.value(forKey: "_clearButton") as? UIButton {
              let templateImage = clearButton.imageView?.image?.withRenderingMode(.alwaysTemplate)
              clearButton.setImage(templateImage, for: .normal)
-             clearButton.tintColor = Theme.Color.segmentedControlBackground
+             clearButton.tintColor = viewModel.colorSet.segmentedControlSegment
          }
         
         //Add left view and make it transparent
         searchBar.leftViewMode = .always
         searchBar.leftView?.contentMode = .center
         searchBar.leftView = UIImageView(image: UIImage(systemName: "magnifyingglass"))
-        searchBar.leftView?.tintColor = .white.withAlphaComponent(0)
+        searchBar.leftView?.tintColor = .white.withAlphaComponent(0) //Just hide it
         
         //Create custom image view and adding to search bar
-        let searchImage = UIImageView(image: UIImage(systemName: "magnifyingglass"))
-        searchImage.tintColor = Theme.Color.secondText
+        searchImage.image = UIImage(systemName: "magnifyingglass")
+        
         searchImage.contentMode = .scaleAspectFit
         self.view.addSubview(searchImage)
         searchImage.translatesAutoresizingMaskIntoConstraints = false
@@ -179,18 +212,6 @@ extension ChooseCurrencyViewController {
             searchImage.heightAnchor.constraint(equalToConstant: baseHeightOfElements*0.5),
             searchImage.widthAnchor.constraint(equalToConstant: baseHeightOfElements*0.5),
         ])
-        
-
-        //RX Part
-        
-        searchBar.rx.text.orEmpty
-            .throttle(.milliseconds(100), scheduler: MainScheduler.instance)
-            .distinctUntilChanged()
-            .subscribe(onNext: { str in
-                if str != "" {
-                    self.viewModel.findCurrency(str: str)
-                }
-            }).disposed(by: disposeBag)
         
     }
     
@@ -207,10 +228,12 @@ extension ChooseCurrencyViewController {
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
-        tableView.backgroundColor = Theme.Color.background
+        
         tableView.tableFooterView = UIView() // Dont show unused rows
         tableView.separatorStyle = .none // Dont show borders between rows
         tableView.keyboardDismissMode = .interactiveWithAccessory // Close the keyboard by scrolling
+        tableView.showsVerticalScrollIndicator = false
+        tableView.showsHorizontalScrollIndicator = false
     }
     
     private func getBaseHeight() -> Double {

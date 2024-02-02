@@ -7,30 +7,9 @@
 
 import UIKit
 import RxSwift
-import RxDataSources
-
-struct SettingsCellViewModel {
-    let name: String
-    let value: String
-}
-
-struct SectionOfSettings {
-    var header: String
-    var items: [Item]
-}
-
-extension SectionOfSettings: SectionModelType {
-    typealias Item = SettingsCellViewModel
-    
-    init(original: SectionOfSettings, items: [Item]) {
-        self = original
-        self.items = items
-    }
-}
-
 
 class SettingsViewController: UIViewController {
-    
+
     var viewModel: SettingsViewModelProtocol = SettingsViewModel()
     let disposeBag = DisposeBag()
     
@@ -49,30 +28,22 @@ class SettingsViewController: UIViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         setupUI()
-        bindTableView()
+        rxSubscribing()
     }
+    
     // MARK:  - RX Subscribing
-    private func bindTableView() {
-        let dataSource = RxTableViewSectionedReloadDataSource<SectionOfSettings>(
-            configureCell: { dataSource, tableView, indexPath, item in
-                let cell = self.tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! SettingsTableViewCell
-                
-                cell.nameLabel.text = item.name
-                cell.valueLabel.text = item.value
-                
-                return cell
-            })
-        
-        viewModel.rxSettingsList.bind(to: tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
+    private func rxSubscribing() {
 
-        tableView.rx.modelSelected(SettingsViewModel.self).subscribe(onNext: { item in
-            let vc = ChooseCurrencyViewController()
-            vc.modalPresentationStyle = .automatic
-            vc.delegate = self
-            self.present(vc, animated: true)
-        }).disposed(by: disposeBag)
-        
+        //Update colors
+        viewModel.rxAppThemeUpdated.subscribe { _ in
+            UIView.animate(withDuration: 0.5, delay: 0.0,
+                           options: [.allowUserInteraction], animations: { () -> Void in
+                self.colorsUpdate()
+            })
+
+        }.disposed(by: disposeBag)
     }
+
 }
 extension SettingsViewController: ReturnDataFromChooseViewControllerProtocol {
     func passCurrencyShortName(name: String?) {
@@ -84,12 +55,13 @@ extension SettingsViewController: ReturnDataFromChooseViewControllerProtocol {
 // MARK:  - SEUP UI
 extension SettingsViewController {
     private func setupUI() {
-        view.backgroundColor = Theme.Color.background
+        
         setupHeaderView()
         setupTopLine()
         setupTableView()
-
+        colorsUpdate()
     }
+    
     private func setupHeaderView() {
         
         headerView = HeaderView(frame: CGRect(
@@ -111,7 +83,7 @@ extension SettingsViewController {
         )
         
         view.addSubview(topline)
-        topline.backgroundColor = Theme.Color.mainColorPale
+        
         
     }
     
@@ -124,20 +96,40 @@ extension SettingsViewController {
         )
         view.addSubview(tableView)
         
-        tableView.delegate = self
         tableView.register(SettingsTableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.dataSource = self
+        tableView.delegate = self
         
         
-        tableView.backgroundColor = Theme.Color.background
         tableView.tableFooterView = UIView() // Dont show unused rows
         //tableView.separatorStyle = .none // Dont show borders between rows
         tableView.keyboardDismissMode = .interactiveWithAccessory // Close the keyboard with scrolling
         
-        
+    }
+    private func colorsUpdate() {
+        view.backgroundColor = viewModel.colorSet.background
+        topline.backgroundColor = viewModel.colorSet.border
+        tableView.backgroundColor = viewModel.colorSet.background
     }
     
 }
 
+extension SettingsViewController: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print(viewModel.settingsList.count)
+        return viewModel.settingsList.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! SettingsTableViewCell
+        cell.dataConfigure(viewModel: viewModel.settingsList[indexPath.row])
+        return cell
+    }
+}
 
 extension SettingsViewController: UITableViewDelegate {
     
@@ -156,6 +148,53 @@ extension SettingsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return baseHeightOfElements*1.5
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //Base currency
+        if indexPath.row == 0 { changeBaseCurrency() }
+        //App theme
+        if indexPath.row == 1 { changeThemeAlert() }
+    }
+    
+
+    
+    
+}
+
+
+
+// MARK:  - CELL TAPPED
+extension SettingsViewController {
+    func changeBaseCurrency() {
+        let vc = ChooseCurrencyViewController()
+        vc.modalPresentationStyle = .automatic
+        vc.delegate = self
+        present(vc, animated: true)
+    }
+    
+    func changeThemeAlert() {
+
+        let alert = UIAlertController(
+            title: nil,
+            message: nil,
+            preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        alert.addAction(UIAlertAction(title: "System", style: .default, handler: {_ in
+            self.viewModel.changeTheme(theme: .system)
+        })
+        )
+        alert.addAction(UIAlertAction(title: "Light", style: .default, handler: {_ in
+            self.viewModel.changeTheme(theme: .light)
+        })
+        )
+        alert.addAction(UIAlertAction(title: "Dark", style: .default, handler: {_ in
+            self.viewModel.changeTheme(theme: .dark)
+        })
+        )
+        
+        self.present(alert, animated: true, completion: nil)
     }
 }
 

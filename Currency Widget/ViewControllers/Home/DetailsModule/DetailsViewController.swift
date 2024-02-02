@@ -47,7 +47,7 @@ extension DetailsViewController {
         favouriteButton.rx.tap.asDriver().drive(onNext: {
             do {
                 if try self.viewModel.rxFavoriteStatus.value() {
-                    self.showAlert(title: "", message: "Delete pair from favorite?")
+                    self.showAlert(title: "", message: "Delete from favorite?")
                 } else {
                     self.viewModel.changeFavoriteStatus()
                 }
@@ -56,6 +56,11 @@ extension DetailsViewController {
             }
         }).disposed(by: bag)
         
+        viewModel.rxAppThemeUpdated.subscribe(onNext: { flag in
+            if flag {
+                self.updateColors()
+            }
+        }).disposed(by: bag)
         
     }
 }
@@ -63,10 +68,15 @@ extension DetailsViewController {
 extension DetailsViewController {
     private func setupUI() {
         view.isHidden = true
-        view.backgroundColor = Theme.Color.backgroundForWidgets
-        view.layer.cornerRadius = Theme.Radius.mainWidget
+        view.layer.cornerRadius = UIScreen.main.bounds.height/100
         
         setupFavoriteView()
+        updateColors()
+    }
+    
+    private func updateColors() {
+        view.backgroundColor = viewModel.colorSet.backgroundForWidgets
+        favouriteButton.tintColor = viewModel.colorSet.heartColor
     }
     
     private func setupFavoriteView(){
@@ -80,7 +90,7 @@ extension DetailsViewController {
             favouriteButton.widthAnchor.constraint(equalTo: favouriteButton.heightAnchor)
         ])
         
-        favouriteButton.tintColor = Theme.Color.mainColor
+        
         self.favouriteButton.setImage(UIImage(systemName: "suit.heart"), for: .normal)
         favouriteButton.contentMode = .scaleAspectFit
     }
@@ -90,14 +100,14 @@ extension DetailsViewController {
     func showAlert(title: String, message: String) {
 
         let alert = UIAlertController(
-            title: title,
-            message: message,
-            preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: {_ in
+            title: message,
+            message: nil,
+            preferredStyle: .actionSheet)
+        
+        alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: {_ in
             self.viewModel.changeFavoriteStatus()
-        })
-        )
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
         
     }

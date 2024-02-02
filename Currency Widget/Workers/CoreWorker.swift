@@ -19,8 +19,8 @@ class CoreWorker {
     
     let bag = DisposeBag()
     
-    //Settings
-    let settingsWorker: SettingsProtocol = SettingsWorker()
+    //Colors
+    let colorsWorker: ColorsWorkerProtocol = ColorsWorker()
     
     //Currency List
     let coinList: CoinListProtocol = UniversalCoinWorker()

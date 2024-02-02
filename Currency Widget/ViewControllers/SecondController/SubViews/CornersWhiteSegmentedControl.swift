@@ -6,17 +6,11 @@
 //
 
 
-// CORNERS DONT WORK!!!!!!!
 
 import UIKit
 
 class CornersWhiteSegmentedControl: UISegmentedControl {
-
-    
-    private(set) lazy var radius:CGFloat = bounds.height / 2
-
-    
-   
+  
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
     
@@ -26,23 +20,30 @@ class CornersWhiteSegmentedControl: UISegmentedControl {
         //setupCorners()
         clipsToBounds = true
         fixBackgroundSegmentControl(self)
+     
     }
     
     override func draw(_ rect: CGRect) {
         //layer.cornerRadius = radius
         layer.masksToBounds = true
-        backgroundColor = .white
+        //backgroundColor = .white
+        //configureColors()
         
         selectedSegmentIndex = 0
-        layer.backgroundColor = Theme.Color.backgroundForWidgets.cgColor
-        selectedSegmentTintColor = Theme.Color.segmentedControlBackground
-        
-        let selectedTextColor = [NSAttributedString.Key.foregroundColor: Theme.Color.backgroundForWidgets]
-        let normalTextColor = [NSAttributedString.Key.foregroundColor: Theme.Color.segmentedControlBackground]
-        
+    }
+    
+    func configureColors(
+        backgroundColor: UIColor, segmentColor: UIColor, selectedTextColor: UIColor, secondTextColor: UIColor){
+
+        self.backgroundColor = backgroundColor
+
+        selectedSegmentTintColor = segmentColor
+
+        let selectedTextColor = [NSAttributedString.Key.foregroundColor: selectedTextColor]
+        let secondTextColor = [NSAttributedString.Key.foregroundColor: secondTextColor]
+
         setTitleTextAttributes(selectedTextColor, for: .selected)
-        setTitleTextAttributes(normalTextColor, for: .normal)
-        
+        setTitleTextAttributes(secondTextColor, for: .normal)
     }
     
     func fixBackgroundSegmentControl( _ segmentControl: UISegmentedControl){
@@ -57,30 +58,5 @@ class CornersWhiteSegmentedControl: UISegmentedControl {
             }
         }
     }
-    
-    //IT IS DOESNT WORK
-    
-    func setupCorners() {
-        //let selectedImageViewIndex = numberOfSegments
-        guard let selectedSegment = subviews[numberOfSegments] as? UIImageView else {
-             return
-         }
- 
-         selectedSegment.image = nil
-         selectedSegment.backgroundColor = Theme.Color.mainColor
-         selectedSegment.layer.removeAnimation(forKey: "SelectionBounds")
-         selectedSegment.layer.cornerRadius = radius - layer.borderWidth
-         selectedSegment.bounds = CGRect(origin: .zero, size: CGSize(
-             width: selectedSegment.bounds.width,
-             height: bounds.height - layer.borderWidth * 2
-         ))
-        layer.backgroundColor = Theme.Color.backgroundForWidgets.cgColor
-        
-        let backgroundView = subviews[0]
-        backgroundView.backgroundColor = Theme.Color.backgroundForWidgets
-        
-        
-    }
-    
 
 }

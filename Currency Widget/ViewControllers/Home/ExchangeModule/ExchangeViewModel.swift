@@ -16,6 +16,9 @@ protocol ExchangeViewModelProtocol {
     var fromCurrency: BehaviorSubject<String> {get set}
     var toCurrency: BehaviorSubject<String> {get set}
     
+    var rxAppThemeUpdated: BehaviorSubject<Bool> { get }
+    var colorSet: AppColors { get }
+    
     func makeExchangeNormal()
     func makeExchangeReverse()
     func switchFields()
@@ -24,8 +27,9 @@ protocol ExchangeViewModelProtocol {
 }
 
 class ExchangeViewModel: ExchangeViewModelProtocol  {
-
     
+    var rxAppThemeUpdated = BehaviorSubject(value: false)
+    var colorSet = CoreWorker.shared.colorsWorker.returnColors()
     
     var fromText = RxSwift.BehaviorSubject<String>(value: "1")
     var toText = RxSwift.BehaviorSubject<String>(value: "1")
@@ -36,21 +40,27 @@ class ExchangeViewModel: ExchangeViewModelProtocol  {
     //let formatter = NumberFormatter().numberStyle = .decimal
     
     init() {
+        subscrubeToCoreWorker()
+    }
+    
+    private func subscrubeToCoreWorker() {
         // Update after fetching currency rates
         CoreWorker.shared.coinList.rxRateUpdated.subscribe(onNext: {_ in
             self.makeExchangeNormal()
         }).disposed(by: disposeBag)
         
-        subscrubeToCoreWorker()
-    }
-    
-    private func subscrubeToCoreWorker() {
         //Update exchanging and fields after new currency on the fields
         CoreWorker.shared.exchangeWorker.rxExchangeFlag.subscribe({ _ in
             self.fromCurrency.onNext(CoreWorker.shared.exchangeWorker.fromCoin)
             self.toCurrency.onNext(CoreWorker.shared.exchangeWorker.toCoin)
             self.makeExchangeNormal()
         }).disposed(by: disposeBag)
+        
+        //Update colors
+        CoreWorker.shared.colorsWorker.rxAppThemeUpdated.subscribe{ _ in
+            self.colorSet = CoreWorker.shared.colorsWorker.returnColors()
+            self.rxAppThemeUpdated.onNext(true)
+        }.disposed(by: disposeBag)
     }
     
     func makeExchangeNormal() {

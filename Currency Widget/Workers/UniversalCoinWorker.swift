@@ -125,6 +125,11 @@ extension UniversalCoinWorker: CoinListProtocol {
             fiatList[i].rate = fiatList[i].rate / ratio
             fiatList[i].flow24Hours = fiatList[i].flow24Hours / ratio
         }
+        for i in cryptoList.indices {
+            cryptoList[i].rate = cryptoList[i].rate / ratio
+            cryptoList[i].flow24Hours = cryptoList[i].flow24Hours / ratio
+        }
+        
         baseCoin = returnCoin(code: newCode)! // Get updated values. And we've checked existing in first line
         rxRateUpdated.onNext(true)
     }
@@ -164,7 +169,7 @@ extension UniversalCoinWorker {
                     let nsDate = Date(timeIntervalSince1970: timeInterval)
    
                     let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "YY.MM.dd HH:mm"
+                    dateFormatter.dateFormat = "dd.MM.YYYY HH:mm"
                     
                     lastUpdate = dateFormatter.string(from: nsDate)
                 }
@@ -384,6 +389,7 @@ extension UniversalCoinWorker {
             CoinUniversal(type: .crypto, code: "GMT", name: "STEPN", base: "USD", rate: 0, flow24Hours: 0, logo: "", imageUrl: "www.cryptocompare.com/media/39838490/gmt.png", colorIndex: -1),
             CoinUniversal(type: .crypto, code: "BSV", name: "Bitcoin SV", base: "USD", rate: 0, flow24Hours: 0, logo: "", imageUrl: "www.cryptocompare.com/media/44082082/bsv.png", colorIndex: -1),
             CoinUniversal(type: .crypto, code: "WBTC", name: "Wrapped Bitcoin", base: "USD", rate: 0, flow24Hours: 0, logo: "", imageUrl: "www.cryptocompare.com/media/35309588/wbtc.png", colorIndex: -1),
+            CoinUniversal(type: .crypto, code: "TONCOIN", name: "The Open Network", base: "USD", rate: 0, flow24Hours: 0, logo: "", imageUrl: "www.cryptocompare.com/media/43957906/toncoin.png", colorIndex: -1)
         ]
     }
     

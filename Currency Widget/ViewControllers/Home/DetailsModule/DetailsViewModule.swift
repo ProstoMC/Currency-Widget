@@ -12,6 +12,9 @@ protocol DetailsViewModuleProtocol {
     var rxIsAppearFlag: BehaviorSubject<Bool> { get }
     var rxFavoriteStatus: BehaviorSubject<Bool> { get set }
     
+    var rxAppThemeUpdated: BehaviorSubject<Bool> { get }
+    var colorSet: AppColors { get }
+    
     func changeFavoriteStatus()
 }
 
@@ -22,8 +25,11 @@ class DetailsViewModule: DetailsViewModuleProtocol {
     var rxIsAppearFlag = RxSwift.BehaviorSubject(value: false) //hidden as default
     var rxFavoriteStatus = RxSwift.BehaviorSubject(value: false)
     
+    var rxAppThemeUpdated = BehaviorSubject(value: false)
+    var colorSet = CoreWorker.shared.colorsWorker.returnColors()
+    
     init() {
-        subscribeToExchangeFlag()
+        subscribeToCoreWorker()
         getFavouriteStatus()
     }
     
@@ -51,10 +57,16 @@ class DetailsViewModule: DetailsViewModuleProtocol {
 
 extension DetailsViewModule {
     
-    private func subscribeToExchangeFlag() {
+    private func subscribeToCoreWorker() {
         CoreWorker.shared.exchangeWorker.rxExchangeFlag.subscribe { flag in
             self.rxIsAppearFlag.onNext(flag)
             self.getFavouriteStatus()
+        }.disposed(by: bag)
+        
+        //Update colors
+        CoreWorker.shared.colorsWorker.rxAppThemeUpdated.subscribe{ _ in
+            self.colorSet = CoreWorker.shared.colorsWorker.returnColors()
+            self.rxAppThemeUpdated.onNext(true)
         }.disposed(by: bag)
     }
     

@@ -6,8 +6,10 @@
 //
 
 import UIKit
+import RxSwift
 
 class SecondViewController: UIViewController {
+    let bag = DisposeBag()
     
     var headerView: HeaderView!
     var tableViewController = CurrencyListTableViewController()
@@ -26,7 +28,13 @@ class SecondViewController: UIViewController {
 // MARK:  - SETUP UI
 extension SecondViewController {
     private func setupUI() {
-        view.backgroundColor = Theme.Color.background
+        view.backgroundColor = CoreWorker.shared.colorsWorker.returnColors().background
+        
+        CoreWorker.shared.colorsWorker.rxAppThemeUpdated.subscribe(onNext: { flag in
+            if flag {
+                self.view.backgroundColor = CoreWorker.shared.colorsWorker.returnColors().background
+            }
+        }).disposed(by: bag)
         
         headerView = HeaderView(frame: CGRect(
             x: 0,

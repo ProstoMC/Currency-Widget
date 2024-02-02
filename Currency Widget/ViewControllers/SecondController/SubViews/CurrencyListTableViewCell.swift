@@ -56,11 +56,11 @@ class CurrencyListTableViewCell: UITableViewCell {
     
     func configureWithUniversalCoin(coin: CurrencyCellViewModel) {
         configureLogo(coin: coin)
-        
+        colorsUpdate(colorSet: coin.colorSet)
         valueName = coin.code
         baseName = coin.baseCode
         
-        nameLabel.text = coin.name
+        nameLabel.text = coin.code + " - " + coin.name
         
         let rate = String(format: "%.2f", coin.rate)
         //self.valueLabel.text = "\(baseLogo) \(rate)"
@@ -70,11 +70,11 @@ class CurrencyListTableViewCell: UITableViewCell {
         changesLabel.text = coin.baseLogo + " " + flow + " "
         
         if coin.flow >= 0 {
-            self.changesStackView.backgroundColor = Theme.Color.green
+            self.changesStackView.backgroundColor = coin.colorSet.green.withAlphaComponent(0.9)
             
             self.changesArrowImageView.image = UIImage(systemName: "arrow.up.right")
         } else {
-            self.changesStackView.backgroundColor = Theme.Color.red
+            self.changesStackView.backgroundColor = coin.colorSet.red.withAlphaComponent(0.9)
             self.changesArrowImageView.image = UIImage(systemName: "arrow.down.right")
         }
         
@@ -106,12 +106,12 @@ class CurrencyListTableViewCell: UITableViewCell {
         if coin.type == .fiat {
             logoImageView.isHidden = true
             logoLabel.text = coin.logo
-            if coin.colorIndex >= 0 && coin.colorIndex < Theme.currencyColors.count {
-                logoLabel.textColor = Theme.currencyColors[coin.colorIndex]
-                logoView.backgroundColor = Theme.currencyColors[coin.colorIndex].withAlphaComponent(0.1)
+            if coin.colorIndex >= 0 && coin.colorIndex < coin.colorSet.currencyColors.count {
+                logoLabel.textColor = coin.colorSet.mainText
+                logoView.backgroundColor = coin.colorSet.currencyColors[coin.colorIndex].withAlphaComponent(0.3)
             } else {
-                logoLabel.textColor = Theme.Color.tabBarBackground
-                logoView.backgroundColor = Theme.Color.tabBarBackground.withAlphaComponent(0.1)
+                logoLabel.textColor = coin.colorSet.tabBarBackground
+                logoView.backgroundColor = coin.colorSet.tabBarBackground.withAlphaComponent(0.3)
             }
         } else {
             guard let url = URL(string: coin.imageUrl ?? "Error") else {
@@ -126,11 +126,10 @@ class CurrencyListTableViewCell: UITableViewCell {
             let placeHolder = UIImage(systemName: "gyroscope")
             
             logoImageView.sd_setImage(with: url, placeholderImage: placeHolder)
-            logoImageView.tintColor = Theme.Color.tabBarBackground
+            logoImageView.tintColor = coin.colorSet.tabBarBackground
         }
-        
-        
     }
+
     
     @objc private func favoriteButtonTapped() {
         print(valueName)
@@ -139,7 +138,7 @@ class CurrencyListTableViewCell: UITableViewCell {
             CoreWorker.shared.favouritePairList.deletePair(valueCode: valueName, baseCode: baseName)
         }
         else {
-            let colorIndex = CoreWorker.shared.favouritePairList.pairList.count % Theme.currencyColors.count
+            let colorIndex = CoreWorker.shared.favouritePairList.pairList.count % CoreWorker.shared.colorsWorker.returnColors().currencyColors.count
             CoreWorker.shared.favouritePairList.addNewPair(valueCode: valueName, baseCode: baseName, colorIndex: colorIndex)
         }
     }
@@ -149,11 +148,7 @@ class CurrencyListTableViewCell: UITableViewCell {
 
 extension CurrencyListTableViewCell {
     private func setupUI() {
-        
-        
-        contentView.backgroundColor = Theme.Color.background
-        backgroundWhiteView.backgroundColor = .white
-        
+
         contentView.addSubview(backgroundWhiteView)
         backgroundWhiteView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -177,6 +172,16 @@ extension CurrencyListTableViewCell {
         
     }
     
+    func colorsUpdate(colorSet: AppColors) {
+        contentView.backgroundColor = colorSet.background
+        backgroundWhiteView.backgroundColor = colorSet.backgroundForWidgets
+        nameLabel.textColor = colorSet.secondText
+        favoriteButton.tintColor = colorSet.heartColor
+        valueLabel.textColor = colorSet.mainText.withAlphaComponent(0.8)
+        changesArrowImageView.tintColor = colorSet.backgroundForWidgets
+        changesLabel.textColor = colorSet.backgroundForWidgets
+    }
+    
     // MARK:  - SETUP LOGO
     private func setupLogo() {
         backgroundWhiteView.addSubview(logoView)
@@ -195,7 +200,7 @@ extension CurrencyListTableViewCell {
         logoLabel.translatesAutoresizingMaskIntoConstraints = false
         logoLabel.font = logoLabel.font.withSize(100) //Just set max and resize after
         logoLabel.adjustsFontSizeToFitWidth = true
-        logoLabel.textColor = Theme.Color.invertedText
+        
         
         NSLayoutConstraint.activate([
             logoLabel.centerYAnchor.constraint(equalTo: logoView.centerYAnchor),
@@ -232,7 +237,7 @@ extension CurrencyListTableViewCell {
         
         nameLabel.adjustsFontSizeToFitWidth = true
         nameLabel.textAlignment = .left
-        nameLabel.textColor = Theme.Color.secondText
+        
     
     }
     
@@ -253,7 +258,7 @@ extension CurrencyListTableViewCell {
         valueLabel.font = UIFont.systemFont(ofSize: backgroundWhiteView.bounds.height*0.45, weight: .medium)
         //valueLabel.adjustsFontSizeToFitWidth = true
         valueLabel.textAlignment = .left
-        valueLabel.textColor = Theme.Color.mainText
+        
         valueLabel.sizeToFit()
     }
     
@@ -287,11 +292,11 @@ extension CurrencyListTableViewCell {
         ])
         
         layoutIfNeeded()
-        changesStackView.backgroundColor = Theme.Color.green
+        
         changesStackView.layer.cornerRadius = changesStackView.bounds.height/2
         
         changesArrowImageView.image = UIImage(systemName: "arrow.up.right")
-        changesArrowImageView.tintColor = Theme.Color.backgroundForWidgets
+        
         changesArrowImageView.contentMode = .scaleAspectFit
         //changesArrowImageView.backgroundColor = .yellow
         
@@ -300,7 +305,7 @@ extension CurrencyListTableViewCell {
         changesLabel.sizeToFit()
         //changesLabel.adjustsFontSizeToFitWidth = true
         changesLabel.textAlignment = .left
-        changesLabel.textColor = Theme.Color.backgroundForWidgets
+        
         //changesLabel.backgroundColor = .lightGray
         
 
@@ -319,7 +324,7 @@ extension CurrencyListTableViewCell {
         
         favoriteButton.setImage(UIImage(systemName: "suit.heart"), for: .normal)
         favoriteButton.contentMode = .scaleAspectFit
-        favoriteButton.tintColor = Theme.Color.mainColor
+        
     }
 
 }

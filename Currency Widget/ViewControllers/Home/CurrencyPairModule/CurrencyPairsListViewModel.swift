@@ -14,6 +14,9 @@ import Differentiator
 protocol CurrencyPairsListViewModelProtocol {
     var rxPairList: BehaviorRelay<[SectionOfCustomData]> { get }
     
+    var rxAppThemeUpdated: BehaviorSubject<Bool> { get }
+    var colorSet: AppColors { get }
+    
     func selectTail(pair: CurrencyPairCellModel)
     func selectTail(indexPath: IndexPath)
     func reorderPair(fromIndex: Int, toIndex: Int)
@@ -22,8 +25,9 @@ protocol CurrencyPairsListViewModelProtocol {
 }
 
 class CurrencyPairsListViewModel {
-
     
+    var rxAppThemeUpdated = BehaviorSubject(value: false)
+    var colorSet = CoreWorker.shared.colorsWorker.returnColors()
     
     var rxPairList: BehaviorRelay<[SectionOfCustomData]>
     
@@ -46,11 +50,21 @@ class CurrencyPairsListViewModel {
             self.rxPairList.accept([self.section])
         }.disposed(by: bag)
         
+        //Update after updating of rates
         CoreWorker.shared.coinList.rxRateUpdated.subscribe { _ in
             self.section = SectionOfCustomData(header: "Header", items: self.createList())
             self.rxPairList.accept([self.section])
         }
         .disposed(by: bag)
+        
+        //Update Colors
+        CoreWorker.shared.colorsWorker.rxAppThemeUpdated.subscribe{ _ in
+            self.changeColorSet()
+            self.rxAppThemeUpdated.onNext(true)
+            //Just reload table - it is hidden 
+            self.section = SectionOfCustomData(header: "Header", items: self.createList())
+            self.rxPairList.accept([self.section])
+        }.disposed(by: bag)
         
     }
     
@@ -69,6 +83,10 @@ class CurrencyPairsListViewModel {
         }
         return list
         
+    }
+    
+    private func changeColorSet() {
+        colorSet = CoreWorker.shared.colorsWorker.returnColors()
     }
 }
 

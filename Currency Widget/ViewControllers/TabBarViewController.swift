@@ -21,6 +21,7 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     let settingsVC = SettingsViewController()
     
     let backgroundView = UIView()
+    let topLineView = UIView()
     
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -38,9 +39,17 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     
     private func setupRx() {
         //Return to first VC
-        CoreWorker.shared.exchangeWorker.rxExchangeFlag.subscribe(onNext: {_ in
+        CoreWorker.shared.exchangeWorker.rxExchangeFlag.subscribe{_ in
             self.selectedIndex = 0
-        }).disposed(by: bag)
+        }.disposed(by: bag)
+        
+        CoreWorker.shared.colorsWorker.rxAppThemeUpdated.subscribe{ _ in
+            UIView.animate(withDuration: 0.5, delay: 0.0,
+                           options: [.allowUserInteraction], animations: { () -> Void in
+                self.setupTabBarUI()
+            })
+        }.disposed(by: bag)
+        
     }
     
 }
@@ -79,31 +88,25 @@ extension TabBarViewController {
     
     
     private func setupTabBarUI() {
-        tabBar.backgroundColor = Theme.Color.tabBarBackground
+        tabBar.backgroundColor = CoreWorker.shared.colorsWorker.returnColors().tabBarBackground
         tabBar.itemPositioning = .centered
-        //tabBar.itemSpacing = UIScreen.main.bounds.width/30
+
+        tabBar.tintColor = CoreWorker.shared.colorsWorker.returnColors().tabBarText.withAlphaComponent(1)
+        tabBar.unselectedItemTintColor = CoreWorker.shared.colorsWorker.returnColors().tabBarText.withAlphaComponent(0.5)
         
-//        tabBar.layer.cornerRadius = Theme.Radius.mainWidget
-//        tabBar.layer.maskedCorners = [.layerMinXMinYCorner,.layerMaxXMinYCorner]
-        tabBar.tintColor = Theme.Color.tabBarText.withAlphaComponent(1)
-        tabBar.unselectedItemTintColor = Theme.Color.tabBarText.withAlphaComponent(0.5)
+        self.view.addSubview(topLineView)
+        topLineView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            topLineView.topAnchor.constraint(equalTo: tabBar.topAnchor),
+            topLineView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
+            topLineView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
+            topLineView.heightAnchor.constraint(equalToConstant: 0.5),
+        ])
+
+        topLineView.backgroundColor = CoreWorker.shared.colorsWorker.returnColors().tabBarLine
         
-        
-//        backgroundView.translatesAutoresizingMaskIntoConstraints = false
-//        tabBar.addSubview(backgroundView)
-//        backgroundView.backgroundColor = Theme.Color.mainColor
-//
-//        NSLayoutConstraint.activate([
-//            backgroundView.centerXAnchor.constraint(equalTo: tabBar.centerXAnchor),
-//            backgroundView.topAnchor.constraint(equalTo: tabBar.topAnchor),
-//            backgroundView.widthAnchor.constraint(equalTo: tabBar.widthAnchor, multiplier: 0.45),
-//            backgroundView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height/20),
-//            //backgroundView.height.constraint(equalToConstant: tabBarItem.accessibilityPath?.bounds.height)
-//        ])
-//
-//        self.title = nil
-//
-//        backgroundView.layer.masksToBounds = true
-//        backgroundView.layer.cornerRadius = 5
+ 
+
     }
 }

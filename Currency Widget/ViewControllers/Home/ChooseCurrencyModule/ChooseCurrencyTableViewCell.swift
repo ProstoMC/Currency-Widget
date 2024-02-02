@@ -40,6 +40,7 @@ class ChooseCurrencyTableViewCell: UITableViewCell {
     func configure(coin: CurrencyCellViewModel) {
         configureLogo(coin: coin)
         //Color logo View
+        colorsUpdate(colorSet: coin.colorSet)
         
         let name = "\(coin.code) - \(coin.name)"
         nameLabel.text = name
@@ -49,12 +50,12 @@ class ChooseCurrencyTableViewCell: UITableViewCell {
         if coin.type == .fiat {
             logoImageView.isHidden = true
             logoLabel.text = coin.logo
-            if coin.colorIndex >= 0 && coin.colorIndex < Theme.currencyColors.count {
-                logoLabel.textColor = Theme.currencyColors[coin.colorIndex]
-                logoView.backgroundColor = Theme.currencyColors[coin.colorIndex].withAlphaComponent(0.1)
+            if coin.colorIndex >= 0 && coin.colorIndex < coin.colorSet.currencyColors.count {
+                logoLabel.textColor = coin.colorSet.mainText
+                logoView.backgroundColor = coin.colorSet.currencyColors[coin.colorIndex].withAlphaComponent(0.3)
             } else {
-                logoLabel.textColor = Theme.Color.tabBarBackground
-                logoView.backgroundColor = Theme.Color.tabBarBackground.withAlphaComponent(0.1)
+                logoLabel.textColor = coin.colorSet.tabBarBackground
+                logoView.backgroundColor = coin.colorSet.tabBarBackground.withAlphaComponent(0.3)
             }
         } else {
             guard let url = URL(string: coin.imageUrl ?? "Error") else {
@@ -69,7 +70,7 @@ class ChooseCurrencyTableViewCell: UITableViewCell {
             let placeHolder = UIImage(systemName: "gyroscope")
             
             logoImageView.sd_setImage(with: url, placeholderImage: placeHolder)
-            logoImageView.tintColor = Theme.Color.tabBarBackground
+            logoImageView.tintColor = coin.colorSet.tabBarBackground
         }
     }
 
@@ -79,8 +80,8 @@ class ChooseCurrencyTableViewCell: UITableViewCell {
 extension ChooseCurrencyTableViewCell {
     private func setupUI() {
         
-        contentView.backgroundColor = Theme.Color.background
-        backgroundWhiteView.backgroundColor = .white
+        
+        
         
         contentView.addSubview(backgroundWhiteView)
         backgroundWhiteView.translatesAutoresizingMaskIntoConstraints = false
@@ -101,6 +102,12 @@ extension ChooseCurrencyTableViewCell {
         setupNameLabel()
     }
     
+    private func colorsUpdate(colorSet: AppColors) {
+        contentView.backgroundColor = colorSet.background
+        backgroundWhiteView.backgroundColor = colorSet.backgroundForWidgets
+        nameLabel.textColor = colorSet.secondText
+    }
+    
     private func setupLogo() {
         backgroundWhiteView.addSubview(logoView)
         logoView.translatesAutoresizingMaskIntoConstraints = false
@@ -118,7 +125,7 @@ extension ChooseCurrencyTableViewCell {
         logoLabel.translatesAutoresizingMaskIntoConstraints = false
         logoLabel.font = logoLabel.font.withSize(100) //Just set max and resize after
         logoLabel.adjustsFontSizeToFitWidth = true
-        logoLabel.textColor = Theme.Color.invertedText
+        
         
         NSLayoutConstraint.activate([
             logoLabel.centerYAnchor.constraint(equalTo: logoView.centerYAnchor),
@@ -154,7 +161,7 @@ extension ChooseCurrencyTableViewCell {
         
         nameLabel.adjustsFontSizeToFitWidth = true
         nameLabel.textAlignment = .left
-        nameLabel.textColor = Theme.Color.secondText
+        
     
     }
     
